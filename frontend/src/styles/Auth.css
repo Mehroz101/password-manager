@@ -107,26 +107,7 @@
   }
   
   /* 🌟 Fixed Login Button at Bottom */
-  .auth_page_btn {
-    width: 100%;
-    left: 0;
-    display: flex;
-    justify-content: center;
-  }
   
-  .auth_page_btn button {
-    width: 90%;
-    max-width: 400px;
-    padding: 13px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    background-color: var(--secondary-color);
-    color: var(--secondary-text-color);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
   
  
   

@@ -47,7 +47,7 @@ const Auth_Page = () => {
       </div>
 
       {/* 🔹 Fixed Login Button at Bottom */}
-      <div className="auth_page_btn">
+      <div className="auth_page_btn action_btn">
         <button onClick={()=>{
           navigate("/")
         }}>{isLogin ? "Login" : "Register"}</button>

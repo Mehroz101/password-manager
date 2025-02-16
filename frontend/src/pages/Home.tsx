@@ -9,7 +9,6 @@ import "../styles/HomePage.css";
 import Netflix from "../assets/netflix.png";
 import Whatsapp from "../assets/whatsapp.png";
 import Google from "../assets/google.png";
-import { useNavigate } from "react-router-dom";
 import SearchBox from "../components/SearchBox";
 const Home = () => {
   return (
