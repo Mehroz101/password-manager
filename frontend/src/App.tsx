@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Loader from "./utils/Loader";
+import { ErrorBoundary } from "react-error-boundary";
+import { Home } from "./utils/LazyLoading";
 
-function App() {
-  const [count, setCount] = useState(0)
+function Fallback({ error }: { error: Error }) {
+  let fileName = "Unknown";
+  if (error.stack) {
+    const regex = /\((.*?):\d+:\d+\)/;
+    const match = error.stack.match(regex);
 
+    if (match) {
+      const filePath = match[1];
+      fileName = filePath.substring(
+        filePath.lastIndexOf("/") + 1,
+        filePath.indexOf("?")
+      );
+    }
+  }
+  return (
+    <div
+      role="alert"
+      className="bg-red-800 flex flex-column w-full h-screen justify-content-center align-items-center"
+    >
+      <p className="text-white text-5xl text-600">Something went wrong:</p>
+      <pre
+        style={{ color: "yellow", backgroundColor: "green", padding: "5px" }}
+      >
+        {error.message}
+      </pre>
+      <pre
+        style={{ color: "yellow", backgroundColor: "green", padding: "5px" }}
+      >
+        File: {fileName}
+      </pre>
+    </div>
+  );
+}
+const App = () => {
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Router>
+        <Suspense
+          fallback={
+            <>
+              <div
+                style={{
+                  height: "100vh",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Loader />
+              </div>
+            </>
+          }
+        >
+          <ErrorBoundary FallbackComponent={Fallback}>
+          <AppRoutes />
+          </ErrorBoundary>
+        </Suspense>
+      </Router>
     </>
-  )
-}
+  );
+};
+const AppRoutes = () => {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </>
+  );
+};
 
-export default App
+export default App;
