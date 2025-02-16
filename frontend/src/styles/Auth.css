@@ -128,9 +128,7 @@
     transition: all 0.3s;
   }
   
-  .auth_page_btn button:hover {
-    background-color: var(--hover-bg);
-  }
+ 
   
   /* 🌟 Responsive Improvements */
   @media (max-width: 480px) {

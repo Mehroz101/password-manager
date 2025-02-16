@@ -1,0 +1,161 @@
+.home_page {
+  background-color: var(--background-color);
+}
+
+
+/* =========================== */
+/* Category */
+/* =========================== */
+.home_page_category_container {
+  margin: 25px auto;
+  width: 100%; /* Keeps search box within screen width */
+  max-width: 400px; /* Prevents it from being too wide */
+
+}
+.home_page_category_boxs {
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  margin-top: 15px;
+   overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer/Edge */
+}
+.home_page_category_boxs::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
+}
+.home_page_category_box {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 110px;
+  padding: 20px 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+}
+.home_page_category_box:hover {
+  transform: translateY(-5px);
+}
+.home_page_category_box p {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.home_page_category_box_icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  color: #fff;
+}
+.home_page_category_box_text {
+  flex: 1;
+}
+.box_1 {
+  background-color: #cde5ff;
+}
+.box_1 .home_page_category_box_icon {
+  background-color: #5a89bc;
+}
+.box_2 {
+  background-color: #cdffcf;
+}
+.box_2 .home_page_category_box_icon {
+  background-color: #5abc5c;
+}
+.box_3 {
+  background-color: #ffd6cd;
+}
+.box_3 .home_page_category_box_icon {
+  background-color: #bc655a;
+}
+
+/* ============================== */
+/* Recent Activity */
+/* ============================== */
+
+.home_page_recent_activity_container {
+  margin: 30px auto;
+  width: 100%; /* Keeps search box within screen width */
+  max-width: 400px;
+  
+}
+.home_page_recent_activity_boxs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.home_page_recent_activity_boxs::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
+}
+.home_page_recent_activity_box {
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 400px;
+  transition: all 0.2s ease-in-out;
+}
+.home_page_recent_activity_box:hover {
+  transform: translateY(-5px);
+}
+.recent_activity_box_left {
+  background-color: #e5f2ff;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 4px;
+  width: 60px;
+}
+.recent_activity_box_left img {
+  width: 40px;
+}
+.recent_activity_box_center {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.recent_activity_box_center .activity_box_title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.recent_activity_box_center p {
+  font-size: 0.8rem;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+.activity_box_account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.6rem;
+}
+.activity_box_account span {
+  font-size: 0.7rem;
+}
+.recent_activity_box_right svg {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}

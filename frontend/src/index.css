@@ -1,6 +1,6 @@
 :root {
   --primary-color: #007bff;
-  --secondary-color: #6c757d;
+  --secondary-color: #0a9380;
   --text-color: #333;
   --background-color: #f8f9fa;
   --secondary-text-color: #fff;
@@ -15,7 +15,7 @@
   --secondary-text-color: #fff;
 }
 
-* {
+body {
   font-family: "Poppins", serif;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -24,6 +24,13 @@
   padding: 0;
   box-sizing: border-box;
   font-size: 1rem; /* Scales with root */
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+  font-size: 1rem; /* Scales with root */
+
 }
 html {
   font-size: 16px;
