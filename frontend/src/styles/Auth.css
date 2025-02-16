@@ -1,0 +1,142 @@
+/* 🌟 Full-Screen Layout */
+.auth_page {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    position: relative; /* Needed for absolute positioning of the button */
+  }
+  
+  /* 🌟 Centered Form */
+  .auth_page_container {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  /* 🌟 Logo & Title */
+  .auth_page_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .auth_logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .auth_logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .auth_main_text h2 {
+    font-size: 1.8rem;
+    margin: 10px 0 5px;
+  }
+  
+  .auth_main_text p {
+    font-size: 1rem;
+    color: var(--text-light);
+  }
+  
+  /* 🌟 Form Styling */
+  .auth_page_form_container {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 15px;
+  }
+  
+  .auth_form_top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .auth_form_top button {
+    flex: 1;
+    padding: 13px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .auth_form_top button{
+    background-color: #ebebeb;
+  }
+  .auth_form_top .active {
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+  }
+  
+  .auth_form_top button:not(.active):hover {
+    background: var(--hover-bg);
+  }
+  
+  /* 🌟 Input Fields */
+  .auth_form_fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .auth_form_fields input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
+    background-color: #ebebeb;
+  }
+  
+  .auth_form_fields input:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.2);
+  }
+  
+  /* 🌟 Fixed Login Button at Bottom */
+  .auth_page_btn {
+    width: 100%;
+    left: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .auth_page_btn button {
+    width: 90%;
+    max-width: 400px;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .auth_page_btn button:hover {
+    background-color: var(--hover-bg);
+  }
+  
+  /* 🌟 Responsive Improvements */
+  @media (max-width: 480px) {
+    .auth_page_container {
+      width: 95%;
+      padding: 15px;
+    }
+  }
+  

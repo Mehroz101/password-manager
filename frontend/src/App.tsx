@@ -2,8 +2,9 @@ import { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loader from "./utils/Loader";
 import { ErrorBoundary } from "react-error-boundary";
-import { Home } from "./utils/LazyLoading";
-
+import { Auth_Page, Home, Layout } from "./utils/LazyLoading";
+import ProtectedRoutes from "./contextapi/ProtectedRoutes";
+import "./App.css"
 function Fallback({ error }: { error: Error }) {
   let fileName = "Unknown";
   if (error.stack) {
@@ -70,7 +71,10 @@ const AppRoutes = () => {
   return (
     <>
       <Routes>
+        <Route path="/login" element={<Auth_Page/>} />
+        <Route path="/" element={<ProtectedRoutes element={<Layout/>}/>}>
         <Route path="/" element={<Home />} />
+        </Route>
       </Routes>
     </>
   );
