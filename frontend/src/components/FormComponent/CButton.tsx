@@ -1,6 +1,6 @@
 import { CButtonType } from "../../types/Types";
 
-const CButton = ({ label, action }: CButtonType) => {
+const CButton = ({ label, action = () => {} }: CButtonType) => {
   return (
     <div className="add_new_btn action_btn">
       <button

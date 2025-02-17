@@ -2,7 +2,15 @@ import { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loader from "./utils/Loader";
 import { ErrorBoundary } from "react-error-boundary";
-import { AddNew, Auth_Page, Home, Layout, ShowAll } from "./utils/LazyLoading";
+import {
+  AddNew,
+  Auth_Page,
+  Home,
+  Layout,
+  Profile,
+  ShowAll,
+  ViewApp,
+} from "./utils/LazyLoading";
 import ProtectedRoutes from "./contextapi/ProtectedRoutes";
 import "./App.css";
 import { ROUTES } from "./utils/routes";
@@ -77,6 +85,8 @@ const AppRoutes = () => {
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.ADDNEW} element={<AddNew />} />
           <Route path={ROUTES.SHOWALL} element={<ShowAll />} />
+          <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route path={`${ROUTES.VIEWAPP}/:id`} element={<ViewApp />} />
         </Route>
       </Routes>
     </>

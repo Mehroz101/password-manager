@@ -5,41 +5,24 @@
   max-width: 400px; /* Prevents it from being too wide */
   margin: 0 auto;
 }
-.add_new_categories {
-  display: flex;
-  gap: 10px;
-  /* margin: 0 auto; */
-  overflow-x: auto;
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer/Edge */
-}
-.add_new_categories::-webkit-scrollbar {
-  display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
-}
-.add_new_category {
-  background-color: #eee;
-  display: flex;
-  align-items: center;
-  border: none;
-  outline: none;
-  gap: 5px;
-  padding: 10px;
-  border-radius: 4px;
-}
-.add_new_category svg {
-  font-size: 0.8rem;
-}
-.add_new_category p {
-  font-size: 0.8rem;
-}
-
 /* ========================== */
 /* add new form */
 /* ========================== */
+
 .add_new_form {
-  margin-top: 30px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
+}
+.add_new_form .category_container,
+.app_container {
+  margin: 0;
+}
+.add_new_form .category_container .category_label,
+.add_new_form .app_label {
+  font-weight: 500;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
 }
 .add_new_form form {
   display: flex;

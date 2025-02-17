@@ -109,7 +109,7 @@
   gap: 4px;
   flex: 1;
 }
-.allpassword_box_center .activity_box_title {
+.allpassword_box_center .allpassword_title {
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -121,21 +121,27 @@
   text-overflow: ellipsis;
   display: block;
 }
-.allpassword_box_center .activity_box_password {
+.allpassword_box_center .password {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.allpassword_box_center .allpassword_password {
   font-size: 0.8rem;
+  max-width: 150px;
   color: #666;
 }
-.allpassword_box_center .activity_box_password svg {
+.allpassword_box_center svg {
   font-size: 0.8rem;
   margin-left: 5px;
 }
-.activity_box_account {
+.allpassword_account {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 0.6rem;
 }
-.activity_box_account span {
+.allpassword_account span {
   font-size: 0.7rem;
 }
 .allpassword_box_right svg {
@@ -146,7 +152,6 @@
   position: relative;
   cursor: pointer;
 }
-
 /* Hidden state */
 .allpassword_box_right .box_right_Action_dropdown {
   position: absolute;

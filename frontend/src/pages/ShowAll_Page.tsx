@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   faEllipsisVertical,
+  faEye,
   faEyeLowVision,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,22 +16,22 @@ const passwordData = [
     id: 1,
     img: Google,
     title: "Google",
-    account: "mehrozfarooq127@gmail.com",
-    password: "*********234",
+    account: "mehrozfarooq127111111111111111111@gmail.com",
+    password: "12343423412222222222222222222222222222",
   },
   {
     id: 2,
     img: Google,
     title: "Facebook",
     account: "user1234@gmail.com",
-    password: "*********567",
+    password: "12343456712222222222222222222222222222",
   },
   {
     id: 3,
     img: Google,
     title: "Twitter",
     account: "twituser678@gmail.com",
-    password: "*********890",
+    password: "12343489012222222222222222222222222222",
   },
   // Other items...
 ];
@@ -42,7 +43,6 @@ const ShowAll_Page = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<{
     [key: number]: boolean;
   }>({});
-  const [copyMessage, setCopyMessage] = useState<string>(""); // For showing feedback message
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
 
   const handleActionBoxToggle = (accountId: number) => {
@@ -94,17 +94,13 @@ const ShowAll_Page = () => {
           );
         }
 
-        // Provide feedback to the user
-        setCopyMessage(
-          `${type === "email" ? "Email" : "Password"} copied to clipboard.`
-        );
-
         // Clear the message after a few seconds
-        setTimeout(() => setCopyMessage(""), 3000);
+        setShowActionBox((prev) => ({
+          ...prev,
+          [id]: false,
+        }));
       } catch (err) {
         console.error("Failed to copy text: ", err);
-        setCopyMessage("Failed to copy. Please try again.");
-        setTimeout(() => setCopyMessage(""), 3000);
       }
     }
   };
@@ -149,21 +145,21 @@ const ShowAll_Page = () => {
                 <img src={password.img} alt={password.title} />
               </div>
               <div className="allpassword_box_center">
-                <p className="activity_box_title">{password.title}</p>
-                <p className="activity_box_account">{password.account}</p>
-                <p className="activity_box_password">
-                  {passwordVisibility[password.id]
-                    ? password.password
-                    : "*************"}{" "}
+                <p className="allpassword_title">{password.title}</p>
+                <p className="allpassword_account">{password.account}</p>
+                <div className="password">
+                  <p className="allpassword_password">
+                    {passwordVisibility[password.id]
+                      ? password.password
+                      : "*************"}{" "}
+                  </p>
                   <FontAwesomeIcon
                     icon={
-                      passwordVisibility[password.id]
-                        ? faEyeSlash
-                        : faEyeLowVision
+                      passwordVisibility[password.id] ? faEye : faEyeLowVision
                     }
                     onClick={() => handlePasswordVisibilityToggle(password.id)} // Toggle the password visibility
                   />
-                </p>
+                </div>
               </div>
               <div className="allpassword_box_right">
                 <FontAwesomeIcon
@@ -196,10 +192,6 @@ const ShowAll_Page = () => {
             </div>
           ))}
         </div>
-        {copyMessage && (
-          <div className="copy-feedback-message">{copyMessage}</div>
-        )}{" "}
-        {/* Display feedback */}
       </div>
     </div>
   );

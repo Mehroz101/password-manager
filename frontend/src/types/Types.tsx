@@ -12,16 +12,22 @@ export interface RecentActivity {
   time: string;
   date: string;
 }
-
-export interface CInputType {
+export interface CInputType
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  type: string;
-  placeholder?: string;
   id: string;
-  ref?: any;
 }
 
 export interface CButtonType {
   label?: string;
-  action: () => void;
+  action?: () => void;
+}
+
+export interface AddNewPassword {
+  appName: string;
+  category: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  url?: string;
 }

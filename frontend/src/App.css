@@ -117,6 +117,37 @@
 .category_boxs::-webkit-scrollbar {
   display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
 }
+.add_new_apps,
+.add_new_categories {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer/Edge */
+}
+.add_new_apps::-webkit-scrollbar,
+.add_new_categories::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
+}
+.add_new_app,
+.add_new_category {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  border: none;
+  outline: none;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 4px;
+}
+.add_new_app svg,
+.add_new_category svg {
+  font-size: 0.8rem;
+}
+.add_new_app p,
+.add_new_category p {
+  font-size: 0.8rem;
+}
 @media (min-width: 600px) {
   .category_boxs {
     overflow-x: auto;

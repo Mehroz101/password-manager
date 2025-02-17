@@ -3,110 +3,156 @@ import SearchBox from "../components/SearchBox";
 import "../styles/AddNewPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import { use, useEffect, useRef, useState } from "react";
-import { Category } from "../types/Types";
+import React, { useEffect, useRef, useState } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
-const categories = [
-  {
-    title: "Twitter",
-  },
-  {
-    title: "Instagram",
-  },
-  {
-    title: "Facebook",
-  },
-  {
-    title: "Google",
-  },
-  {
-    title: "Netflix",
-  },
-  {
-    title: "Amazon",
-  },
-  {
-    title: "Linkedin",
-  },
-  {
-    title: "Youtube",
-  },
+import { useForm, SubmitHandler } from "react-hook-form";
+import { AddNewPassword } from "../types/Types";
+
+// App List
+const apps = [
+  { title: "Twitter" },
+  { title: "Instagram" },
+  { title: "Facebook" },
+  { title: "Google" },
+  { title: "Netflix" },
+  { title: "Amazon" },
+  { title: "Linkedin" },
+  { title: "Youtube" },
+  { title: "Other" },
 ];
+
+// Category List
+const categories = [
+  { title: "API" },
+  { title: "Card" },
+  { title: "Email" },
+  { title: "Ecom" },
+  { title: "Other" },
+];
+
 const AddNew_Page = () => {
-  const [category, setCategories] = useState<Partial<Category>[]>([]);
-  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [selectedApp, setSelectedApp] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    console.log("Submit");
+  // React Hook Form Setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AddNewPassword>();
+
+  // Form Submit Handler
+  const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
+    if (!selectedApp && !selectedCategory) {
+      return alert("app and category required");
+    }
+    const sendData = {
+      appName: selectedApp,
+      categoryName: selectedCategory,
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      url: data.url,
+    };
+    console.log(sendData);
     navigate("/");
   };
-  useEffect(() => {
-    if (categories) {
-      setCategories(categories);
-    }
-  }, [categories]);
+
+  // Focus Input Field on Load
   useEffect(() => {
     setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus(); // Focuses input field
-      }
-    }, 300); // Delay helps on some devices
+      inputRef.current?.focus();
+    }, 300);
   }, []);
+
   return (
-    <>
-      <div className="add_new_page">
-        <SearchBox />
-        <div className="add_new_categories">
-          <div className="add_new_category ">
-            <FontAwesomeIcon icon={faPlus} />
-            <p>Add</p>
+    <div className="add_new_page">
+      <SearchBox />
+      <div className="add_new_form">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* App Selection */}
+          <div className="app_container">
+            <p className="app_label">App</p>
+            <div className="add_new_apps">
+              {/* <button type="button" className="add_new_app">
+                <FontAwesomeIcon icon={faPlus} />
+                <p>Add</p>
+              </button> */}
+              {apps.map((app, index) => (
+                <button
+                  type="button"
+                  className={`add_new_app ${
+                    selectedApp === app.title ? "active" : ""
+                  }`}
+                  key={index}
+                  onClick={() => setSelectedApp(app.title)}
+                >
+                  <p>{app.title}</p>
+                </button>
+              ))}
+            </div>
           </div>
-          {category &&
-            category.map((category, index) => (
-              <button
-                className={`add_new_category ${
-                  activeCategory === index ? "active" : ""
-                }`}
-                key={index}
-                onClick={() => setActiveCategory(index)}
-              >
-                <p>{category.title}</p>
-              </button>
-            ))}
-        </div>
-        <div className="add_new_form">
-          <form action="">
-            {/* <div className="add_new_field">
-              <label htmlFor="username">Username</label>
-              <input type="text" id="username" placeholder="Username" />
-            </div> */}
-            <CInput
-              label="Username"
-              id="username"
-              type="text"
-              placeholder="Username"
-              ref={inputRef}
-            />
-            <CInput
-              label="Email Address"
-              id="email"
-              type="email"
-              placeholder="Email Address"
-            />
-            <CInput
-              label="Password"
-              id="password"
-              type="password"
-              placeholder="Password"
-            />
-            <CButton label="Save" action={handleSubmit} />
-          </form>
-        </div>
+
+          {/* Category Selection */}
+          <div className="category_container">
+            <p className="category_label">Category</p>
+            <div className="add_new_categories">
+              {categories.map((category, index) => (
+                <button
+                  type="button"
+                  className={`add_new_category ${
+                    selectedCategory === category.title ? "active" : ""
+                  }`}
+                  key={index}
+                  onClick={() => setSelectedCategory(category.title)}
+                >
+                  <p>{category.title}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Input Fields */}
+          <CInput
+            label="Username"
+            id="username"
+            type="text"
+            placeholder="Username"
+            {...register("username")}
+          />
+
+          <CInput
+            label="Email Address"
+            id="email"
+            type="email"
+            placeholder="Email Address"
+            {...register("email")}
+          />
+
+          <CInput
+            label="Password"
+            id="password"
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+          />
+
+          <CInput
+            label="Website Link"
+            id="link"
+            type="text"
+            placeholder="Website URL"
+            {...register("url")}
+          />
+
+          {/* Submit Button */}
+          <CButton label="Save" />
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
