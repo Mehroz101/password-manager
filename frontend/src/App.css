@@ -149,13 +149,17 @@
   font-size: 0.8rem;
 }
 @media (min-width: 600px) {
-  .category_boxs {
+  .category_boxs,
+  .add_new_apps,
+  .add_new_categories {
     overflow-x: auto;
     scrollbar-width: thin; /* For Firefox, change to 'thin' */
     -ms-overflow-style: scrollbar; /* For Internet Explorer/Edge */
   }
 
-  .category_boxs::-webkit-scrollbar {
+  .category_boxs::-webkit-scrollbar,
+  .add_new_apps::-webkit-scrollbar,
+  .add_new_categories::-webkit-scrollbar {
     width: 8px; /* You can adjust the width of the scrollbar */
     display: block; /* Makes the scrollbar visible in Chrome, Safari, and Edge */
   }
