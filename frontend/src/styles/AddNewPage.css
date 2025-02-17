@@ -1,11 +1,14 @@
-.add_new_page{
-    display: flex;
-    flex-direction: column;
+.add_new_page {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Keeps search box within screen width */
+  max-width: 400px; /* Prevents it from being too wide */
+  margin: 0 auto;
 }
 .add_new_categories {
   display: flex;
   gap: 10px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   overflow-x: auto;
   scrollbar-width: none; /* For Firefox */
   -ms-overflow-style: none; /* For Internet Explorer/Edge */
@@ -17,6 +20,8 @@
   background-color: #eee;
   display: flex;
   align-items: center;
+  border: none;
+  outline: none;
   gap: 5px;
   padding: 10px;
   border-radius: 4px;
@@ -29,35 +34,20 @@
 }
 
 /* ========================== */
- /* add new form */
+/* add new form */
 /* ========================== */
-.add_new_form{
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
+.add_new_form {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
 }
-.add_new_form form{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    max-width: 400px;
+.add_new_form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
 }
-.add_new_form .add_new_field{
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-.add_new_form .add_new_field label{
-    font-size: 0.9rem;
-}
-.add_new_form .add_new_field input{
-    padding: 15px;
-    flex: 1;
-    border: none;
-    background-color: #eee;
-    font-size: 0.9rem;
-    width: 100%; /* Ensures it fills available space */
-    outline: none;
-    border-radius: 4px;
+.add_new_btn {
+  margin-top: 30px;
 }

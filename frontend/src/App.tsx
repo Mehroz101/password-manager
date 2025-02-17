@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Loader from "./utils/Loader";
 import { ErrorBoundary } from "react-error-boundary";
-import { AddNew, Auth_Page, Home, Layout } from "./utils/LazyLoading";
+import { AddNew, Auth_Page, Home, Layout, ShowAll } from "./utils/LazyLoading";
 import ProtectedRoutes from "./contextapi/ProtectedRoutes";
-import "./App.css"
-import {ROUTES} from "./utils/routes"
+import "./App.css";
+import { ROUTES } from "./utils/routes";
 function Fallback({ error }: { error: Error }) {
   let fileName = "Unknown";
   if (error.stack) {
@@ -61,7 +61,7 @@ const App = () => {
           }
         >
           <ErrorBoundary FallbackComponent={Fallback}>
-          <AppRoutes />
+            <AppRoutes />
           </ErrorBoundary>
         </Suspense>
       </Router>
@@ -72,10 +72,11 @@ const AppRoutes = () => {
   return (
     <>
       <Routes>
-        <Route path={ROUTES.AUTH} element={<Auth_Page/>} />
-        <Route path={"/"} element={<ProtectedRoutes element={<Layout/>}/>}>
-        <Route path={ROUTES.HOME} element={<Home />} />
-        <Route path={ROUTES.ADDNEW} element={<AddNew />} />
+        <Route path={ROUTES.AUTH} element={<Auth_Page />} />
+        <Route path={"/"} element={<ProtectedRoutes element={<Layout />} />}>
+          <Route path={ROUTES.HOME} element={<Home />} />
+          <Route path={ROUTES.ADDNEW} element={<AddNew />} />
+          <Route path={ROUTES.SHOWALL} element={<ShowAll />} />
         </Route>
       </Routes>
     </>

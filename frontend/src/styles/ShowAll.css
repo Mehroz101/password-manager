@@ -1,11 +1,3 @@
-.home_page {
-  background-color: var(--background-color);
-}
-
-/* =========================== */
-/* Category */
-/* =========================== */
-
 .home_page_category_box {
   display: flex;
   align-items: center;
@@ -65,29 +57,29 @@
   background-color: #bc5aac;
 }
 
-/* ============================== */
+/* =========================== */
 /* Recent Activity */
-/* ============================== */
-
-.home_page_recent_activity_container {
+/* =========================== */
+.showall_password_container {
   margin: 30px auto;
   width: 100%; /* Keeps search box within screen width */
   max-width: 400px;
 }
-.home_page_recent_activity_boxs {
+.showall_password_boxs {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  max-height: 400px;
+  max-height: 100%;
+  min-height: 400px;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.home_page_recent_activity_boxs::-webkit-scrollbar {
+.showall_password_boxs::-webkit-scrollbar {
   display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
 }
-.home_page_recent_activity_box {
+.allpassword_box {
   display: flex;
   justify-content: space-around;
   gap: 5px;
@@ -96,12 +88,9 @@
   padding: 10px;
   border-radius: 4px;
   max-width: 400px;
-  transition: all 0.2s ease-in-out;
 }
-.home_page_recent_activity_box:hover {
-  transform: translateY(-5px);
-}
-.recent_activity_box_left {
+
+.allpassword_box_left {
   background-color: #e5f2ff;
   height: auto;
   display: flex;
@@ -111,26 +100,34 @@
   border-radius: 4px;
   width: 60px;
 }
-.recent_activity_box_left img {
+.allpassword_box_left img {
   width: 40px;
 }
-.recent_activity_box_center {
+.allpassword_box_center {
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex: 1;
 }
-.recent_activity_box_center .activity_box_title {
+.allpassword_box_center .activity_box_title {
   font-size: 0.9rem;
   font-weight: 600;
 }
-.recent_activity_box_center p {
+.allpassword_box_center p {
   font-size: 0.8rem;
   max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;
+}
+.allpassword_box_center .activity_box_password {
+  font-size: 0.8rem;
+  color: #666;
+}
+.allpassword_box_center .activity_box_password svg {
+  font-size: 0.8rem;
+  margin-left: 5px;
 }
 .activity_box_account {
   display: flex;
@@ -141,7 +138,56 @@
 .activity_box_account span {
   font-size: 0.7rem;
 }
-.recent_activity_box_right svg {
+.allpassword_box_right svg {
   color: var(--secondary-color);
   font-size: 1.1rem;
+}
+.allpassword_box_right {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Hidden state */
+.allpassword_box_right .box_right_Action_dropdown {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 150px;
+  background-color: white !important;
+  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px); /* Start slightly above */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+    visibility 0.1s ease-in-out;
+  cursor: pointer;
+}
+.allpassword_box_right span {
+  display: block;
+  font-size: 0.8rem;
+  padding: 5px;
+}
+.allpassword_box_right span:hover {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+}
+/* Visible state with animation */
+.allpassword_box_right .box_right_Action_show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0); /* Move to normal position */
+  animation: slideDown 0.3s ease-in-out;
+}
+
+/* Keyframe animation for smooth opening */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

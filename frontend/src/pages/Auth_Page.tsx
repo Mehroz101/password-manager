@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Auth_Page = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="auth_page">
       <div className="auth_page_container">
@@ -48,9 +48,13 @@ const Auth_Page = () => {
 
       {/* 🔹 Fixed Login Button at Bottom */}
       <div className="auth_page_btn action_btn">
-        <button onClick={()=>{
-          navigate("/")
-        }}>{isLogin ? "Login" : "Register"}</button>
+        <button
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          {isLogin ? "Login" : "Register"}
+        </button>
       </div>
     </div>
   );

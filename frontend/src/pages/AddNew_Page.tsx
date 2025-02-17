@@ -3,57 +3,106 @@ import SearchBox from "../components/SearchBox";
 import "../styles/AddNewPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
+import { use, useEffect, useRef, useState } from "react";
+import { Category } from "../types/Types";
+import CInput from "../components/FormComponent/CInput";
+import CButton from "../components/FormComponent/CButton";
+const categories = [
+  {
+    title: "Twitter",
+  },
+  {
+    title: "Instagram",
+  },
+  {
+    title: "Facebook",
+  },
+  {
+    title: "Google",
+  },
+  {
+    title: "Netflix",
+  },
+  {
+    title: "Amazon",
+  },
+  {
+    title: "Linkedin",
+  },
+  {
+    title: "Youtube",
+  },
+];
 const AddNew_Page = () => {
-  const naviagte = useNavigate();
+  const [category, setCategories] = useState<Partial<Category>[]>([]);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    console.log("Submit");
+    navigate("/");
+  };
+  useEffect(() => {
+    if (categories) {
+      setCategories(categories);
+    }
+  }, [categories]);
+  useEffect(() => {
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus(); // Focuses input field
+      }
+    }, 300); // Delay helps on some devices
+  }, []);
   return (
     <>
       <div className="add_new_page">
         <SearchBox />
         <div className="add_new_categories">
-          <div className="add_new_category">
+          <div className="add_new_category ">
             <FontAwesomeIcon icon={faPlus} />
             <p>Add</p>
           </div>
-          <div className="add_new_category">
-            <p>Twitter</p>
-          </div>
-          <div className="add_new_category">
-            <p>Instagram</p>
-          </div>
-          <div className="add_new_category">
-            <p>Facebook</p>
-          </div>
-          <div className="add_new_category">
-            <p>Google</p>
-          </div>
-          <div className="add_new_category">
-            <p>Netflix</p>
-          </div>
+          {category &&
+            category.map((category, index) => (
+              <button
+                className={`add_new_category ${
+                  activeCategory === index ? "active" : ""
+                }`}
+                key={index}
+                onClick={() => setActiveCategory(index)}
+              >
+                <p>{category.title}</p>
+              </button>
+            ))}
         </div>
         <div className="add_new_form">
           <form action="">
-            <div className="add_new_field">
+            {/* <div className="add_new_field">
               <label htmlFor="username">Username</label>
               <input type="text" id="username" placeholder="Username" />
-            </div>
-            <div className="add_new_field">
-              <label htmlFor="email">Email Address</label>
-              <input type="email" id="email" placeholder="Email" />
-            </div>
-            <div className="add_new_field">
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" placeholder="Password" />
-            </div>
-            <div className="auth_page_btn action_btn">
-              <button
-                style={{ width: "100%" }}
-                onClick={() => {
-                  navigate("/");
-                }}
-              >
-                Save
-              </button>
-            </div>
+            </div> */}
+            <CInput
+              label="Username"
+              id="username"
+              type="text"
+              placeholder="Username"
+              ref={inputRef}
+            />
+            <CInput
+              label="Email Address"
+              id="email"
+              type="email"
+              placeholder="Email Address"
+            />
+            <CInput
+              label="Password"
+              id="password"
+              type="password"
+              placeholder="Password"
+            />
+            <CButton label="Save" action={handleSubmit} />
           </form>
         </div>
       </div>
