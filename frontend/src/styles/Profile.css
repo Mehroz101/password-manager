@@ -1,5 +1,7 @@
 .profile_page {
   width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 .profile_page_top {
   display: flex;

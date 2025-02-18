@@ -1,8 +1,8 @@
-.viewapp_page {
+.setting_page {
   width: 100%;
 }
 
-.viewapp_page .viewapp_top_card {
+.setting_top_card {
   display: flex;
   align-items: flex-start;
   gap: 15px;
@@ -12,12 +12,9 @@
   border-radius: 8px;
   max-width: 400px;
   margin: 0 auto;
-  transition: all 0.2s ease-in-out;
 }
-.viewapp_page .viewapp_top_card:hover {
-  transform: translateY(-5px);
-}
-.viewapp_page .top_card_left {
+
+.setting_page .top_card_left {
   background-color: #e5f2ff;
   height: auto;
   display: flex;
@@ -27,32 +24,37 @@
   border-radius: 4px;
   width: 60px;
 }
-.viewapp_page .top_card_left img {
+.setting_page .top_card_left img {
   width: 40px;
 }
-.viewapp_page .top_card_right {
+.setting_page .top_card_right {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-.viewapp_page .top_card_right .top_card_right_top {
+.setting_page .top_card_right .top_card_right_top {
   display: flex;
   gap: 5px;
   align-items: center;
 
   justify-content: space-between;
 }
-.viewapp_page .top_card_right .top_card_right_top svg {
+.setting_page .top_card_right .top_card_right_top svg {
   margin-left: auto;
   color: var(--secondary-color);
 }
-.viewapp_page .top_card_right p {
+.setting_page .top_card_right p {
   font-size: 1.1rem;
 }
-.viewapp_page .top_card_right .top_card_title {
+.setting_page .top_card_right .top_card_title {
   font-weight: 600;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 110px;
 }
-.viewapp_page .top_card_right .top_card_category {
+.setting_page .top_card_right .top_card_category {
   font-weight: 400;
   font-size: 0.6rem;
   justify-self: flex-start;
@@ -67,36 +69,19 @@
   gap: 10px;
   margin-top: 4px;
 }
-.top_card_right .activity_box_account span {
+.setting_page .top_card_right .activity_box_account span {
   font-size: 0.7rem;
   color: #666;
 }
+.setting_form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
 
-.form_fields {
-  background-color: white;
-  margin-top: 10px;
-  padding: 10px;
-  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-.form_fields form {
-  margin: 10px auto;
-}
-.form_fields .category_container,
-.app_container {
-  margin: 0;
-}
-.form_fields .category_container .category_label,
-.form_fields .app_label {
-  font-weight: 500;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
-}
-.form_fields form {
+.setting_form form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%;
-  max-width: 400px;
+  margin-top: 20px;
 }

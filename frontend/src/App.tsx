@@ -4,11 +4,14 @@ import Loader from "./utils/Loader";
 import { ErrorBoundary } from "react-error-boundary";
 import {
   AddNew,
+  AddUser,
   Auth_Page,
   Home,
   Layout,
   Profile,
+  Setting,
   ShowAll,
+  Users,
   ViewApp,
 } from "./utils/LazyLoading";
 import ProtectedRoutes from "./contextapi/ProtectedRoutes";
@@ -86,6 +89,9 @@ const AppRoutes = () => {
           <Route path={ROUTES.ADDNEW} element={<AddNew />} />
           <Route path={ROUTES.SHOWALL} element={<ShowAll />} />
           <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route path={ROUTES.SETTING} element={<Setting />} />
+          <Route path={ROUTES.USERS} element={<Users />} />
+          <Route path={ROUTES.ADDNEWUSER} element={<AddUser />} />
           <Route path={`${ROUTES.VIEWAPP}/:id`} element={<ViewApp />} />
         </Route>
       </Routes>

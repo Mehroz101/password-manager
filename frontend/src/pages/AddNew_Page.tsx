@@ -52,7 +52,7 @@ const AddNew_Page = () => {
     const sendData = {
       appName: selectedApp,
       categoryName: selectedCategory,
-      username: data.username,
+      name: data.name,
       email: data.email,
       password: data.password,
       url: data.url,
@@ -117,11 +117,11 @@ const AddNew_Page = () => {
 
           {/* Input Fields */}
           <CInput
-            label="Username"
-            id="username"
+            label="App Name"
+            id="name"
             type="text"
-            placeholder="Username"
-            {...register("username")}
+            placeholder="Enter App Name"
+            {...register("name")}
           />
 
           <CInput

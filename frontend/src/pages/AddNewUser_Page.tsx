@@ -1,15 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import Netflix from "../assets/netflix.png";
-import "../styles/ViewApp.css";
+import React, { useEffect, useRef, useState } from "react";
+import "../styles/AddNewUser.css";
 import CInput from "../components/FormComponent/CInput";
-import { useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import CButton from "../components/FormComponent/CButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-
-// App List
 const apps = [
   { title: "Twitter" },
   { title: "Instagram" },
@@ -30,11 +25,7 @@ const categories = [
   { title: "Ecom" },
   { title: "Other" },
 ];
-const ViewApp_Page = () => {
-  const location = useLocation(); // useLocation() returns an object
-  const pathSegments = location.pathname.split("/"); // Extract pathname and split it
-
-  const appId = pathSegments[2] || "N/A"; // Ensure there's a fallback in case it's missing
+const AddNewUser_Page = () => {
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,36 +55,21 @@ const ViewApp_Page = () => {
     navigate("/");
   };
 
+  // Focus Input Field on Load
+  useEffect(() => {
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 300);
+  }, []);
+
   return (
     <>
-      <div className="viewapp_page">
-        <div className="viewapp_top_card">
-          <div className="top_card_left">
-            <img src={Netflix} alt="appicon" />
-          </div>
-          <div className="top_card_right">
-            <div className="top_card_right_top">
-              <p className="top_card_title">Netflix</p>
-              <p className="top_card_category">Streaming</p>
-              <FontAwesomeIcon icon={faTrash} />
-            </div>
-            <div className="top_card_right_bottom">
-              <p className="activity_box_account">
-                <span>Last Edited: 12/07/2024</span> <span>12:40pm</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="form_fields">
+      <div className="addnewuser_page">
+        <div className="add_new_form">
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* App Selection */}
             <div className="app_container">
               <p className="app_label">App</p>
               <div className="add_new_apps">
-                {/* <button type="button" className="add_new_app">
-                <FontAwesomeIcon icon={faPlus} />
-                <p>Add</p>
-              </button> */}
                 {apps.map((app, index) => (
                   <button
                     type="button"
@@ -108,8 +84,7 @@ const ViewApp_Page = () => {
                 ))}
               </div>
             </div>
-
-            {/* Category Selection */}
+            {/* Category Selection
             <div className="category_container">
               <p className="category_label">Category</p>
               <div className="add_new_categories">
@@ -126,17 +101,22 @@ const ViewApp_Page = () => {
                   </button>
                 ))}
               </div>
-            </div>
-
+            </div> */}
             {/* Input Fields */}
             <CInput
-              label="App Name"
-              id="appName"
+              label="User Name"
+              id="name"
               type="text"
-              placeholder="Enter App Name"
+              placeholder="Enter User Name"
               {...register("name")}
             />
-
+            <CInput
+              label="Username"
+              id="username"
+              type="text"
+              placeholder="Enter Unique Username"
+              {...register("name")}
+            />
             <CInput
               label="Email Address"
               id="email"
@@ -144,7 +124,6 @@ const ViewApp_Page = () => {
               placeholder="Email Address"
               {...register("email")}
             />
-
             <CInput
               label="Password"
               id="password"
@@ -152,17 +131,15 @@ const ViewApp_Page = () => {
               placeholder="Password"
               {...register("password")}
             />
-
             <CInput
-              label="Website Link"
-              id="link"
-              type="text"
-              placeholder="Website URL"
+              label="Confirm Password"
+              id="cPassword"
+              type="password"
+              placeholder="Confirm Your Password"
               {...register("url")}
             />
-
             {/* Submit Button */}
-            <CButton label="Update" />
+            <CButton label="Create" />
           </form>
         </div>
       </div>
@@ -170,4 +147,4 @@ const ViewApp_Page = () => {
   );
 };
 
-export default ViewApp_Page;
+export default AddNewUser_Page;

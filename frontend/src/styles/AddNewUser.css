@@ -1,0 +1,10 @@
+.addnewuser_page {
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+}
+.addnewuser_page .add_new_form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

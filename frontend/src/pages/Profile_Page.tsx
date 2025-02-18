@@ -8,7 +8,11 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import ProfileImg from "../assets/profileImg.png";
+import { useNavigate } from "react-router-dom";
+import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons/faPeopleGroup";
+import { ROUTES } from "../utils/routes";
 const Profile_Page = () => {
+  const navigate = useNavigate();
   const user = {
     name: "Mehroz Farooq",
     username: "mehrozfarooq",
@@ -17,16 +21,27 @@ const Profile_Page = () => {
 
   const stats = [
     { title: "Total Password", count: 23 },
-    { title: "Compromised", count: 5 },
-    { title: "Weak", count: 10 },
+    { title: "Departments", count: 5 },
+    { title: "Employees", count: 10 },
     { title: "Reused", count: 230 },
   ];
 
   const menuItems = [
-    { id: 1, title: "Setting", icon: faGear },
-    { id: 2, title: "Help Center", icon: faCircleInfo },
     {
-      id: 3,
+      id: 1,
+      title: "Setting",
+      icon: faGear,
+      action: () => navigate(ROUTES.SETTING),
+    },
+    {
+      id: 2,
+      title: "Users",
+      icon: faPeopleGroup,
+      action: () => navigate(ROUTES.USERS),
+    },
+    { id: 3, title: "Help Center", icon: faCircleInfo },
+    {
+      id: 4,
       title: "Logout",
       icon: faArrowRightFromBracket,
       action: () => console.log("Logging out..."),

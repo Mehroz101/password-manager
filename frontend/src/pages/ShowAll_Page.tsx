@@ -3,13 +3,41 @@ import {
   faEllipsisVertical,
   faEye,
   faEyeLowVision,
-  faEyeSlash,
+  faClipboard,
+  faCreditCard,
+  faPaperclip,
+  faShield,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Google from "../assets/google.png";
 import "../styles/ShowAll.css";
 import SearchBox from "../components/SearchBox";
+import { Category } from "../types/Types";
+import CategoryCard from "../components/CategoryCard";
 
+const category_cards = [
+  {
+    icon: faCreditCard,
+    title: "Card",
+    cardNo: 1,
+  },
+  {
+    icon: faClipboard,
+    title: "Password",
+    cardNo: 2,
+  },
+  {
+    icon: faShield,
+    title: "Login",
+    cardNo: 3,
+  },
+  {
+    icon: faPaperclip,
+    title: "API",
+    cardNo: 4,
+  },
+];
 // Example of dynamic data for the password boxes
 const passwordData = [
   {
@@ -43,6 +71,8 @@ const ShowAll_Page = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<{
     [key: number]: boolean;
   }>({});
+  const [categories, setCategories] = useState<Category[]>([]);
+
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
 
   const handleActionBoxToggle = (accountId: number) => {
@@ -131,10 +161,24 @@ const ShowAll_Page = () => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
+  useEffect(() => {
+    if (category_cards) {
+      setCategories(category_cards);
+    }
+  }, [category_cards]);
 
   return (
     <div className="showall_page">
       <SearchBox />
+      <div className="category_container">
+        <h3 className="section_heading">Category</h3>
+        <div className="category_boxs">
+          {categories &&
+            categories.map((category, index) => (
+              <CategoryCard key={index} category={category} />
+            ))}
+        </div>
+      </div>
       <div className="showall_password_container">
         <h3>Password</h3>
         <div className="showall_password_boxs">

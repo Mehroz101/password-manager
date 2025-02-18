@@ -1,0 +1,165 @@
+.users_page {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  margin-bottom: 50px;
+}
+.users_page .user_top_card {
+  display: flex;
+  background-color: white;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 5px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  gap: 20px;
+}
+.users_page .user_top_card .top_card_left {
+  background-color: #d3faff;
+  color: #4cb9eb;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.users_page .user_top_card .top_card_right .top_card_title {
+  font-size: 0.9rem;
+  color: #666;
+}
+.users_page .user_top_card .top_card_right .top_card_number {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+.users_page .user_top_card .top_card_right .top_card_number .totalusers {
+  font-size: 0.9rem;
+  color: #999;
+}
+.users_page .user_box {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+  align-items: center;
+  /* background-color: white; */
+  padding: 10px 5px;
+  border-bottom: 1px solid #999;
+}
+.users_page .user_box p {
+  font-size: 0.9rem;
+}
+.users_page .user_box_center {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.users_page .user_box_center_top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.users_page .user_box_center_top .user_box_name {
+  width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.users_page .user_box_center_bottom p {
+  font-size: 0.8rem;
+  color: #999;
+}
+.users_page .user_box_center_top .user_box_belongs {
+  font-weight: 400;
+  font-size: 0.6rem;
+  justify-self: flex-start;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  border-radius: 8px;
+  padding: 0 4px;
+  line-height: 25px;
+}
+.user_box_left img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+.users_page .user_box_right {
+  justify-self: flex-end;
+  margin-left: auto;
+  align-self: flex-start;
+}
+.users_page .add_btn {
+  position: fixed;
+  bottom: 70px;
+  right: 30px;
+  background-color: var(--primary-color);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+  border-radius: 50px;
+  border: none;
+  box-shadow: 1px 1px 15px rgba(92, 92, 92, 0.4);
+}
+.users_page .add_new_user svg {
+  font-size: 1.3rem;
+  color: white;
+}
+
+.user_box_right svg {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}
+.user_box_right {
+  position: relative;
+  cursor: pointer;
+}
+/* Hidden state */
+.user_box_right .box_right_Action_dropdown {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 150px;
+  background-color: white !important;
+  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  /* opacity: 0; */
+  /* visibility: hidden; */
+  transform: translateY(-10px); /* Start slightly above */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+    visibility 0.1s ease-in-out;
+  cursor: pointer;
+  /* display: none; Ensure it remains hidden by default */
+  z-index: 10; /* Ensure it's above other elements */
+}
+.user_box_right span {
+  display: block;
+  font-size: 0.8rem;
+  padding: 5px;
+}
+.user_box_right span:hover {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+}
+/* Visible state with animation */
+.user_box_right .box_right_Action_show {
+  opacity: 1;
+  visibility: visible;
+  background-color: red;
+  transform: translateY(0); /* Move to normal position */
+  animation: slideDown 0.3s ease-in-out;
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

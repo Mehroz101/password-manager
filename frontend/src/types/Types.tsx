@@ -16,6 +16,7 @@ export interface CInputType
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   id: string;
+  disabled?: boolean;
 }
 
 export interface CButtonType {
@@ -26,7 +27,7 @@ export interface CButtonType {
 export interface AddNewPassword {
   appName: string;
   category: string;
-  username?: string;
+  name?: string;
   email?: string;
   password?: string;
   url?: string;

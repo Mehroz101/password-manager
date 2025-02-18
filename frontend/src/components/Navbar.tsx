@@ -3,6 +3,7 @@ import ProfileImg from "../assets/profileImg.png";
 import "../styles/Navbar.css";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Verified from "../assets/verified.png";
 const Navbar = () => {
   const navigate = useNavigate();
   return (
@@ -12,7 +13,10 @@ const Navbar = () => {
           <img src={ProfileImg} alt="img" />
         </div>
         <div className="nav_profile_text">
-          <p>Mehroz Farooq</p>
+          <p>
+            Mehroz Farooq
+            <img src={Verified} alt="" className="verified_badge" />
+          </p>
           <span>Good morning</span>
         </div>
       </div>

@@ -4,5 +4,8 @@ export const ROUTES ={
     ADDNEW:"addnew",
     SHOWALL :"/showall",
     VIEWAPP :"/viewapp",
-    PROFILE :"/profile"
+    PROFILE :"/profile",
+    SETTING:"/setting",
+    USERS:"/users",
+    ADDNEWUSER:"/addnewuser",
 }
