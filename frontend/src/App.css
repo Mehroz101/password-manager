@@ -148,6 +148,50 @@
 .add_new_category p {
   font-size: 0.8rem;
 }
+
+
+/* 🟢 Custom Styling for Selected Items (Chips) */
+.custom-chip {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin: 3px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 🟡 Style Dropdown Panel */
+.custom-dropdown {
+  background-color: white;
+  color: white;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+/* 🔵 Style Unselected Options */
+.p-multiselect-item {
+  padding: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 🟢 Style Selected Options */
+.p-multiselect-item.p-highlight {
+  background-color: var(--secondary-color) !important;
+  color: var(--secondary-text-color) !important;
+  font-weight: bold;
+}
+
+/* 🔷 Hover Effect for Dropdown Options */
+.custom-dropdown .p-multiselect-item:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+
+
 @media (min-width: 600px) {
   .category_boxs,
   .add_new_apps,
@@ -169,3 +213,5 @@
     border-radius: 10px;
   }
 }
+
+

@@ -28,6 +28,7 @@ export interface AddNewPassword {
   appName: string;
   category: string;
   name?: string;
+  username?:string;
   email?: string;
   password?: string;
   url?: string;

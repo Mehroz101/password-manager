@@ -8,6 +8,8 @@ import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
+import CMultiSelect from "../components/FormComponent/CMultiSelect";
+import CDropdown from "../components/FormComponent/CDropdown";
 
 // App List
 const apps = [
@@ -30,6 +32,31 @@ const categories = [
   { title: "Ecom" },
   { title: "Other" },
 ];
+const groupedOptions = [
+  {
+    label: "Apple",
+    value: "apple",
+  },
+  { label: "Banana", value: "banana" },
+  { label: "Carrot", value: "carrot" },
+  { label: "Lettuce", value: "lettuce" },
+];
+const categoryOptions = [
+  {
+    label: "Fruits",
+    items: [
+      { label: "Apple", value: "apple" },
+      { label: "Banana", value: "banana" },
+    ],
+  },
+  {
+    label: "Vegetables",
+    items: [
+      { label: "Carrot", value: "carrot" },
+      { label: "Lettuce", value: "lettuce" },
+    ],
+  },
+];
 
 const AddNew_Page = () => {
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
@@ -41,6 +68,7 @@ const AddNew_Page = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<AddNewPassword>();
 
@@ -53,6 +81,7 @@ const AddNew_Page = () => {
       appName: selectedApp,
       categoryName: selectedCategory,
       name: data.name,
+      username: data.username,
       email: data.email,
       password: data.password,
       url: data.url,
@@ -115,7 +144,26 @@ const AddNew_Page = () => {
             </div>
           </div>
 
+          <CDropdown
+            control={control}
+            name="category"
+            options={categoryOptions}
+            placeholder="Select a category"
+            onChange={(selectedOption) =>
+              console.log("Selected:", selectedOption)
+            }
+          />
           {/* Input Fields */}
+          <CMultiSelect
+            control={control}
+            name="selectedItems"
+            label="Allowed User"
+            options={groupedOptions}
+            placeholder="Select options"
+            onChange={(selectedOptions) =>
+              console.log("Selected:", selectedOptions)
+            }
+          />
           <CInput
             label="App Name"
             id="name"
@@ -124,6 +172,13 @@ const AddNew_Page = () => {
             {...register("name")}
           />
 
+          <CInput
+            label="username"
+            id="username"
+            type="text"
+            placeholder="username"
+            {...register("username")}
+          />
           <CInput
             label="Email Address"
             id="email"

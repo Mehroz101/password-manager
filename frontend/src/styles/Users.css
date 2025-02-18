@@ -118,6 +118,35 @@
   position: relative;
   cursor: pointer;
 }
+/* .box_right_Action_dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  visibility:visible;
+  opacity: 1;
+  transition: visibility 0s 0.3s, opacity 0.3s ease-in-out;
+  z-index: 10;
+}
+
+.box_right_Action_show {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s 0s, opacity 0.3s ease-in-out;
+}
+
+.user_box_right span {
+  display: block;
+  font-size: 0.8rem;
+  padding: 5px;
+}
+
+.user_box_right span:hover {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+} */
 /* Hidden state */
 .user_box_right .box_right_Action_dropdown {
   position: absolute;
@@ -127,14 +156,12 @@
   background-color: white !important;
   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  /* opacity: 0; */
-  /* visibility: hidden; */
+  opacity: 0;
+  visibility: hidden;
   transform: translateY(-10px); /* Start slightly above */
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
     visibility 0.1s ease-in-out;
   cursor: pointer;
-  /* display: none; Ensure it remains hidden by default */
-  z-index: 10; /* Ensure it's above other elements */
 }
 .user_box_right span {
   display: block;
@@ -149,10 +176,11 @@
 .user_box_right .box_right_Action_show {
   opacity: 1;
   visibility: visible;
-  background-color: red;
   transform: translateY(0); /* Move to normal position */
   animation: slideDown 0.3s ease-in-out;
 }
+
+/* Keyframe animation for smooth opening */
 @keyframes slideDown {
   from {
     opacity: 0;
