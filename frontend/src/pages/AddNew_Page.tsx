@@ -10,6 +10,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
 import CMultiSelect from "../components/FormComponent/CMultiSelect";
 import CDropdown from "../components/FormComponent/CDropdown";
+import CMultiSelectDropdown from "../components/FormComponent/CMultiSelectDropdown";
 
 // App List
 const apps = [
@@ -32,30 +33,35 @@ const categories = [
   { title: "Ecom" },
   { title: "Other" },
 ];
+
 const groupedOptions = [
   {
-    label: "Apple",
-    value: "apple",
+    label: "Group 1",
+    items: [
+      { label: "User A", value: "userA" },
+      { label: "User B", value: "userB" },
+      { label: "User C", value: "userC" },
+      { label: "User D", value: "userD" },
+      { label: "User E", value: "userE" },
+      { label: "User F", value: "userF" },
+      { label: "User G", value: "userG" },
+      { label: "User H", value: "userH" },
+    ],
   },
-  { label: "Banana", value: "banana" },
-  { label: "Carrot", value: "carrot" },
-  { label: "Lettuce", value: "lettuce" },
+  {
+    label: "Group 2",
+    items: [
+      { label: "User I", value: "userI" },
+      { label: "User J", value: "userJ" },
+    ],
+  },
 ];
+
 const categoryOptions = [
-  {
-    label: "Fruits",
-    items: [
-      { label: "Apple", value: "apple" },
-      { label: "Banana", value: "banana" },
-    ],
-  },
-  {
-    label: "Vegetables",
-    items: [
-      { label: "Carrot", value: "carrot" },
-      { label: "Lettuce", value: "lettuce" },
-    ],
-  },
+  { label: "Developement", value: "Developement" },
+  { label: "Networking", value: "Networking" },
+  { label: "Sales", value: "Sales" },
+  { label: "Support", value: "Support" },
 ];
 
 const AddNew_Page = () => {
@@ -74,9 +80,6 @@ const AddNew_Page = () => {
 
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
-    if (!selectedApp && !selectedCategory) {
-      return alert("app and category required");
-    }
     const sendData = {
       appName: selectedApp,
       categoryName: selectedCategory,
@@ -102,14 +105,10 @@ const AddNew_Page = () => {
       <SearchBox />
       <div className="add_new_form">
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* App Selection */}
-          <div className="app_container">
+          {/* <div className="app_container">
             <p className="app_label">App</p>
             <div className="add_new_apps">
-              {/* <button type="button" className="add_new_app">
-                <FontAwesomeIcon icon={faPlus} />
-                <p>Add</p>
-              </button> */}
+            
               {apps.map((app, index) => (
                 <button
                   type="button"
@@ -125,7 +124,6 @@ const AddNew_Page = () => {
             </div>
           </div>
 
-          {/* Category Selection */}
           <div className="category_container">
             <p className="category_label">Category</p>
             <div className="add_new_categories">
@@ -142,13 +140,14 @@ const AddNew_Page = () => {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <CDropdown
             control={control}
             name="category"
             options={categoryOptions}
-            placeholder="Select a category"
+            placeholder="Select a department"
+            label="Category"
             onChange={(selectedOption) =>
               console.log("Selected:", selectedOption)
             }
@@ -159,11 +158,17 @@ const AddNew_Page = () => {
             name="selectedItems"
             label="Allowed User"
             options={groupedOptions}
-            placeholder="Select options"
+            placeholder="Select users"
             onChange={(selectedOptions) =>
               console.log("Selected:", selectedOptions)
             }
           />
+          {/* <CMultiSelectDropdown
+            control={control}
+            name="fruits"
+            options={groupedOptions}
+            isMultiSelect={true}
+          /> */}
           <CInput
             label="App Name"
             id="name"

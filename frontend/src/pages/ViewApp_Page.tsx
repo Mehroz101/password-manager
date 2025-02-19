@@ -8,28 +8,39 @@ import { AddNewPassword } from "../types/Types";
 import CButton from "../components/FormComponent/CButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import CDropdown from "../components/FormComponent/CDropdown";
+import CMultiSelect from "../components/FormComponent/CMultiSelect";
 
-// App List
-const apps = [
-  { title: "Twitter" },
-  { title: "Instagram" },
-  { title: "Facebook" },
-  { title: "Google" },
-  { title: "Netflix" },
-  { title: "Amazon" },
-  { title: "Linkedin" },
-  { title: "Youtube" },
-  { title: "Other" },
+const groupedOptions = [
+  {
+    label: "Group 1",
+    items: [
+      { label: "User A", value: "userA" },
+      { label: "User B", value: "userB" },
+      { label: "User C", value: "userC" },
+      { label: "User D", value: "userD" },
+      { label: "User E", value: "userE" },
+      { label: "User F", value: "userF" },
+      { label: "User G", value: "userG" },
+      { label: "User H", value: "userH" },
+    ],
+  },
+  {
+    label: "Group 2",
+    items: [
+      { label: "User I", value: "userI" },
+      { label: "User J", value: "userJ" },
+    ],
+  },
 ];
 
-// Category List
-const categories = [
-  { title: "API" },
-  { title: "Card" },
-  { title: "Email" },
-  { title: "Ecom" },
-  { title: "Other" },
+const categoryOptions = [
+  { label: "Developement", value: "Developement" },
+  { label: "Networking", value: "Networking" },
+  { label: "Sales", value: "Sales" },
+  { label: "Support", value: "Support" },
 ];
+
 const ViewApp_Page = () => {
   const location = useLocation(); // useLocation() returns an object
   const pathSegments = location.pathname.split("/"); // Extract pathname and split it
@@ -42,6 +53,7 @@ const ViewApp_Page = () => {
 
   // React Hook Form Setup
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -49,9 +61,6 @@ const ViewApp_Page = () => {
 
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
-    if (!selectedApp && !selectedCategory) {
-      return alert("app and category required");
-    }
     const sendData = {
       appName: selectedApp,
       categoryName: selectedCategory,
@@ -86,48 +95,27 @@ const ViewApp_Page = () => {
         </div>
         <div className="form_fields">
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* App Selection */}
-            <div className="app_container">
-              <p className="app_label">App</p>
-              <div className="add_new_apps">
-                {/* <button type="button" className="add_new_app">
-                <FontAwesomeIcon icon={faPlus} />
-                <p>Add</p>
-              </button> */}
-                {apps.map((app, index) => (
-                  <button
-                    type="button"
-                    className={`add_new_app ${
-                      selectedApp === app.title ? "active" : ""
-                    }`}
-                    key={index}
-                    onClick={() => setSelectedApp(app.title)}
-                  >
-                    <p>{app.title}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Category Selection */}
-            <div className="category_container">
-              <p className="category_label">Category</p>
-              <div className="add_new_categories">
-                {categories.map((category, index) => (
-                  <button
-                    type="button"
-                    className={`add_new_category ${
-                      selectedCategory === category.title ? "active" : ""
-                    }`}
-                    key={index}
-                    onClick={() => setSelectedCategory(category.title)}
-                  >
-                    <p>{category.title}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
+            <CDropdown
+              control={control}
+              name="category"
+              options={categoryOptions}
+              placeholder="Select a department"
+              label="Category"
+              onChange={(selectedOption) =>
+                console.log("Selected:", selectedOption)
+              }
+            />
+            {/* Input Fields */}
+            <CMultiSelect
+              control={control}
+              name="selectedItems"
+              label="Allowed User"
+              options={groupedOptions}
+              placeholder="Select users"
+              onChange={(selectedOptions) =>
+                console.log("Selected:", selectedOptions)
+              }
+            />
             {/* Input Fields */}
             <CInput
               label="App Name"

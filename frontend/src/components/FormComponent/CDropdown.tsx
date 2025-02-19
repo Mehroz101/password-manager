@@ -25,6 +25,7 @@ interface CDropdownProps {
   showErrorMessage?: boolean;
   autoFocus?: boolean;
   errorMessage?: string;
+  label?: string;
 }
 
 const CDropdown: React.FC<CDropdownProps> = ({
@@ -44,6 +45,7 @@ const CDropdown: React.FC<CDropdownProps> = ({
   showErrorMessage = true,
   errorMessage = "This field is required!",
   autoFocus = false,
+  label = "",
   ...moreOptions
 }) => {
   return (
@@ -53,64 +55,79 @@ const CDropdown: React.FC<CDropdownProps> = ({
       rules={{ required }}
       render={({ field, fieldState }) => (
         <>
-          <Dropdown
-            id={field.name}
-            value={field.value}
-            optionLabel={optionLabel}
-            optionValue={optionValue}
-            placeholder={placeholder}
-            options={options}
-            autoFocus={autoFocus}
-            onChange={(e) => {
-              field.onChange(e.value);
+          <div>
+            {label && (
+              <label htmlFor="" style={{ fontSize: "0.9rem" }}>
+                {label}
+              </label>
+            )}
+            <Dropdown
+              id={field.name}
+              value={field.value}
+              optionLabel={optionLabel}
+              optionValue={optionValue}
+              placeholder={placeholder}
+              options={options}
+              autoFocus={autoFocus}
+              onChange={(e) => {
+                field.onChange(e.value);
 
-              const originalEvent = e.originalEvent as
-                | KeyboardEvent
-                | undefined;
+                const originalEvent = e.originalEvent as
+                  | KeyboardEvent
+                  | undefined;
 
-              if (focusOptions && originalEvent) {
-                if (
-                  originalEvent.key !== "ArrowDown" &&
-                  originalEvent.key !== "ArrowUp"
-                ) {
-                  focusOptions(e);
+                if (focusOptions && originalEvent) {
+                  if (
+                    originalEvent.key !== "ArrowDown" &&
+                    originalEvent.key !== "ArrowUp"
+                  ) {
+                    focusOptions(e);
 
-                  let obj = {
-                    value: e.value,
-                    label:
-                      (originalEvent.target as HTMLElement)?.innerText || "",
-                  };
+                    let obj = {
+                      value: e.value,
+                      label:
+                        (originalEvent.target as HTMLElement)?.innerText || "",
+                    };
 
-                  if (onChange) {
-                    onChange(obj);
+                    if (onChange) {
+                      onChange(obj);
+                    }
                   }
                 }
-              }
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-              if (focusOptions && e.key === "Enter") {
-                focusOptions(e);
-                if (onChange) {
-                  onChange({ value: field.value, label: "" });
+              }}
+              onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (focusOptions && e.key === "Enter") {
+                  focusOptions(e);
+                  if (onChange) {
+                    onChange({ value: field.value, label: "" });
+                  }
                 }
-              }
-            }}
-            showOnFocus={showOnFocus}
-            disabled={disabled}
-            showClear={showClear}
-            className={classNames({ "p-invalid": fieldState.error })}
-            filter={filter}
-            style={{ width: "100%" }}
-            pt={{
-              input: { style: { padding: "0.25rem 0.4rem", fontSize: ".9em" } },
-              item: { style: { padding: "0.4rem 0.4rem" } },
-            }}
-            resetFilterOnHide
-            {...moreOptions}
-          />
-          {showErrorMessage && fieldState.error && (
-            <span className="text-red-700 text-sm">{errorMessage}</span>
-          )}
+              }}
+              showOnFocus={showOnFocus}
+              disabled={disabled}
+              showClear={showClear}
+              className={classNames({ "p-invalid": fieldState.error })}
+              filter={filter}
+              style={{
+                width: "100%",
+                padding: "9px 8px",
+                backgroundColor: "#eee",
+                border: "none",
+                outline: "none",
+              }}
+              pt={{
+                input: {
+                  style: { padding: "0.25rem 0.4rem", fontSize: ".9em" },
+                },
+                item: { style: { padding: "0.4rem 0.4rem" } },
+              }}
+              resetFilterOnHide
+              {...moreOptions}
+            />
+            {showErrorMessage && fieldState.error && (
+              <span className="text-red-700 text-sm">{errorMessage}</span>
+            )}
+          </div>
         </>
       )}
     />

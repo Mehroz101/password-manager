@@ -28,8 +28,19 @@ export interface AddNewPassword {
   appName: string;
   category: string;
   name?: string;
-  username?:string;
+  username?: string;
   email?: string;
   password?: string;
   url?: string;
+}
+export interface AuthInterface {
+  username: string;
+  email: string;
+  password: string;
+  cPassword?: string;
+}
+export interface ResponseInterface {
+  success: boolean;
+  message: string;
+  data?: any;
 }

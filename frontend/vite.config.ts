@@ -1,7 +1,17 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import envCompatible from 'vite-plugin-env-compatible';
+import { defineConfig } from "vite";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+  envPrefix:"REACT_APP_",
+  plugins: [react(),
+  envCompatible(),
+  ],
+  optimizeDeps: {
+    exclude: ['js-big-decimal'],
+
+  }
+});
+// import.meta.env.REACT_APP_API_URL
+// const REACT_APP_API_URL = import.meta.env.REACT_APP_API_URL;
+// use this line to use env in eny file in frontend

@@ -99,9 +99,12 @@
   align-items: center;
   gap: 20px;
   border-bottom: 1px solid #dbdbdb;
-  padding: 10px 0;
+  padding: 10px 5px;
+  cursor: pointer;
 }
-
+.profile_page_menu:hover {
+  background-color: #eee;
+}
 .menu_left {
   background-color: #d3e2ff;
   color: #4c84eb;
