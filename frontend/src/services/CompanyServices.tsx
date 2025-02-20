@@ -33,6 +33,7 @@ export const UploadCompanyLogo = async (
   data: any
 ): Promise<ResponseInterface> => {
   try {
+    console.log("axios call");
     const token = localStorage.getItem("passwordmanager");
     const config = {
       headers: {

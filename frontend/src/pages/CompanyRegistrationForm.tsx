@@ -31,10 +31,11 @@ const CompanyRegistrationForm = () => {
       noOfUsers: 0,
     },
   });
-  const { data: companyData } = useQuery<ResponseInterface>({
-    queryKey: ["companydetail"],
-    queryFn: GetCompanyDetail,
-  });
+  const { data: companyData, refetch: refetchCompany } =
+    useQuery<ResponseInterface>({
+      queryKey: ["companydetail"],
+      queryFn: GetCompanyDetail,
+    });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileImg, setProfileImg] = useState<string>(DefaultProfileImg);
@@ -67,12 +68,13 @@ const CompanyRegistrationForm = () => {
   const uploadCompanyLogoMutation = useMutation({
     mutationFn: UploadCompanyLogo,
     onSuccess: (data) => {
-      if (data.success && data?.data?.companyLogo) {
-        setProfileImg(data?.data?.companyLogo); // Update profile picture after upload
+      console.log(data);
+      if (data.success) {
         notify({
           type: "success",
           message: "Company logo updated successfully",
         });
+        refetchCompany();
       } else {
         notify({ type: "error", message: data.message });
       }
@@ -91,6 +93,7 @@ const CompanyRegistrationForm = () => {
       reader.readAsDataURL(file);
       const formData = new FormData();
       formData.append("companyLogo", file);
+      console.log(formData);
       uploadCompanyLogoMutation.mutate(formData);
     }
   };
@@ -108,7 +111,7 @@ const CompanyRegistrationForm = () => {
             <img
               src={
                 companyData?.data.companyLogo
-                  ? `http://localhost:5000/${companyData?.data.companyLogo}`
+                  ? `http://localhost:5000/uploads/${companyData?.data.companyLogo}`
                   : profileImg
               }
               alt="Company Logo"

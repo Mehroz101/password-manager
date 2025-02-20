@@ -61,6 +61,7 @@ export const uploadCompanyLogo = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("enterd in upload");
     const file = req.file;
     if (!req.file) {
       res.status(400).json({ success: false, message: "No file uploaded" });
@@ -76,8 +77,9 @@ export const uploadCompanyLogo = async (
             .json({ success: false, message: "First register a company" });
         } else {
           if (company.companyLogo) {
+            console.log("logofound");
             const previousLogo = company.companyLogo;
-            const filePath = `./public/images/${previousLogo}`;
+            const filePath = `./uploads/${previousLogo}`;
             if (fs.existsSync(filePath)) {
               fs.unlinkSync(filePath);
             }
@@ -97,5 +99,30 @@ export const uploadCompanyLogo = async (
     res
       .status(500)
       .json({ success: false, message: "Error uploading company logo", error });
+  }
+};
+
+export const getCompany = async (
+  req: RequestExtendsInterface,
+  res: Response
+) => {
+  try {
+    console.log("enterd");
+    if (req.user) {
+      const userID = req.user.id;
+      const company = await Company.findOne({ creatorID: userID });
+      if (!company) {
+        res.status(200).json({ success: false, message: "" });
+      } else {
+        res.status(200).json({ success: true, message: "", data: company });
+      }
+    } else {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error getting company", error });
   }
 };
