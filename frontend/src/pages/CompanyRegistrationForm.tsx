@@ -1,17 +1,29 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../styles/CompanyRegistrationForm.css";
 import { useForm } from "react-hook-form";
-import { CompanyRegistrationInterface } from "../types/Types";
+import {
+  CompanyRegistrationInterface,
+  ResponseInterface,
+} from "../types/Types";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
-import { useMutation } from "@tanstack/react-query";
-import { RegisterCompany } from "../services/CompanyServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  GetCompanyDetail,
+  RegisterCompany,
+  UploadCompanyLogo,
+} from "../services/CompanyServices";
 import { notify } from "../utils/notification";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import DefaultProfileImg from "../assets/companyLogo.png";
 
 const CompanyRegistrationForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+
     formState: { errors },
   } = useForm<CompanyRegistrationInterface>({
     defaultValues: {
@@ -19,8 +31,14 @@ const CompanyRegistrationForm = () => {
       noOfUsers: 0,
     },
   });
+  const { data: companyData } = useQuery<ResponseInterface>({
+    queryKey: ["companydetail"],
+    queryFn: GetCompanyDetail,
+  });
 
-  const InputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profileImg, setProfileImg] = useState<string>(DefaultProfileImg);
+
   const RegisterCompanyMutation = useMutation({
     mutationFn: RegisterCompany,
     onSuccess: (data) => {
@@ -36,22 +54,81 @@ const CompanyRegistrationForm = () => {
       notify({ type: "error", message: errorMessage });
     },
   });
+
   const onSubmit = (data: CompanyRegistrationInterface) => {
     RegisterCompanyMutation.mutate(data);
   };
 
   const onError = (errors: any) => {
     if (errors.companyName) {
-      InputRef.current?.focus();
+      fileInputRef.current?.focus();
     }
   };
-
-  //
-
+  const uploadCompanyLogoMutation = useMutation({
+    mutationFn: UploadCompanyLogo,
+    onSuccess: (data) => {
+      if (data.success && data?.data?.companyLogo) {
+        setProfileImg(data?.data?.companyLogo); // Update profile picture after upload
+        notify({
+          type: "success",
+          message: "Company logo updated successfully",
+        });
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+    onError: (error: any) => {
+      notify({ type: "error", message: "Error uploading image" });
+    },
+  });
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImg(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("companyLogo", file);
+      uploadCompanyLogoMutation.mutate(formData);
+    }
+  };
+  useEffect(() => {
+    if (companyData) {
+      setValue("companyName", companyData.data.companyName);
+      setValue("noOfUsers", companyData.data.noOfUsers);
+    }
+  }, [companyData]);
   return (
     <div className="companyregistrationform_page">
       <div className="companyregistrationform_form">
-        <h3 className="section_heading">Company Registration</h3>
+        <div className="company_page_top">
+          <div className="company_img">
+            <img
+              src={
+                companyData?.data.companyLogo
+                  ? `http://localhost:5000/${companyData?.data.companyLogo}`
+                  : profileImg
+              }
+              alt="Company Logo"
+            />
+
+            <div
+              className="edit_companyImg"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+          </div>
+        </div>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           {/* Company Name Input */}
           <CInput
@@ -74,7 +151,7 @@ const CompanyRegistrationForm = () => {
             {...register("noOfUsers", {
               required: "Number of Employees is required",
             })}
-            error={errors.noOfUsers} // FIXED THIS ERROR
+            error={errors.noOfUsers}
           />
 
           {/* Submit Button */}

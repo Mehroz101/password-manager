@@ -29,3 +29,48 @@ export const RegisterCompany = async (
     };
   }
 };
+export const UploadCompanyLogo = async (
+  data: any
+): Promise<ResponseInterface> => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(API_URL + "/uploadlogo", data, config);
+    if (response.data) {
+      return response.data;
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message || "An error occurred",
+    };
+  }
+};
+export const GetCompanyDetail = async (): Promise<ResponseInterface> => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(API_URL + "/getcompanydetail", config);
+    console.log(response);
+    if (response.data) {
+      return response.data;
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message || "An error occurred",
+    };
+  }
+};

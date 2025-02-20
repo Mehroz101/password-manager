@@ -7,6 +7,7 @@ import companyRoutes from "./Routes/companyRoutes";
 
 dotenv.config();
 const app = express();
+app.use("/uploads", express.static("uploads"));
 
 // Middleware
 app.use(cors());

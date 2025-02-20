@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { RequestExtendsInterface } from "../Types/types";
 import Company from "../Models/Company";
 import User from "../Models/User";
-
+import fs from "fs";
 export const registerCompany = async (
   req: RequestExtendsInterface,
   res: Response
@@ -54,5 +54,48 @@ export const registerCompany = async (
     res
       .status(500)
       .json({ success: false, message: "Error registering company", error });
+  }
+};
+export const uploadCompanyLogo = async (
+  req: RequestExtendsInterface,
+  res: Response
+): Promise<void> => {
+  try {
+    const file = req.file;
+    if (!req.file) {
+      res.status(400).json({ success: false, message: "No file uploaded" });
+    } else {
+      if (!req.user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+      } else {
+        const userID = req.user.id;
+        const company = await Company.findOne({ creatorID: userID });
+        if (!company) {
+          res
+            .status(404)
+            .json({ success: false, message: "First register a company" });
+        } else {
+          if (company.companyLogo) {
+            const previousLogo = company.companyLogo;
+            const filePath = `./public/images/${previousLogo}`;
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+            }
+          }
+          company.companyLogo = file?.filename;
+          await company.save();
+          res.status(200).json({
+            success: true,
+            message: "Company logo uploaded successfully",
+            company,
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error uploading company logo", error });
   }
 };

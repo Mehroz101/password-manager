@@ -7,6 +7,7 @@ export interface ICompany extends Document {
   companyUserLimit: number;
   creatorID: Types.ObjectId;
   noOfUsers: number;
+  companyLogo?: string;
 }
 
 const CompanySchema = new Schema(
@@ -34,6 +35,9 @@ const CompanySchema = new Schema(
     creatorID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    companyLogo: {
+      type: String,
     },
   },
   {

@@ -5,6 +5,59 @@
   margin: 0 auto;
   height: 100%;
 }
+
+.company_page_top {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.company_page_top .company_img {
+  width: 200px;
+  height: 200px;
+  border: 1px solid var(--secondary-color);
+  padding: 10px;
+  border-radius: 50%;
+  position: relative;
+}
+.company_page_top .company_img img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;
+  border: 1px solid var(--secondary-color);
+  border-radius: 50%;
+  padding: 10px;
+  object-fit: cover;
+}
+.edit_companyImg {
+  position: absolute;
+  bottom: 35px;
+  right: 18px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  background-color: var(--secondary-color);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.edit_companyImg:hover {
+  transform: scale(1.1);
+}
+.company_page_top .userorignalname {
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.company_page_top .username {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
 .companyregistrationform_page .companyregistrationform_form {
   width: 100%;
   display: flex;
