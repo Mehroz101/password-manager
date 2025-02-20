@@ -7,7 +7,7 @@ export const LoginFunc = async (
 ): Promise<ResponseInterface> => {
   try {
     console.log(data, "data");
-    const response = await axios.post(API_URL + "/login", data);
+    const response = await axios.post(API_URL + "/auth/login", data);
     console.log(response);
     if (!response.data.success) {
       return {
@@ -36,7 +36,7 @@ export const SignupFunc = async (
 ): Promise<ResponseInterface> => {
   try {
     console.log(data, "data");
-    const response = await axios.post(API_URL + "/signup", data);
+    const response = await axios.post(API_URL + "/auth/signup", data);
     console.log(response);
     if (!response.data.success) {
       return {
