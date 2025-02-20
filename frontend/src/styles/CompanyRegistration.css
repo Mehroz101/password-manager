@@ -1,0 +1,124 @@
+.company_registration_page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+  height: 70vh;
+}
+
+.company_registration_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.company_registration_screen {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px auto;
+  text-align: center;
+  height: 370px;
+}
+
+.company_registration_screen_image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+}
+
+.company_registration_screen_image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.company_registration_screen_title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #666;
+  margin: 15px 0;
+}
+
+.company_registration_screen_text {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.company_registration_navigator {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+.company_registration_navigator_btn {
+  font-size: 0.9rem;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.company_registration_navigator_btn.disabled {
+  color: #aaa;
+  cursor: default;
+  pointer-events: none;
+}
+
+.company_registration_dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.company_registration_dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.company_registration_dot.active {
+  background-color: var(--primary-color);
+  width: 20px;
+  border-radius: 10px;
+}
+.company_registration_finish_btn {
+  background-color: var(--secondary-color); /* Primary color */
+  color: #fff; /* White text */
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+  width: 100%; /* Full width */
+  text-align: center;
+}
+
+.company_registration_finish_btn:hover {
+  background-color: var(--secondary-color); /* Darker shade on hover */
+  transform: translateY(-2px);
+}
+
+.company_registration_finish_btn:active {
+  background-color: var(--primary-color); /* Even darker on click */
+  transform: translateY(0);
+}

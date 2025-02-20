@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const ProtectedRoutes = ({ element }: { element: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem("passwordmanager");
+  const token = localStorage.getItem("passwordmanager") || "0";
 
   useEffect(() => {
     if (!token) {

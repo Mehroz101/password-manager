@@ -1,0 +1,30 @@
+.companyregistrationform_page {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+}
+.companyregistrationform_page .companyregistrationform_form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  gap: 40px;
+}
+.companyregistrationform_form .section_heading {
+  font-size: 1.3rem;
+}
+.companyregistrationform_page .companyregistrationform_form form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  gap: 20px;
+}
+.companyregistrationform_page .companyregistrationform_form form .action_btn {
+  margin-top: 20px;
+}

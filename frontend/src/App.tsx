@@ -6,6 +6,8 @@ import {
   AddNew,
   AddUser,
   Auth_Page,
+  CompanyRegistration,
+  CompanyRegistrationForm,
   Home,
   Layout,
   Profile,
@@ -92,6 +94,14 @@ const AppRoutes = () => {
           <Route path={ROUTES.SETTING} element={<Setting />} />
           <Route path={ROUTES.USERS} element={<Users />} />
           <Route path={ROUTES.ADDNEWUSER} element={<AddUser />} />
+          <Route
+            path={ROUTES.COMPANYREGISTER}
+            element={<CompanyRegistration />}
+          />
+          <Route
+            path={ROUTES.COMPANYREGISTRATIONFORM}
+            element={<CompanyRegistrationForm />}
+          />
           <Route path={`${ROUTES.VIEWAPP}/:id`} element={<ViewApp />} />
         </Route>
       </Routes>

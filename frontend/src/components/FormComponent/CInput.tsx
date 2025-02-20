@@ -2,7 +2,7 @@ import { CInputType } from "../../types/Types";
 import { forwardRef } from "react";
 
 const CInput = forwardRef<HTMLInputElement, CInputType>(
-  ({ label, type, placeholder, id, disabled = false, ...rest }, ref) => {
+  ({ label, type, placeholder, id, disabled = false, error, ...rest }, ref) => {
     return (
       <div className="add_new_field">
         {label && <label htmlFor={id}>{label}</label>}
@@ -12,8 +12,10 @@ const CInput = forwardRef<HTMLInputElement, CInputType>(
           placeholder={placeholder}
           disabled={disabled}
           ref={ref}
+          className={error ? "input_error" : ""}
           {...rest}
         />
+        {error && <p className="error_message">{error.message}</p>}
       </div>
     );
   }

@@ -109,6 +109,7 @@ const AddNewUser_Page = () => {
               type="text"
               placeholder="Enter User Name"
               {...register("name")}
+              ref={inputRef}
             />
             <CInput
               label="Username"

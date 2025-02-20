@@ -13,6 +13,8 @@ import { Category, RecentActivity } from "../types/Types";
 import { useEffect, useState } from "react";
 import CategoryCard from "../components/CategoryCard";
 import RecentActivityCard from "../components/RecentActivityCard";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../utils/routes";
 const category_cards = [
   {
     icon: faCreditCard,
@@ -88,6 +90,10 @@ const Home = () => {
     <>
       <div className="home_page">
         <SearchBox />
+        <p className="company_register_text">
+          Register a company to enable advanced features{" "}
+          <Link to={ROUTES.COMPANYREGISTER}>click here</Link>
+        </p>
         <div className="category_container">
           <h3 className="section_heading">Category</h3>
           <div className="category_boxs">

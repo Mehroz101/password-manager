@@ -1,13 +1,13 @@
 import { AuthInterface, ResponseInterface } from "../types/Types";
 import axios from "axios";
 const REACT_APP_API_URL = import.meta.env.REACT_APP_API_URL;
-const API_URL = `${REACT_APP_API_URL}/api`;
+const API_URL = `${REACT_APP_API_URL}/auth`;
 export const LoginFunc = async (
   data: AuthInterface
 ): Promise<ResponseInterface> => {
   try {
     console.log(data, "data");
-    const response = await axios.post(API_URL + "/auth/login", data);
+    const response = await axios.post(API_URL + "/login", data);
     console.log(response);
     if (!response.data.success) {
       return {
@@ -22,7 +22,6 @@ export const LoginFunc = async (
       };
     }
   } catch (error: unknown) {
-    debugger;
     console.log(error);
     return {
       success: false,
@@ -36,7 +35,7 @@ export const SignupFunc = async (
 ): Promise<ResponseInterface> => {
   try {
     console.log(data, "data");
-    const response = await axios.post(API_URL + "/auth/signup", data);
+    const response = await axios.post(API_URL + "/signup", data);
     console.log(response);
     if (!response.data.success) {
       return {

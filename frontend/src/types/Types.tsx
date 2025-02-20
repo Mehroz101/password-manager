@@ -1,3 +1,5 @@
+import { FieldError } from "react-hook-form";
+
 export interface Category {
   icon: unknown;
   title: string;
@@ -17,6 +19,7 @@ export interface CInputType
   label?: string;
   id: string;
   disabled?: boolean;
+  error?: FieldError;
 }
 
 export interface CButtonType {
@@ -43,4 +46,9 @@ export interface ResponseInterface {
   success: boolean;
   message: string;
   data?: any;
+}
+
+export interface CompanyRegistrationInterface {
+  companyName: string;
+  noOfUsers: number;
 }

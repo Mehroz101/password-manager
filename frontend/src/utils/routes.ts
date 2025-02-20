@@ -8,4 +8,6 @@ export const ROUTES ={
     SETTING:"/setting",
     USERS:"/users",
     ADDNEWUSER:"/addnewuser",
+    COMPANYREGISTER:"/companyregistration",
+    COMPANYREGISTRATIONFORM:"/CompanyRegistrationForm",
 }

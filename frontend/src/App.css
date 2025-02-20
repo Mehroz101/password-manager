@@ -57,7 +57,7 @@
 }
 
 .action_btn button {
-  width: 90%;
+  width: 100%;
   max-width: 400px;
   padding: 13px;
   border: none;
@@ -69,10 +69,15 @@
   cursor: pointer;
   transition: all 0.3s;
 }
+.action_btn button:focus {
+  background-color: var(--primary-color);
+}
 .add_new_field {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
+  max-width: 400px;
 }
 .add_new_field label {
   font-size: 0.9rem;
@@ -149,7 +154,6 @@
   font-size: 0.8rem;
 }
 
-
 /* 🟢 Custom Styling for Selected Items (Chips) */
 .custom-chip {
   background-color: var(--secondary-color);
@@ -190,8 +194,6 @@
   color: white;
 }
 
-
-
 @media (min-width: 600px) {
   .category_boxs,
   .add_new_apps,
@@ -213,5 +215,13 @@
     border-radius: 10px;
   }
 }
+.input_error {
+  border: 1px solid rgb(138, 0, 0) !important;
+  outline: none;
+}
 
-
+.error_message {
+  color: rgb(201, 0, 0);
+  font-size: 0.7rem;
+  margin-top: 2px;
+}

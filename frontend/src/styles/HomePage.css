@@ -1,6 +1,12 @@
 .home_page {
   background-color: var(--background-color);
 }
+.home_page .company_register_text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
 
 /* =========================== */
 /* Category */
