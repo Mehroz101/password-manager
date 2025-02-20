@@ -8,31 +8,39 @@ export const registerUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log(req.body);
-    const { username, email, password } = req.body;
-    const isUserExist = await User.findOne({ username: username });
-    if (isUserExist) {
-      res.status(400).json({ success: false, message: "User already exists" });
-    } else {
-      const previousUserID = await User.findOne().sort({ userID: -1 });
-      const nextUserID = previousUserID ? previousUserID.userID + 1 : 1;
-      const hashedPassword = await bcrypt.hash(password, 10);
+    const { username, email, password: plainPassword } = req.body;
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+       res.status(400).json({
+        success: false,
+        message: `Username ${username} or email ${email} already exists`,
+      });
+    }
+    else{
+      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      const nextUserID = await User.findOne().sort({ userID: -1 })
+      const userID = nextUserID ? nextUserID.userID + 1 : 1;
       const user = new User({
         username,
         email,
         password: hashedPassword,
-        userID: nextUserID,
+        userID: userID,
       });
       await user.save();
-      res
-        .status(201)
-        .json({ success: true, message: "User registered successfully" });
+  
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+      });
+
     }
+
   } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Registration failed", error });
+    res.status(500).json({
+      success: false,
+      message: "Registration failed",
+      error,
+    });
   }
 };
 
@@ -59,7 +67,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       expiresIn: "10day",
     });
 
-    res.json({ token });
+    res.json({success:true,message:"Login successful",token: token });
   } catch (error) {
     res.status(500).json({ success: false, message: "Login failed", error });
   }

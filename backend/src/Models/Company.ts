@@ -6,6 +6,7 @@ export interface ICompany extends Document {
   companyUserIDs: number[];
   companyUserLimit: number;
   creatorID: Types.ObjectId;
+  noOfUsers: number;
 }
 
 const CompanySchema = new Schema(
@@ -19,6 +20,10 @@ const CompanySchema = new Schema(
       type: Number,
       required: true,
       unique: true,
+    },
+    noOfUsers: {
+      type: Number,
+      required: true,
     },
     companyUserIDs: {
       type: [Number],
@@ -35,3 +40,5 @@ const CompanySchema = new Schema(
     timestamps: true,
   }
 );
+
+export default mongoose.model<ICompany>("Company", CompanySchema);

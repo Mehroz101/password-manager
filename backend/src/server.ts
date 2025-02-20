@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./DB/dbconnection";
 import authRoutes from "./Routes/authRoutes";
+import companyRoutes from "./Routes/companyRoutes";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/company", companyRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
