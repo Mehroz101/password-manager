@@ -1,72 +1,74 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "../components/SearchBox";
 import "../styles/AddNewPage.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
-import CMultiSelect from "../components/FormComponent/CMultiSelect";
 import CDropdown from "../components/FormComponent/CDropdown";
-import CMultiSelectDropdown from "../components/FormComponent/CMultiSelectDropdown";
+import { notify } from "../utils/notification";
+import { AddAndUpdatePasswordFunc } from "../services/PasswordServices";
+import { useMutation } from "@tanstack/react-query";
 
 // App List
-const apps = [
-  { title: "Twitter" },
-  { title: "Instagram" },
-  { title: "Facebook" },
-  { title: "Google" },
-  { title: "Netflix" },
-  { title: "Amazon" },
-  { title: "Linkedin" },
-  { title: "Youtube" },
-  { title: "Other" },
-];
+// const apps = [
+//   { title: "Twitter" },
+//   { title: "Instagram" },
+//   { title: "Facebook" },
+//   { title: "Google" },
+//   { title: "Netflix" },
+//   { title: "Amazon" },
+//   { title: "Linkedin" },
+//   { title: "Youtube" },
+//   { title: "Other" },
+// ];
 
-// Category List
-const categories = [
-  { title: "API" },
-  { title: "Card" },
-  { title: "Email" },
-  { title: "Ecom" },
-  { title: "Other" },
-];
+// // Category List
+// const categories = [
+//   { title: "API" },
+//   { title: "Card" },
+//   { title: "Email" },
+//   { title: "Ecom" },
+//   { title: "Other" },
+// ];
 
-const groupedOptions = [
-  {
-    label: "Group 1",
-    items: [
-      { label: "User A", value: "userA" },
-      { label: "User B", value: "userB" },
-      { label: "User C", value: "userC" },
-      { label: "User D", value: "userD" },
-      { label: "User E", value: "userE" },
-      { label: "User F", value: "userF" },
-      { label: "User G", value: "userG" },
-      { label: "User H", value: "userH" },
-    ],
-  },
-  {
-    label: "Group 2",
-    items: [
-      { label: "User I", value: "userI" },
-      { label: "User J", value: "userJ" },
-    ],
-  },
-];
+// const groupedOptions = [
+//   {
+//     label: "Group 1",
+//     items: [
+//       { label: "User A", value: "userA" },
+//       { label: "User B", value: "userB" },
+//       { label: "User C", value: "userC" },
+//       { label: "User D", value: "userD" },
+//       { label: "User E", value: "userE" },
+//       { label: "User F", value: "userF" },
+//       { label: "User G", value: "userG" },
+//       { label: "User H", value: "userH" },
+//     ],
+//   },
+//   {
+//     label: "Group 2",
+//     items: [
+//       { label: "User I", value: "userI" },
+//       { label: "User J", value: "userJ" },
+//     ],
+//   },
+// ];
 
 const categoryOptions = [
   { label: "Developement", value: "Developement" },
   { label: "Networking", value: "Networking" },
   { label: "Sales", value: "Sales" },
   { label: "Support", value: "Support" },
+  { label: "Google", value: "Google" },
+  { label: "Gmail", value: "Gmail" },
+  { label: "Netflix", value: "Netflix" },
+  { label: "Amazon", value: "Amazon" },
+  { label: "Linkedin", value: "Linkedin" },
 ];
 
 const AddNew_Page = () => {
-  const [selectedApp, setSelectedApp] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -81,18 +83,27 @@ const AddNew_Page = () => {
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
     const sendData = {
-      appName: selectedApp,
-      categoryName: selectedCategory,
-      name: data.name,
+      categoryName: data.categoryName,
+      appName: data.appName,
       username: data.username,
       email: data.email,
       password: data.password,
       url: data.url,
     };
     console.log(sendData);
-    navigate("/");
+    // navigate("/");
+    AddNewPasswordMutation.mutate(sendData);
   };
-
+  const AddNewPasswordMutation = useMutation({
+    mutationFn: AddAndUpdatePasswordFunc,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+  });
   // Focus Input Field on Load
   useEffect(() => {
     setTimeout(() => {
@@ -144,16 +155,17 @@ const AddNew_Page = () => {
 
           <CDropdown
             control={control}
-            name="category"
+            name="categoryName"
             options={categoryOptions}
             placeholder="Select a department"
             label="Category"
+            required
             onChange={(selectedOption) =>
               console.log("Selected:", selectedOption)
             }
           />
           {/* Input Fields */}
-          <CMultiSelect
+          {/* <CMultiSelect
             control={control}
             name="selectedItems"
             label="Allowed User"
@@ -162,7 +174,7 @@ const AddNew_Page = () => {
             onChange={(selectedOptions) =>
               console.log("Selected:", selectedOptions)
             }
-          />
+          /> */}
           {/* <CMultiSelectDropdown
             control={control}
             name="fruits"
@@ -174,7 +186,7 @@ const AddNew_Page = () => {
             id="name"
             type="text"
             placeholder="Enter App Name"
-            {...register("name")}
+            {...register("appName", { required: true })}
           />
 
           <CInput
@@ -197,7 +209,7 @@ const AddNew_Page = () => {
             id="password"
             type="password"
             placeholder="Password"
-            {...register("password")}
+            {...register("password", { required: true })}
           />
 
           <CInput
