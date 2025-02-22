@@ -53,21 +53,37 @@ export const AddAndUpdatePassword = async (
           }
         }
       } else {
-        const passwordData = new Password({
-          appName,
-          username,
-          email,
-          password,
-          webUrl,
-          categoryName,
-          userID: UserID?.userID,
-          passwordImg: ImgURL,
+        const previousPasswordID = await Password.findOne().sort({
+          passwordID: -1,
         });
-        await passwordData.save();
-        res.status(200).json({
-          success: true,
-          message: "Password added successfully",
-        });
+        console.log(previousPasswordID);
+        const nextPasswordID = previousPasswordID
+          ? previousPasswordID.passwordID + 1
+          : 1;
+        const userId = await User.findOne({ _id: userID });
+        console.log("userId", userId);
+        if (!userId) {
+          res
+            .status(401)
+            .json({ success: true, message: "unauthorized login again" });
+        } else {
+          const passwordData = new Password({
+            appName,
+            username,
+            email,
+            password,
+            webUrl,
+            categoryName,
+            userID: userId?.userID,
+            passwordImg: ImgURL,
+            passwordID: nextPasswordID,
+          });
+          await passwordData.save();
+          res.status(200).json({
+            success: true,
+            message: "Password added successfully",
+          });
+        }
       }
     }
   } catch (error) {
@@ -82,12 +98,28 @@ export const getAllPasswords = async (
   res: Response
 ) => {
   try {
-    if (req.user) {
-      const userID = req.user.id;
-      const passwords = await Password.find({ userID });
-      res.status(200).json({ success: true, message: "", data: passwords });
-    } else {
+    console.log("Entered getAllPasswords");
+
+    if (!req.user) {
+      console.log("User not found");
       res.status(401).json({ success: false, message: "Unauthorized" });
+    } 
+    else{
+      console.log("User found");
+
+      const user = await User.findOne({ _id: req.user.id });
+      if (!user) {
+        console.log("User ID not found in database");
+        res.status(404).json({ success: false, message: "User not found" });
+      } else {
+        const passwords = await Password.find({ userID: user.userID });
+        console.log("Passwords found", passwords);
+
+        res.status(200).json({ success: true, message: "", data: passwords });
+      }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching passwords:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };

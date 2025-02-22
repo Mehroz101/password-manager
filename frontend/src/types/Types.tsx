@@ -52,3 +52,13 @@ export interface CompanyRegistrationInterface {
   companyName: string;
   noOfUsers: number;
 }
+export interface GetAllPasswordResponse {
+  passwordID:number,
+  appName: string;
+  categoryName: string;
+  email: string;
+  password: string;
+  username: string;
+  webUrl: string;
+  passwordImg: string;
+}

@@ -8,7 +8,7 @@ export interface IPassword extends Document {
   categoryName: string;
   username: string;
   webUrl: string;
-  passwordID: string;
+  passwordID: number;
   passwordImg: string;
 }
 const PasswordSchema = new Schema(

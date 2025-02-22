@@ -13,8 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Google from "../assets/google.png";
 import "../styles/ShowAll.css";
 import SearchBox from "../components/SearchBox";
-import { Category } from "../types/Types";
+import { Category, GetAllPasswordResponse } from "../types/Types";
 import CategoryCard from "../components/CategoryCard";
+import { useQuery } from "@tanstack/react-query";
+import { GetAllPassword } from "../services/PasswordServices";
 
 const category_cards = [
   {
@@ -39,7 +41,7 @@ const category_cards = [
   },
 ];
 // Example of dynamic data for the password boxes
-const passwordData = [
+const passwordData1 = [
   {
     id: 1,
     img: Google,
@@ -72,7 +74,10 @@ const ShowAll_Page = () => {
     [key: number]: boolean;
   }>({});
   const [categories, setCategories] = useState<Category[]>([]);
-
+  const { data: passwordData } = useQuery<GetAllPasswordResponse[]>({
+    queryKey: ["passworddata"],
+    queryFn: GetAllPassword,
+  });
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
 
   const handleActionBoxToggle = (accountId: number) => {
@@ -94,11 +99,13 @@ const ShowAll_Page = () => {
     type: "email" | "password",
     id: number
   ) => {
-    const passwordEntry = passwordData.find((entry) => entry.id === id);
+    const passwordEntry = passwordData?.find(
+      (entry) => entry.passwordID === id
+    );
 
     if (passwordEntry) {
       const textToCopy =
-        type === "email" ? passwordEntry.account : passwordEntry.password;
+        type === "email" ? passwordEntry.email : passwordEntry.password;
 
       try {
         if (navigator.clipboard) {
@@ -183,58 +190,71 @@ const ShowAll_Page = () => {
         <h3>Password</h3>
         <div className="showall_password_boxs">
           {/* Dynamically render password boxes */}
-          {passwordData.map((password) => (
-            <div className="allpassword_box" key={password.id}>
-              <div className="allpassword_box_left">
-                <img src={password.img} alt={password.title} />
-              </div>
-              <div className="allpassword_box_center">
-                <p className="allpassword_title">{password.title}</p>
-                <p className="allpassword_account">{password.account}</p>
-                <div className="password">
-                  <p className="allpassword_password">
-                    {passwordVisibility[password.id]
-                      ? password.password
-                      : "*************"}{" "}
+          {passwordData &&
+            passwordData.map((password, index) => (
+              <div className="allpassword_box" key={index}>
+                <div className="allpassword_box_left">
+                  <img src={password.passwordImg} alt={password.appName} />
+                </div>
+                <div className="allpassword_box_center">
+                  <p className="allpassword_title">{password.appName}</p>
+                  <p className="allpassword_account">
+                    {password.email ? password.email : password.username}
                   </p>
+                  <div className="password">
+                    <p className="allpassword_password">
+                      {passwordVisibility[password.passwordID]
+                        ? password.password
+                        : "*************"}{" "}
+                    </p>
+                    <FontAwesomeIcon
+                      icon={
+                        passwordVisibility[password.passwordID]
+                          ? faEye
+                          : faEyeLowVision
+                      }
+                      onClick={() =>
+                        handlePasswordVisibilityToggle(password.passwordID)
+                      } // Toggle the password visibility
+                    />
+                  </div>
+                </div>
+                <div className="allpassword_box_right">
                   <FontAwesomeIcon
-                    icon={
-                      passwordVisibility[password.id] ? faEye : faEyeLowVision
-                    }
-                    onClick={() => handlePasswordVisibilityToggle(password.id)} // Toggle the password visibility
+                    icon={faEllipsisVertical}
+                    onClick={() => handleActionBoxToggle(password.passwordID)} // Toggle the action box
                   />
+                  <div
+                    ref={actionBoxRef}
+                    className={`box_right_Action_dropdown ${
+                      showActionBox[password.passwordID]
+                        ? "box_right_Action_show"
+                        : "" // Only show for the clicked item
+                    }`}
+                  >
+                    <span
+                      onClick={() =>
+                        handleCopyToClipboard("email", password.passwordID)
+                      }
+                    >
+                      Copy Email
+                    </span>
+                    <span
+                      onClick={() =>
+                        handleCopyToClipboard("password", password.passwordID)
+                      }
+                    >
+                      Copy Password
+                    </span>
+                    <span
+                      onClick={() => handleActionBoxToggle(password.passwordID)}
+                    >
+                      Delete
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="allpassword_box_right">
-                <FontAwesomeIcon
-                  icon={faEllipsisVertical}
-                  onClick={() => handleActionBoxToggle(password.id)} // Toggle the action box
-                />
-                <div
-                  ref={actionBoxRef}
-                  className={`box_right_Action_dropdown ${
-                    showActionBox[password.id] ? "box_right_Action_show" : "" // Only show for the clicked item
-                  }`}
-                >
-                  <span
-                    onClick={() => handleCopyToClipboard("email", password.id)}
-                  >
-                    Copy Email
-                  </span>
-                  <span
-                    onClick={() =>
-                      handleCopyToClipboard("password", password.id)
-                    }
-                  >
-                    Copy Password
-                  </span>
-                  <span onClick={() => handleActionBoxToggle(password.id)}>
-                    Delete
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

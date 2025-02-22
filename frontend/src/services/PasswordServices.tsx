@@ -20,3 +20,18 @@ export const AddAndUpdatePasswordFunc = async (data: AddNewPassword) => {
     console.log(error);
   }
 };
+
+export const GetAllPassword = async () => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`${API_URL}/getallpasswords`, config);
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
