@@ -62,10 +62,10 @@ export const uploadCompanyLogo = async (
 ): Promise<void> => {
   try {
     console.log("enterd in upload");
-    const file = req.file;
-    if (!req.file) {
+    if (!req?.file) {
       res.status(400).json({ success: false, message: "No file uploaded" });
     } else {
+      const file = req?.file;
       if (!req.user) {
         res.status(401).json({ success: false, message: "Unauthorized" });
       } else {

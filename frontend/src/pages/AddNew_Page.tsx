@@ -1,9 +1,7 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "../components/SearchBox";
 import "../styles/AddNewPage.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -12,27 +10,27 @@ import CMultiSelect from "../components/FormComponent/CMultiSelect";
 import CDropdown from "../components/FormComponent/CDropdown";
 import CMultiSelectDropdown from "../components/FormComponent/CMultiSelectDropdown";
 
-// App List
-const apps = [
-  { title: "Twitter" },
-  { title: "Instagram" },
-  { title: "Facebook" },
-  { title: "Google" },
-  { title: "Netflix" },
-  { title: "Amazon" },
-  { title: "Linkedin" },
-  { title: "Youtube" },
-  { title: "Other" },
-];
+// // App List
+// const apps = [
+//   { title: "Twitter" },
+//   { title: "Instagram" },
+//   { title: "Facebook" },
+//   { title: "Google" },
+//   { title: "Netflix" },
+//   { title: "Amazon" },
+//   { title: "Linkedin" },
+//   { title: "Youtube" },
+//   { title: "Other" },
+// ];
 
-// Category List
-const categories = [
-  { title: "API" },
-  { title: "Card" },
-  { title: "Email" },
-  { title: "Ecom" },
-  { title: "Other" },
-];
+// // Category List
+// const categories = [
+//   { title: "API" },
+//   { title: "Card" },
+//   { title: "Email" },
+//   { title: "Ecom" },
+//   { title: "Other" },
+// ];
 
 const groupedOptions = [
   {
