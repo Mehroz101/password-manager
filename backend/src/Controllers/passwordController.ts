@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { PasswordRequestExtendsInterface } from "../Types/types";
+import { DeleteRequest, PasswordRequestExtendsInterface } from "../Types/types";
 import Password from "../Models/Password";
 import User from "../Models/User";
 
@@ -98,28 +98,53 @@ export const getAllPasswords = async (
   res: Response
 ) => {
   try {
-    console.log("Entered getAllPasswords");
-
     if (!req.user) {
-      console.log("User not found");
       res.status(401).json({ success: false, message: "Unauthorized" });
-    } 
-    else{
-      console.log("User found");
-
+    } else {
       const user = await User.findOne({ _id: req.user.id });
       if (!user) {
-        console.log("User ID not found in database");
         res.status(404).json({ success: false, message: "User not found" });
       } else {
         const passwords = await Password.find({ userID: user.userID });
-        console.log("Passwords found", passwords);
 
         res.status(200).json({ success: true, message: "", data: passwords });
       }
     }
   } catch (error) {
     console.error("Error fetching passwords:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+export const DeletePassword = async (req: DeleteRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+    } else {
+      const { passwordID } = req.body;
+      console.log(req.body);
+      if (!passwordID) {
+        res
+          .status(400)
+          .json({ success: false, message: "Password ID is required" });
+      } else {
+        console.log("Request Body:", req.body);
+
+        const deletedPassword = await Password.findOneAndDelete({
+          passwordID: passwordID,
+        });
+        if (!deletedPassword) {
+          res
+            .status(404)
+            .json({ success: false, message: "Password not found" });
+        } else {
+          res
+            .status(200)
+            .json({ success: true, message: "Password deleted successfully" });
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting password:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

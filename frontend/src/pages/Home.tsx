@@ -5,7 +5,6 @@ import {
   faShield,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/HomePage.css";
-import Netflix from "../assets/netflix.png";
 import Whatsapp from "../assets/whatsapp.png";
 import Google from "../assets/google.png";
 import SearchBox from "../components/SearchBox";
@@ -47,7 +46,7 @@ const recent_activity = [
     date: "24/07/2024",
   },
   {
-    img: Netflix,
+    img: Google,
     title: "Netflix",
     account: "mehrozfarooq127@gmail.com",
     activityType: "Last Used",

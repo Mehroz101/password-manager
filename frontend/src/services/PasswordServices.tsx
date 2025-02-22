@@ -21,6 +21,27 @@ export const AddAndUpdatePasswordFunc = async (data: AddNewPassword) => {
   }
 };
 
+export const DeletePassword = async (passwordId:number)=> {
+  try {
+    console.log("axios ",passwordId)
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      `${API_URL}/deletepassword`,
+      {passwordID:passwordId},
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
+  }
+};
+
 export const GetAllPassword = async () => {
   try {
     const token = localStorage.getItem("passwordmanager");

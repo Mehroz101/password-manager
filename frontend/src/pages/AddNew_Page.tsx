@@ -74,6 +74,7 @@ const categoryOptions = [
   { label: "Netflix", value: "Netflix" },
   { label: "Amazon", value: "Amazon" },
   { label: "Linkedin", value: "Linkedin" },
+  { label: "Other", value: "Other" },
 ];
 
 const AddNew_Page = () => {
@@ -107,6 +108,7 @@ const AddNew_Page = () => {
     onSuccess: (data) => {
       if (data.success) {
         notify({ type: "success", message: data.message });
+        navigate("/showall")
       } else {
         notify({ type: "error", message: data.message });
       }

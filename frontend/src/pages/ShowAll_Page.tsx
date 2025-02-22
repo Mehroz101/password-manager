@@ -13,10 +13,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Google from "../assets/google.png";
 import "../styles/ShowAll.css";
 import SearchBox from "../components/SearchBox";
-import { Category, GetAllPasswordResponse } from "../types/Types";
+import { Category, DeletePasswordPayload, GetAllPasswordResponse } from "../types/Types";
 import CategoryCard from "../components/CategoryCard";
-import { useQuery } from "@tanstack/react-query";
-import { GetAllPassword } from "../services/PasswordServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { DeletePassword, GetAllPassword } from "../services/PasswordServices";
+import { notify } from "../utils/notification";
 
 const category_cards = [
   {
@@ -74,7 +75,7 @@ const ShowAll_Page = () => {
     [key: number]: boolean;
   }>({});
   const [categories, setCategories] = useState<Category[]>([]);
-  const { data: passwordData } = useQuery<GetAllPasswordResponse[]>({
+  const { data: passwordData,refetch:passwordDataRefetch } = useQuery<GetAllPasswordResponse[]>({
     queryKey: ["passworddata"],
     queryFn: GetAllPassword,
   });
@@ -161,7 +162,24 @@ const ShowAll_Page = () => {
       });
     }
   };
-
+  const deletePasswordMutation = useMutation({
+    mutationFn:DeletePassword,
+    onSuccess:(data)=>{
+      if(data.success){
+        notify({type:"success",message:data.message})
+        passwordDataRefetch()
+      }
+      else{
+        notify({type:"error",message:data.message})
+      }
+      
+    }
+  })
+  const handleDeletePassword = (passwordId: number) => {
+    console.log("passwordId: ", passwordId);
+    deletePasswordMutation.mutate( passwordId);
+  };
+  
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
@@ -247,7 +265,10 @@ const ShowAll_Page = () => {
                       Copy Password
                     </span>
                     <span
-                      onClick={() => handleActionBoxToggle(password.passwordID)}
+                      onClick={() => {
+                        handleActionBoxToggle(password.passwordID);
+                        handleDeletePassword(password.passwordID);
+                      }}
                     >
                       Delete
                     </span>

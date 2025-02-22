@@ -52,6 +52,9 @@ export interface CompanyRegistrationInterface {
   companyName: string;
   noOfUsers: number;
 }
+export interface DeletePasswordPayload {
+  passwordID: number;
+}
 export interface GetAllPasswordResponse {
   passwordID:number,
   appName: string;
