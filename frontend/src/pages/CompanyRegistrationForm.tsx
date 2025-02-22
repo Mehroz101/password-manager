@@ -74,6 +74,7 @@ const CompanyRegistrationForm = () => {
           type: "success",
           message: "Company logo updated successfully",
         });
+        if(data.data)
         refetchCompany();
       } else {
         notify({ type: "error", message: data.message });

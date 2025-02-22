@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./DB/dbconnection";
 import authRoutes from "./Routes/authRoutes";
 import companyRoutes from "./Routes/companyRoutes";
+import passwordRoutes from "./Routes/passwordRoutes";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ connectDB();
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/company", companyRoutes);
+app.use("/api/password", passwordRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

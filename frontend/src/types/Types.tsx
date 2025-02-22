@@ -29,11 +29,11 @@ export interface CButtonType {
 
 export interface AddNewPassword {
   appName: string;
-  category: string;
-  name?: string;
+  categoryName: string;
+  // name?: string;
   username?: string;
   email?: string;
-  password?: string;
+  password: string;
   url?: string;
 }
 export interface AuthInterface {
