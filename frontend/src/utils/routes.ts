@@ -3,7 +3,7 @@ export const ROUTES ={
     AUTH:"/login",
     ADDNEW:"addnew",
     SHOWALL :"/showall",
-    VIEWAPP :"/viewapp",
+    VIEWAPP :"/editpassword",
     PROFILE :"/profile",
     SETTING:"/setting",
     USERS:"/users",

@@ -123,7 +123,7 @@ const AddNew_Page = () => {
 
   return (
     <div className="add_new_page">
-      <SearchBox />
+      {/* <SearchBox /> */}
       <div className="add_new_form">
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="app_container">

@@ -98,6 +98,42 @@
   outline: none;
   border: 1px solid var(--secondary-color);
 }
+.add_new_password_field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+.add_new_password_field label {
+  font-size: 0.9rem;
+}
+.add_new_password_field .input_field{
+  display: flex;
+  align-items: center;
+  background-color: #eee;
+  padding: 0 15px;
+  border-radius: 4px;
+
+}
+
+.add_new_password_field input {
+  flex: 1;
+  border: none;
+  background-color: #eee;
+  outline: none;
+  padding: 15px 0;
+  font-size: 0.9rem;
+  width: 100%; /* Ensures it fills available space */
+}
+.add_new_password_field input::placeholder {
+  color: #666;
+}
+
+.add_new_password_field .input_field:focus-within {
+  outline: none;
+  border: 1px solid var(--secondary-color);
+}
 
 .active {
   background-color: var(--secondary-color) !important;

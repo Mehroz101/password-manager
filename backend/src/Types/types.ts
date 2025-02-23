@@ -15,7 +15,7 @@ export interface PasswordRequestExtendsInterface extends Request {
   categoryName?: string;
 }
 
-export interface DeleteRequest extends Request {
+export interface SpecificIDRequest extends Request {
   user?: { id: string };
   body: { passwordID: number };
 }

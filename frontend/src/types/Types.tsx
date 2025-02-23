@@ -35,6 +35,7 @@ export interface AddNewPassword {
   email?: string;
   password: string;
   url?: string;
+  passwordID?:number
 }
 export interface AuthInterface {
   username: string;

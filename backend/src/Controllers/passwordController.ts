@@ -1,5 +1,8 @@
 import { Response } from "express";
-import { DeleteRequest, PasswordRequestExtendsInterface } from "../Types/types";
+import {
+  SpecificIDRequest,
+  PasswordRequestExtendsInterface,
+} from "../Types/types";
 import Password from "../Models/Password";
 import User from "../Models/User";
 
@@ -19,49 +22,58 @@ export const AddAndUpdatePassword = async (
         categoryName,
         passwordID = null,
       } = req.body;
-      const UserID = await User.findOne({ _id: userID });
+      // const UserID = await User.findOne({ _id: userID });
       const ImgURL = `http://localhost:5000/uploads/${categoryName}.png`;
       if (passwordID) {
         const passwordData = await Password.findOne({ passwordID });
-
+        // const EditDate = new Date();
         if (passwordData) {
-          if (categoryName === passwordData.categoryName) {
-            passwordData.appName = appName;
-            passwordData.username = username;
-            passwordData.email = email;
-            passwordData.password = password;
-            passwordData.webUrl = webUrl;
-            passwordData.passwordImg = ImgURL;
-            await passwordData.save();
-            res.status(200).json({
-              success: true,
-              message: "Password updated successfully",
-            });
-          } else {
-            passwordData.appName = appName;
-            passwordData.username = username;
-            passwordData.email = email;
-            passwordData.password = password;
-            passwordData.webUrl = webUrl;
-            passwordData.categoryName = categoryName;
-            passwordData.passwordImg = ImgURL;
-            await passwordData.save();
-            res.status(200).json({
-              success: true,
-              message: "Password updated successfully",
-            });
-          }
+          // if (categoryName === passwordData.categoryName) {
+          //   passwordData.appName = appName;
+          //   passwordData.username = username;
+          //   passwordData.email = email;
+          //   passwordData.password = password;
+          //   passwordData.webUrl = webUrl;
+          //   passwordData.passwordImg = ImgURL;
+          //   passwordData.lastAction.actionType = "Last Edited";
+          //   passwordData.lastAction.actionDateTime = EditDate;
+          //   passwordData.categoryType = "Social";
+          //   await passwordData.save();
+          //   res.status(200).json({
+          //     success: true,
+          //     message: "Password updated successfully",
+          //   });
+          // } else {
+          const EditDate = new Date();
+          passwordData.lastAction.actionType = "Last Edited";
+          passwordData.lastAction.actionDateTime = EditDate;
+          passwordData.categoryType = "Social";
+          passwordData.appName = appName;
+          passwordData.username = username;
+          passwordData.email = email;
+          passwordData.password = password;
+          passwordData.webUrl = webUrl;
+          passwordData.categoryName = categoryName;
+          passwordData.passwordImg = ImgURL;
+          await passwordData.save();
+          res.status(200).json({
+            success: true,
+            message: "Password updated successfully",
+          });
+          // }
+        } else {
+          res
+            .status(404)
+            .json({ success: true, message: "Password not found" });
         }
       } else {
         const previousPasswordID = await Password.findOne().sort({
           passwordID: -1,
         });
-        console.log(previousPasswordID);
         const nextPasswordID = previousPasswordID
           ? previousPasswordID.passwordID + 1
           : 1;
         const userId = await User.findOne({ _id: userID });
-        console.log("userId", userId);
         if (!userId) {
           res
             .status(401)
@@ -77,6 +89,11 @@ export const AddAndUpdatePassword = async (
             userID: userId?.userID,
             passwordImg: ImgURL,
             passwordID: nextPasswordID,
+            categoryType: "Social",
+            lastAction: {
+              actionType: "Created At",
+              actionDateTime: new Date(),
+            },
           });
           await passwordData.save();
           res.status(200).json({
@@ -115,7 +132,7 @@ export const getAllPasswords = async (
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-export const DeletePassword = async (req: DeleteRequest, res: Response) => {
+export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
@@ -147,4 +164,33 @@ export const DeletePassword = async (req: DeleteRequest, res: Response) => {
     console.error("Error deleting password:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
+};
+
+export const GetSpecificPassword = async (
+  req: SpecificIDRequest,
+  res: Response
+) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+    } else {
+      const { passwordID } = req.body;
+      if (!passwordID) {
+        res
+          .status(400)
+          .json({ success: false, message: "Password ID is required" });
+      } else {
+        const passwordData = await Password.findOne({
+          passwordID: passwordID,
+        });
+        if (!passwordData) {
+          res
+            .status(404)
+            .json({ success: false, message: "Password not found" });
+        } else {
+          res.status(200).json({ success: true, message: "", data: passwordData });
+        }
+      }
+    }
+  } catch (error) {}
 };

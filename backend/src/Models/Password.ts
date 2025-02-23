@@ -10,6 +10,11 @@ export interface IPassword extends Document {
   webUrl: string;
   passwordID: number;
   passwordImg: string;
+  categoryType: String;
+  lastAction: {
+    actionType: String;
+    actionDateTime: Date;
+  };
 }
 const PasswordSchema = new Schema(
   {
@@ -22,6 +27,18 @@ const PasswordSchema = new Schema(
     webUrl: { type: String },
     passwordID: { type: Number, required: true },
     passwordImg: { type: String, required: true },
+    categoryType: {
+      type: String,
+      // required: true,
+    },
+    lastAction: {
+      actionType: {
+        type: String,
+      },
+      actionDateTime: {
+        type: Date,
+      },
+    },
   },
   {
     timestamps: true,

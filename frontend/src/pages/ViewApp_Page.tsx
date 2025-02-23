@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Netflix from "../assets/netflix.png";
+// import Netflix from "../assets/netflix.png";
 import "../styles/ViewApp.css";
 import CInput from "../components/FormComponent/CInput";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
 import CButton from "../components/FormComponent/CButton";
@@ -10,7 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import CDropdown from "../components/FormComponent/CDropdown";
 import CMultiSelect from "../components/FormComponent/CMultiSelect";
-
+import Google from "../assets/google.png";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AddAndUpdatePasswordFunc, GetSpecificPassword } from "../services/PasswordServices";
+import CPasswordInput from "../components/FormComponent/CPasswordInput";
+import { notify } from "../utils/notification";
+import { formatDate } from "../utils/function";
 const groupedOptions = [
   {
     label: "Group 1",
@@ -34,11 +39,23 @@ const groupedOptions = [
   },
 ];
 
+// const categoryOptions = [
+//   { label: "Developement", value: "Developement" },
+//   { label: "Networking", value: "Networking" },
+//   { label: "Sales", value: "Sales" },
+//   { label: "Support", value: "Support" },
+// ];
 const categoryOptions = [
   { label: "Developement", value: "Developement" },
   { label: "Networking", value: "Networking" },
   { label: "Sales", value: "Sales" },
   { label: "Support", value: "Support" },
+  { label: "Google", value: "Google" },
+  { label: "Gmail", value: "Gmail" },
+  { label: "Netflix", value: "Netflix" },
+  { label: "Amazon", value: "Amazon" },
+  { label: "Linkedin", value: "Linkedin" },
+  { label: "Other", value: "Other" },
 ];
 
 const ViewApp_Page = () => {
@@ -56,39 +73,76 @@ const ViewApp_Page = () => {
     control,
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<AddNewPassword>();
+  } = useForm<AddNewPassword>({
+    defaultValues: {
+      appName: "",
+      email: "",
+      password: "",
+      url: "",
+      categoryName: "",
+    },
+  });
 
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
     const sendData = {
-      appName: selectedApp,
-      categoryName: selectedCategory,
-      name: data.name,
+      categoryName: data.categoryName,
+      appName: data.appName,
       email: data.email,
       password: data.password,
       url: data.url,
+      passwordID:Number(appId)
     };
     console.log(sendData);
-    navigate("/");
+    AddNewPasswordMutation.mutate(sendData);
+
   };
+   const AddNewPasswordMutation = useMutation({
+    mutationFn: AddAndUpdatePasswordFunc,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+        navigate("/showall")
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+  });
+  const { data: specificData } = useQuery({
+    queryKey: ["specificData"],
+    queryFn: () => GetSpecificPassword(Number(appId)),
+    enabled: appId ? true : false,
+  });
+  useEffect(() => {
+    if (specificData) {
+      console.log(specificData);
+      setValue("appName", specificData.appName);
+      setValue("email", specificData.email);
+      setValue("password", specificData.password);
+      setValue("url", specificData.webUrl);
+      setValue("categoryName", specificData.categoryName);
+    }
+  }, [specificData]);
 
   return (
     <>
       <div className="viewapp_page">
         <div className="viewapp_top_card">
           <div className="top_card_left">
-            <img src={Netflix} alt="appicon" />
+            <img src={specificData?.passwordImg} alt="appicon" />
           </div>
           <div className="top_card_right">
             <div className="top_card_right_top">
-              <p className="top_card_title">Netflix</p>
-              <p className="top_card_category">Streaming</p>
+              <p className="top_card_title">{watch("appName",specificData?.appName)}</p>
+              <p className="top_card_category">{specificData?.categoryType}</p>
               <FontAwesomeIcon icon={faTrash} />
             </div>
             <div className="top_card_right_bottom">
               <p className="activity_box_account">
-                <span>Last Edited: 12/07/2024</span> <span>12:40pm</span>
+                <span>Last Edited: {formatDate(specificData?.updatedAt)}</span>
               </p>
             </div>
           </div>
@@ -97,16 +151,17 @@ const ViewApp_Page = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <CDropdown
               control={control}
-              name="category"
+              name="categoryName"
               options={categoryOptions}
               placeholder="Select a department"
               label="Category"
+              required={true}
               onChange={(selectedOption) =>
                 console.log("Selected:", selectedOption)
               }
             />
             {/* Input Fields */}
-            <CMultiSelect
+            {/* <CMultiSelect
               control={control}
               name="selectedItems"
               label="Allowed User"
@@ -115,14 +170,14 @@ const ViewApp_Page = () => {
               onChange={(selectedOptions) =>
                 console.log("Selected:", selectedOptions)
               }
-            />
+            /> */}
             {/* Input Fields */}
             <CInput
               label="App Name"
               id="appName"
               type="text"
               placeholder="Enter App Name"
-              {...register("name")}
+              {...register("appName")}
             />
 
             <CInput
@@ -133,7 +188,7 @@ const ViewApp_Page = () => {
               {...register("email")}
             />
 
-            <CInput
+            <CPasswordInput
               label="Password"
               id="password"
               type="password"

@@ -21,9 +21,9 @@ export const AddAndUpdatePasswordFunc = async (data: AddNewPassword) => {
   }
 };
 
-export const DeletePassword = async (passwordId:number)=> {
+export const DeletePassword = async (passwordId: number) => {
   try {
-    console.log("axios ",passwordId)
+    console.log("axios ", passwordId);
     const token = localStorage.getItem("passwordmanager");
     const config = {
       headers: {
@@ -32,13 +32,12 @@ export const DeletePassword = async (passwordId:number)=> {
     };
     const response = await axios.post(
       `${API_URL}/deletepassword`,
-      {passwordID:passwordId},
+      { passwordID: passwordId },
       config
     );
     return response.data;
   } catch (error) {
     console.log(error);
-
   }
 };
 
@@ -55,4 +54,20 @@ export const GetAllPassword = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+export const GetSpecificPassword = async (passwordID: number) => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      `${API_URL}/getspecificpassword`,
+      { passwordID: passwordID },
+      config
+    );
+    return response.data.data;
+  } catch (error) {}
 };

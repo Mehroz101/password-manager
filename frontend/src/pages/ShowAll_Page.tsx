@@ -18,6 +18,7 @@ import CategoryCard from "../components/CategoryCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DeletePassword, GetAllPassword } from "../services/PasswordServices";
 import { notify } from "../utils/notification";
+import { useNavigate } from "react-router-dom";
 
 const category_cards = [
   {
@@ -80,7 +81,7 @@ const ShowAll_Page = () => {
     queryFn: GetAllPassword,
   });
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
-
+const navigate = useNavigate();
   const handleActionBoxToggle = (accountId: number) => {
     setShowActionBox((previousState) => ({
       ...previousState,
@@ -179,7 +180,9 @@ const ShowAll_Page = () => {
     console.log("passwordId: ", passwordId);
     deletePasswordMutation.mutate( passwordId);
   };
-  
+  const handleEditPassword = (passwordId:number)=>{
+    navigate(`/editpassword/${passwordId}`)
+  }
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
@@ -263,6 +266,13 @@ const ShowAll_Page = () => {
                       }
                     >
                       Copy Password
+                    </span>
+                    <span
+                      onClick={() =>
+                        handleEditPassword(password.passwordID)
+                      }
+                    >
+                      Edit
                     </span>
                     <span
                       onClick={() => {
