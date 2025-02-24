@@ -12,11 +12,8 @@
   border-radius: 8px;
   max-width: 400px;
   margin: 0 auto;
-  transition: all 0.2s ease-in-out;
 }
-.viewapp_page .viewapp_top_card:hover {
-  transform: translateY(-5px);
-}
+
 .viewapp_page .top_card_left {
   background-color: #e5f2ff;
   height: auto;

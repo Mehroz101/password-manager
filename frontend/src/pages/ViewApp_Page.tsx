@@ -12,7 +12,11 @@ import CDropdown from "../components/FormComponent/CDropdown";
 import CMultiSelect from "../components/FormComponent/CMultiSelect";
 import Google from "../assets/google.png";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AddAndUpdatePasswordFunc, GetSpecificPassword } from "../services/PasswordServices";
+import {
+  AddAndUpdatePasswordFunc,
+  DeletePassword,
+  GetSpecificPassword,
+} from "../services/PasswordServices";
 import CPasswordInput from "../components/FormComponent/CPasswordInput";
 import { notify } from "../utils/notification";
 import { formatDate } from "../utils/function";
@@ -79,6 +83,7 @@ const ViewApp_Page = () => {
   } = useForm<AddNewPassword>({
     defaultValues: {
       appName: "",
+      username: "",
       email: "",
       password: "",
       url: "",
@@ -90,22 +95,37 @@ const ViewApp_Page = () => {
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
     const sendData = {
       categoryName: data.categoryName,
+      username: data.username,
       appName: data.appName,
       email: data.email,
       password: data.password,
       url: data.url,
-      passwordID:Number(appId)
+      passwordID: Number(appId),
     };
     console.log(sendData);
     AddNewPasswordMutation.mutate(sendData);
-
   };
-   const AddNewPasswordMutation = useMutation({
+  const deletePasswordMutation = useMutation({
+    mutationFn: DeletePassword,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+        navigate("/showall");
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+  });
+  const handleDeletePassword = (passwordId: number) => {
+    console.log("passwordId: ", passwordId);
+    deletePasswordMutation.mutate(passwordId);
+  };
+  const AddNewPasswordMutation = useMutation({
     mutationFn: AddAndUpdatePasswordFunc,
     onSuccess: (data) => {
       if (data.success) {
         notify({ type: "success", message: data.message });
-        navigate("/showall")
+        navigate("/showall");
       } else {
         notify({ type: "error", message: data.message });
       }
@@ -120,6 +140,7 @@ const ViewApp_Page = () => {
     if (specificData) {
       console.log(specificData);
       setValue("appName", specificData.appName);
+      setValue("username", specificData.username);
       setValue("email", specificData.email);
       setValue("password", specificData.password);
       setValue("url", specificData.webUrl);
@@ -136,9 +157,14 @@ const ViewApp_Page = () => {
           </div>
           <div className="top_card_right">
             <div className="top_card_right_top">
-              <p className="top_card_title">{watch("appName",specificData?.appName)}</p>
+              <p className="top_card_title">
+                {watch("appName", specificData?.appName)}
+              </p>
               <p className="top_card_category">{specificData?.categoryType}</p>
-              <FontAwesomeIcon icon={faTrash} />
+              <FontAwesomeIcon
+                icon={faTrash}
+                onClick={() => handleDeletePassword(Number(appId))}
+              />
             </div>
             <div className="top_card_right_bottom">
               <p className="activity_box_account">
@@ -178,6 +204,13 @@ const ViewApp_Page = () => {
               type="text"
               placeholder="Enter App Name"
               {...register("appName")}
+            />
+            <CInput
+              label="Username"
+              id="username"
+              type="text"
+              placeholder="Enter User Name"
+              {...register("username")}
             />
 
             <CInput

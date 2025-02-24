@@ -11,17 +11,18 @@ const CPasswordInput = forwardRef<HTMLInputElement, CInputType>(
         {label && <label htmlFor={id}>{label}</label>}
         <div className="input_field">
           <input
-            type={passwordToggle === true ? type : "text"}
+            type={passwordToggle === false ? type : "text"}
             id={id}
             placeholder={placeholder}
             disabled={disabled}
             ref={ref}
             className={error ? "input_error" : ""}
             {...rest}
+            autoComplete="new-password"
           />
           {type === "password" && (
             <FontAwesomeIcon
-              icon={passwordToggle ? faEyeLowVision : faEye}
+              icon={passwordToggle ? faEye : faEyeLowVision}
               onClick={() => setPasswordToggle(!passwordToggle)}
             />
           )}

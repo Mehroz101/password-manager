@@ -13,12 +13,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Google from "../assets/google.png";
 import "../styles/ShowAll.css";
 import SearchBox from "../components/SearchBox";
-import { Category, DeletePasswordPayload, GetAllPasswordResponse } from "../types/Types";
+import {
+  Category,
+  DeletePasswordPayload,
+  GetAllPasswordResponse,
+} from "../types/Types";
 import CategoryCard from "../components/CategoryCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DeletePassword, GetAllPassword } from "../services/PasswordServices";
 import { notify } from "../utils/notification";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const category_cards = [
   {
@@ -69,6 +73,10 @@ const passwordData1 = [
 ];
 
 const ShowAll_Page = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredData, setFilteredData] = useState<GetAllPasswordResponse[]>(
+    []
+  );
   const [showActionBox, setShowActionBox] = useState<{
     [key: number]: boolean;
   }>({});
@@ -76,13 +84,16 @@ const ShowAll_Page = () => {
     [key: number]: boolean;
   }>({});
   const [categories, setCategories] = useState<Category[]>([]);
-  const { data: passwordData,refetch:passwordDataRefetch } = useQuery<GetAllPasswordResponse[]>({
+  const { data: passwordData, refetch: passwordDataRefetch } = useQuery<
+    GetAllPasswordResponse[]
+  >({
     queryKey: ["passworddata"],
     queryFn: GetAllPassword,
   });
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleActionBoxToggle = (accountId: number) => {
+    console.log(accountId);
     setShowActionBox((previousState) => ({
       ...previousState,
       [accountId]: !previousState[accountId],
@@ -164,25 +175,33 @@ const navigate = useNavigate();
     }
   };
   const deletePasswordMutation = useMutation({
-    mutationFn:DeletePassword,
-    onSuccess:(data)=>{
-      if(data.success){
-        notify({type:"success",message:data.message})
-        passwordDataRefetch()
+    mutationFn: DeletePassword,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+        passwordDataRefetch();
+      } else {
+        notify({ type: "error", message: data.message });
       }
-      else{
-        notify({type:"error",message:data.message})
-      }
-      
-    }
-  })
+    },
+  });
   const handleDeletePassword = (passwordId: number) => {
     console.log("passwordId: ", passwordId);
-    deletePasswordMutation.mutate( passwordId);
+    deletePasswordMutation.mutate(passwordId);
   };
-  const handleEditPassword = (passwordId:number)=>{
-    navigate(`/editpassword/${passwordId}`)
-  }
+  const handleEditPassword = (passwordId: number) => {
+    navigate(`/editpassword/${passwordId}`);
+  };
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    setSearchTerm(event.target.value);
+    const filtereddata = passwordData?.filter((item) => {
+      return item.appName
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase());
+    });
+    setFilteredData(filtereddata || []);
+  };
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
@@ -194,10 +213,15 @@ const navigate = useNavigate();
       setCategories(category_cards);
     }
   }, [category_cards]);
+  useEffect(() => {
+    if (passwordData) {
+      setFilteredData(passwordData);
+    }
+  }, [passwordData]);
 
   return (
     <div className="showall_page">
-      <SearchBox />
+      <SearchBox handleSearch={handleSearch} />
       <div className="category_container">
         <h3 className="section_heading">Category</h3>
         <div className="category_boxs">
@@ -211,8 +235,8 @@ const navigate = useNavigate();
         <h3>Password</h3>
         <div className="showall_password_boxs">
           {/* Dynamically render password boxes */}
-          {passwordData &&
-            passwordData.map((password, index) => (
+          {filteredData && filteredData?.length > 0 ? (
+            filteredData.map((password, index) => (
               <div className="allpassword_box" key={index}>
                 <div className="allpassword_box_left">
                   <img src={password.passwordImg} alt={password.appName} />
@@ -243,7 +267,10 @@ const navigate = useNavigate();
                 <div className="allpassword_box_right">
                   <FontAwesomeIcon
                     icon={faEllipsisVertical}
-                    onClick={() => handleActionBoxToggle(password.passwordID)} // Toggle the action box
+                    onClick={() => {
+                      console.log("clicked", password);
+                      handleActionBoxToggle(password.passwordID);
+                    }} // Toggle the action box
                   />
                   <div
                     ref={actionBoxRef}
@@ -268,9 +295,7 @@ const navigate = useNavigate();
                       Copy Password
                     </span>
                     <span
-                      onClick={() =>
-                        handleEditPassword(password.passwordID)
-                      }
+                      onClick={() => handleEditPassword(password.passwordID)}
                     >
                       Edit
                     </span>
@@ -285,7 +310,14 @@ const navigate = useNavigate();
                   </div>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div>
+              <p>
+                No Password Found <Link to="/addnew">Add Password</Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
