@@ -45,7 +45,10 @@ const Profile_Page = () => {
       id: 4,
       title: "Logout",
       icon: faArrowRightFromBracket,
-      action: () => console.log("Logging out..."),
+      action: () => {
+        localStorage.removeItem("passwordmanager");
+        navigate(ROUTES.AUTH);
+      },
     },
   ];
 
