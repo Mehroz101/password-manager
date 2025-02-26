@@ -29,13 +29,14 @@ export interface CButtonType {
 
 export interface AddNewPassword {
   appName: string;
+  categoryType: string;
   categoryName: string;
   // name?: string;
   username?: string;
   email?: string;
   password: string;
   url?: string;
-  passwordID?:number
+  passwordID?: number;
 }
 export interface AuthInterface {
   username: string;
@@ -57,9 +58,10 @@ export interface DeletePasswordPayload {
   passwordID: number;
 }
 export interface GetAllPasswordResponse {
-  passwordID:number,
+  passwordID: number;
   appName: string;
   categoryName: string;
+  categoryType: string;
   email: string;
   password: string;
   username: string;

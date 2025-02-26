@@ -19,6 +19,7 @@ export const AddAndUpdatePassword = async (
         email = "",
         password,
         url: webUrl = "",
+        categoryType,
         categoryName,
         passwordID = null,
       } = req.body;
@@ -47,7 +48,7 @@ export const AddAndUpdatePassword = async (
           const EditDate = new Date();
           passwordData.lastAction.actionType = "Last Edited";
           passwordData.lastAction.actionDateTime = EditDate;
-          passwordData.categoryType = "Social";
+          passwordData.categoryType = categoryType;
           passwordData.appName = appName;
           passwordData.username = username;
           passwordData.email = email;
@@ -86,10 +87,10 @@ export const AddAndUpdatePassword = async (
             password,
             webUrl,
             categoryName,
+            categoryType,
             userID: userId?.userID,
             passwordImg: ImgURL,
             passwordID: nextPasswordID,
-            categoryType: "Social",
             lastAction: {
               actionType: "Created At",
               actionDateTime: new Date(),
@@ -188,7 +189,9 @@ export const GetSpecificPassword = async (
             .status(404)
             .json({ success: false, message: "Password not found" });
         } else {
-          res.status(200).json({ success: true, message: "", data: passwordData });
+          res
+            .status(200)
+            .json({ success: true, message: "", data: passwordData });
         }
       }
     }

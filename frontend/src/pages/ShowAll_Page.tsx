@@ -3,21 +3,17 @@ import {
   faEllipsisVertical,
   faEye,
   faEyeLowVision,
-  faClipboard,
   faCreditCard,
   faPaperclip,
-  faShield,
+  faThumbsUp,
+  faEnvelope,
+  faFeather,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Google from "../assets/google.png";
 import "../styles/ShowAll.css";
 import SearchBox from "../components/SearchBox";
-import {
-  Category,
-  DeletePasswordPayload,
-  GetAllPasswordResponse,
-} from "../types/Types";
+import { Category, GetAllPasswordResponse } from "../types/Types";
 import CategoryCard from "../components/CategoryCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DeletePassword, GetAllPassword } from "../services/PasswordServices";
@@ -31,13 +27,13 @@ const category_cards = [
     cardNo: 1,
   },
   {
-    icon: faClipboard,
-    title: "Password",
+    icon: faEnvelope,
+    title: "Email",
     cardNo: 2,
   },
   {
-    icon: faShield,
-    title: "Login",
+    icon: faThumbsUp,
+    title: "Social",
     cardNo: 3,
   },
   {
@@ -45,38 +41,20 @@ const category_cards = [
     title: "API",
     cardNo: 4,
   },
+  {
+    icon: faFeather,
+    title: "Other",
+    cardNo: 5,
+  },
 ];
 // Example of dynamic data for the password boxes
-const passwordData1 = [
-  {
-    id: 1,
-    img: Google,
-    title: "Google",
-    account: "mehrozfarooq127111111111111111111@gmail.com",
-    password: "12343423412222222222222222222222222222",
-  },
-  {
-    id: 2,
-    img: Google,
-    title: "Facebook",
-    account: "user1234@gmail.com",
-    password: "12343456712222222222222222222222222222",
-  },
-  {
-    id: 3,
-    img: Google,
-    title: "Twitter",
-    account: "twituser678@gmail.com",
-    password: "12343489012222222222222222222222222222",
-  },
-  // Other items...
-];
 
 const ShowAll_Page = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredData, setFilteredData] = useState<GetAllPasswordResponse[]>(
     []
   );
+  const [filteredCategory, setFilteredCategory] = useState<string>("");
   const [showActionBox, setShowActionBox] = useState<{
     [key: number]: boolean;
   }>({});
@@ -218,6 +196,14 @@ const ShowAll_Page = () => {
       setFilteredData(passwordData);
     }
   }, [passwordData]);
+  useEffect(() => {
+    if (filteredCategory) {
+      const filtereddata = passwordData?.filter((item) => {
+        return item.categoryType === filteredCategory;
+      });
+      setFilteredData(filtereddata || []);
+    }
+  }, [filteredCategory]);
 
   return (
     <div className="showall_page">
@@ -227,7 +213,12 @@ const ShowAll_Page = () => {
         <div className="category_boxs">
           {categories &&
             categories.map((category, index) => (
-              <CategoryCard key={index} category={category} />
+              <CategoryCard
+                key={index}
+                category={category}
+                filteredCategory={filteredCategory}
+                setFilteredCategory={setFilteredCategory}
+              />
             ))}
         </div>
       </div>

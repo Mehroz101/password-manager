@@ -2,15 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 // import Netflix from "../assets/netflix.png";
 import "../styles/ViewApp.css";
 import CInput from "../components/FormComponent/CInput";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
 import CButton from "../components/FormComponent/CButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import CDropdown from "../components/FormComponent/CDropdown";
-import CMultiSelect from "../components/FormComponent/CMultiSelect";
-import Google from "../assets/google.png";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AddAndUpdatePasswordFunc,
@@ -20,35 +18,6 @@ import {
 import CPasswordInput from "../components/FormComponent/CPasswordInput";
 import { notify } from "../utils/notification";
 import { formatDate } from "../utils/function";
-const groupedOptions = [
-  {
-    label: "Group 1",
-    items: [
-      { label: "User A", value: "userA" },
-      { label: "User B", value: "userB" },
-      { label: "User C", value: "userC" },
-      { label: "User D", value: "userD" },
-      { label: "User E", value: "userE" },
-      { label: "User F", value: "userF" },
-      { label: "User G", value: "userG" },
-      { label: "User H", value: "userH" },
-    ],
-  },
-  {
-    label: "Group 2",
-    items: [
-      { label: "User I", value: "userI" },
-      { label: "User J", value: "userJ" },
-    ],
-  },
-];
-
-// const categoryOptions = [
-//   { label: "Developement", value: "Developement" },
-//   { label: "Networking", value: "Networking" },
-//   { label: "Sales", value: "Sales" },
-//   { label: "Support", value: "Support" },
-// ];
 const categoryOptions = [
   { label: "Developement", value: "Developement" },
   { label: "Networking", value: "Networking" },
@@ -61,35 +30,34 @@ const categoryOptions = [
   { label: "Linkedin", value: "Linkedin" },
   { label: "Other", value: "Other" },
 ];
+const categoryTypeOptions = [
+  { label: "API", value: "API" },
+  { label: "Card", value: "Card" },
+  { label: "Email", value: "Email" },
+  { label: "Social", value: "Social" },
+  { label: "Other", value: "Other" },
+];
 
 const ViewApp_Page = () => {
   const location = useLocation(); // useLocation() returns an object
   const pathSegments = location.pathname.split("/"); // Extract pathname and split it
 
   const appId = pathSegments[2] || "N/A"; // Ensure there's a fallback in case it's missing
-  const [selectedApp, setSelectedApp] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   // React Hook Form Setup
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<AddNewPassword>({
-    defaultValues: {
-      appName: "",
-      username: "",
-      email: "",
-      password: "",
-      url: "",
-      categoryName: "",
-    },
-  });
+  const { control, register, handleSubmit, setValue, watch } =
+    useForm<AddNewPassword>({
+      defaultValues: {
+        appName: "",
+        username: "",
+        email: "",
+        password: "",
+        url: "",
+        categoryName: "",
+        categoryType: "",
+      },
+    });
 
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
@@ -100,6 +68,7 @@ const ViewApp_Page = () => {
       email: data.email,
       password: data.password,
       url: data.url,
+      categoryType: data.categoryType,
       passwordID: Number(appId),
     };
     console.log(sendData);
@@ -145,6 +114,7 @@ const ViewApp_Page = () => {
       setValue("password", specificData.password);
       setValue("url", specificData.webUrl);
       setValue("categoryName", specificData.categoryName);
+      setValue("categoryType", specificData.categoryType);
     }
   }, [specificData]);
 
@@ -168,13 +138,27 @@ const ViewApp_Page = () => {
             </div>
             <div className="top_card_right_bottom">
               <p className="activity_box_account">
-                <span>Last Edited: {formatDate(specificData?.updatedAt)}</span>
+                <span>
+                  {specificData?.lastAction.actionType}:{" "}
+                  {formatDate(specificData?.updatedAt)}
+                </span>
               </p>
             </div>
           </div>
         </div>
         <div className="form_fields">
           <form onSubmit={handleSubmit(onSubmit)}>
+            <CDropdown
+              control={control}
+              name="categoryType"
+              options={categoryTypeOptions}
+              placeholder="Select a type"
+              label="Category Type"
+              required={true}
+              onChange={(selectedOption) =>
+                console.log("Selected:", selectedOption)
+              }
+            />
             <CDropdown
               control={control}
               name="categoryName"

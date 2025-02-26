@@ -1,7 +1,6 @@
-import SearchBox from "../components/SearchBox";
 import "../styles/AddNewPage.css";
 import { useNavigate } from "react-router-dom";
-import  { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -76,22 +75,25 @@ const categoryOptions = [
   { label: "Linkedin", value: "Linkedin" },
   { label: "Other", value: "Other" },
 ];
+const categoryTypeOptions = [
+  { label: "API", value: "API" },
+  { label: "Card", value: "Card" },
+  { label: "Email", value: "Email" },
+  { label: "Social", value: "Social" },
+  { label: "Other", value: "Other" },
+];
 
 const AddNew_Page = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   // React Hook Form Setup
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<AddNewPassword>();
+  const { register, handleSubmit, control } = useForm<AddNewPassword>();
 
   // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
     const sendData = {
+      categoryType: data.categoryType,
       categoryName: data.categoryName,
       appName: data.appName,
       username: data.username,
@@ -108,7 +110,7 @@ const AddNew_Page = () => {
     onSuccess: (data) => {
       if (data.success) {
         notify({ type: "success", message: data.message });
-        navigate("/showall")
+        navigate("/showall");
       } else {
         notify({ type: "error", message: data.message });
       }
@@ -165,9 +167,20 @@ const AddNew_Page = () => {
 
           <CDropdown
             control={control}
+            name="categoryType"
+            options={categoryTypeOptions}
+            placeholder="Select an type"
+            label="Category Type"
+            required
+            onChange={(selectedOption) =>
+              console.log("Selected:", selectedOption)
+            }
+          />
+          <CDropdown
+            control={control}
             name="categoryName"
             options={categoryOptions}
-            placeholder="Select a department"
+            placeholder="Select an app"
             label="Category"
             required
             onChange={(selectedOption) =>

@@ -29,7 +29,7 @@ const PasswordSchema = new Schema(
     passwordImg: { type: String, required: true },
     categoryType: {
       type: String,
-      // required: true,
+      required: true,
     },
     lastAction: {
       actionType: {
