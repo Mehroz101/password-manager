@@ -1,10 +1,10 @@
-import React from "react";
+// import React from "react";
 import "../styles/Setting.css";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOut } from "@fortawesome/free-solid-svg-icons";
-import Netflix from "../assets/google.png";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+// import Netflix from "../assets/google.png";
 
 const Setting_Page = () => {
   return (
