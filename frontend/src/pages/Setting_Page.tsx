@@ -4,7 +4,7 @@ import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
-import Netflix from "../assets/whatsapp.png";
+import Netflix from "../assets/google.png";
 
 const Setting_Page = () => {
   return (
