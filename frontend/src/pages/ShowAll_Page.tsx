@@ -8,6 +8,7 @@ import {
   faThumbsUp,
   faEnvelope,
   faFeather,
+  faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,29 +23,34 @@ import { Link, useNavigate } from "react-router-dom";
 
 const category_cards = [
   {
+    icon: faGlobe,
+    title: "ALL",
+    cardNo: 1,
+  },
+  {
     icon: faCreditCard,
     title: "Card",
-    cardNo: 1,
+    cardNo: 2,
   },
   {
     icon: faEnvelope,
     title: "Email",
-    cardNo: 2,
+    cardNo: 3,
   },
   {
     icon: faThumbsUp,
     title: "Social",
-    cardNo: 3,
+    cardNo: 4,
   },
   {
     icon: faPaperclip,
     title: "API",
-    cardNo: 4,
+    cardNo: 5,
   },
   {
     icon: faFeather,
     title: "Other",
-    cardNo: 5,
+    cardNo: 6,
   },
 ];
 // Example of dynamic data for the password boxes
@@ -197,11 +203,13 @@ const ShowAll_Page = () => {
     }
   }, [passwordData]);
   useEffect(() => {
-    if (filteredCategory) {
+    if (filteredCategory !== "ALL") {
       const filtereddata = passwordData?.filter((item) => {
         return item.categoryType === filteredCategory;
       });
       setFilteredData(filtereddata || []);
+    } else {
+      setFilteredData(passwordData || []);
     }
   }, [filteredCategory]);
 

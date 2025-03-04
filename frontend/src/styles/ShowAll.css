@@ -9,6 +9,7 @@
   border-radius: 10px;
   background-color: #fff;
   box-sizing: border-box;
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 .home_page_category_box:hover {
@@ -55,6 +56,18 @@
 }
 .box_4 .home_page_category_box_icon {
   background-color: #bc5aac;
+}
+.box_5 {
+  background-color: #e6ffcd;
+}
+.box_5 .home_page_category_box_icon {
+  background-color: #90bc5a;
+}
+.box_6 {
+  background-color: #ffcdcd;
+}
+.box_6 .home_page_category_box_icon {
+  background-color: #bc5a5a;
 }
 
 /* =========================== */

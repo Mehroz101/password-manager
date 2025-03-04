@@ -102,11 +102,8 @@
   padding: 10px;
   border-radius: 4px;
   max-width: 400px;
-  transition: all 0.2s ease-in-out;
 }
-.home_page_recent_activity_box:hover {
-  transform: translateY(-5px);
-}
+
 .recent_activity_box_left {
   background-color: #e5f2ff;
   height: auto;

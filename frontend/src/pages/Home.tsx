@@ -88,12 +88,12 @@ const Home = () => {
   return (
     <>
       <div className="home_page">
-        <SearchBox />
+        {/* <SearchBox /> */}
         <p className="company_register_text">
           Register a company to enable advanced features{" "}
           <Link to={ROUTES.COMPANYREGISTER}>click here</Link>
         </p>
-        <div className="category_container">
+        {/* <div className="category_container">
           <h3 className="section_heading">Category</h3>
           <div className="category_boxs">
             {categories &&
@@ -101,7 +101,7 @@ const Home = () => {
                 <CategoryCard key={index} category={category} />
               ))}
           </div>
-        </div>
+        </div> */}
         <div className="home_page_recent_activity_container">
           <h3 className="section_heading">Recent Activity</h3>
           <div className="home_page_recent_activity_boxs">

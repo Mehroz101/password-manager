@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/Setting.css";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";

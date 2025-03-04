@@ -65,13 +65,12 @@ import { useMutation } from "@tanstack/react-query";
 
 const categoryOptions = [
   { label: "Developement", value: "Developement" },
-  { label: "Networking", value: "Networking" },
-  { label: "Sales", value: "Sales" },
+  { label: "Wifi", value: "Wifi" },
+  { label: "Card", value: "Card" },
   { label: "Support", value: "Support" },
   { label: "Google", value: "Google" },
   { label: "Gmail", value: "Gmail" },
   { label: "Netflix", value: "Netflix" },
-  { label: "Amazon", value: "Amazon" },
   { label: "Linkedin", value: "Linkedin" },
   { label: "Other", value: "Other" },
 ];
