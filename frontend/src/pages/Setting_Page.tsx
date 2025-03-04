@@ -1,15 +1,16 @@
+// import React from "react";
 import "../styles/Setting.css";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOut } from "@fortawesome/free-solid-svg-icons";
-import Netflix from "../assets/google.png";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+// import Netflix from "../assets/google.png";
 
 const Setting_Page = () => {
   return (
     <>
       <div className="setting_page">
-        <div className="setting_top_card">
+        {/* <div className="setting_top_card">
           <div className="top_card_left">
             <img src={Netflix} alt="appicon" />
           </div>
@@ -25,9 +26,9 @@ const Setting_Page = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="setting_form">
-          <form action="">
+          <form action="" autoComplete="off">
             <CInput
               type="text"
               placeholder="Username"
