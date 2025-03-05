@@ -68,3 +68,12 @@ export interface GetAllPasswordResponse {
   webUrl: string;
   passwordImg: string;
 }
+export interface ActivityResponseInterface {
+  passwordID: {
+    passwordImg: string;
+    appName: string;
+    createdAt: string;
+    email: string;
+  };
+  actionType: string;
+}

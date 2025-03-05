@@ -1,31 +1,44 @@
 import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { ActivityResponseInterface } from "../types/Types";
 
 const RecentActivityCard = ({
   activity,
-}: {
-  activity: {
-    img: string;
-    title: string;
-    time: string;
-    date: string;
-    account: string;
-    activityType: string;
-  };
-}) => {
+}:{
+    activity: ActivityResponseInterface;
+  }
+
+) => {
+  const [activities,setActivities] = useState<ActivityResponseInterface | null>(null)
+  useEffect(() => {
+    if (activity?.passwordID) {
+      setActivities({
+        passwordID: {
+          passwordImg: activity.passwordID.passwordImg,
+          appName: activity.passwordID.appName,
+          email: activity.passwordID.email,
+          createdAt: activity.passwordID.createdAt,
+        },
+        actionType: activity.actionType,
+      });
+    }
+  }, [activity]);
+
+  if (!activities) return null;
   return (
     <div className="home_page_recent_activity_box">
       <div className="recent_activity_box_left">
-        <img src={activity.img} alt="google" />
+        <img src={activity.passwordID.passwordImg} alt="google" />
       </div>
       <div className="recent_activity_box_center">
-        <p className="activity_box_title">{activity.title}</p>
-        <p className="activity_box_account">{activity.account}</p>
+        <p className="activity_box_title">{activity.passwordID.appName}</p>
+        <p className="activity_box_account">{activity.passwordID.email}</p>
         <p className="activity_box_account">
           <span>
-            {activity.activityType}: {activity.date}
+            {activity.actionType}: {activity.passwordID.createdAt}
           </span>{" "}
-          <span>{activity.time}</span>
+          {/* <span>{activity.time}</span> */}
         </p>
       </div>
       <div className="recent_activity_box_right">

@@ -2,9 +2,11 @@ import { Response } from "express";
 import {
   SpecificIDRequest,
   PasswordRequestExtendsInterface,
+  RequestExtendsInterface,
 } from "../Types/types";
 import Password from "../Models/Password";
 import User from "../Models/User";
+import RecentActivity from "../Models/RecentActivity";
 
 export const AddAndUpdatePassword = async (
   req: PasswordRequestExtendsInterface,
@@ -23,7 +25,6 @@ export const AddAndUpdatePassword = async (
         categoryName,
         passwordID = null,
       } = req.body;
-      // const UserID = await User.findOne({ _id: userID });
       const ImgURL = `http://localhost:5000/uploads/${categoryName}.png`;
       if (passwordID) {
         const passwordData = await Password.findOne({ passwordID });
@@ -56,7 +57,19 @@ export const AddAndUpdatePassword = async (
           passwordData.webUrl = webUrl;
           passwordData.categoryName = categoryName;
           passwordData.passwordImg = ImgURL;
-          await passwordData.save();
+          const passwordid = await passwordData.save();
+
+          const Userid = await User.findOne({ _id: userID });
+
+          await RecentActivity.findOneAndUpdate(
+            {
+              userID: Userid?.userID,
+              passwordID: passwordid._id,
+              actionType: "Password Edited",
+            }, // Find existing entry
+            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
+            { upsert: true, new: true } // Create if not exists, return the updated doc
+          );
           res.status(200).json({
             success: true,
             message: "Password updated successfully",
@@ -96,7 +109,16 @@ export const AddAndUpdatePassword = async (
               actionDateTime: new Date(),
             },
           });
-          await passwordData.save();
+          const passwordid = await passwordData.save();
+          await RecentActivity.findOneAndUpdate(
+            {
+              userID: userId?.userID,
+              passwordID: passwordid._id,
+              actionType: "Password Created",
+            }, // Find existing entry
+            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
+            { upsert: true, new: true } // Create if not exists, return the updated doc
+          );
           res.status(200).json({
             success: true,
             message: "Password added successfully",
@@ -189,11 +211,41 @@ export const GetSpecificPassword = async (
             .status(404)
             .json({ success: false, message: "Password not found" });
         } else {
+          const userID = await User.findOne({ _id: req.user.id });
+          await RecentActivity.findOneAndUpdate(
+            {
+              userID: userID?.userID,
+              passwordID: passwordData._id,
+              actionType: "Password Viewed",
+            }, // Find existing entry
+            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
+            { upsert: true, new: true } // Create if not exists, return the updated doc
+          );
           res
             .status(200)
             .json({ success: true, message: "", data: passwordData });
         }
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const RecentActivities = async (
+  req: RequestExtendsInterface,
+  res: Response
+) => {
+  try {
+    if (req.user) {
+      const userID = await User.findOne({ _id: req.user.id });
+      const recentActivities = await RecentActivity.find({
+        userID: userID?.userID,
+      }).populate("passwordID");
+      res
+        .status(200)
+        .json({ success: true, message: "", data: recentActivities });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 };

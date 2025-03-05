@@ -71,3 +71,21 @@ export const GetSpecificPassword = async (passwordID: number) => {
     return response.data.data;
   } catch (error) {}
 };
+
+export const GetAllRecentActivites = async () =>{
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      `${API_URL}/getrecentactivities`,
+      config
+    );
+    return response.data.data;
+  } catch (error) {
+    
+  }
+}
