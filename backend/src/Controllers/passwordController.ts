@@ -167,10 +167,20 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
           .status(400)
           .json({ success: false, message: "Password ID is required" });
       } else {
-        console.log("Request Body:", req.body);
+        const userID = await User.findOne({ _id: req.user.id });
+        if (!userID) {
+          return;
+        }
+        const passwordDoc = await Password.findOne({
+          passwordID: passwordID, // Search by custom passwordID field
+          userID: userID?.userID, // Ensure it's linked to the correct user
+        });
+        const deletedPassword = await Password.deleteOne({
+          _id: passwordDoc?._id
+        });
+        await RecentActivity.deleteMany({
+          passwordID: passwordDoc?._id, // Use the actual _id of the password
 
-        const deletedPassword = await Password.findOneAndDelete({
-          passwordID: passwordID,
         });
         if (!deletedPassword) {
           res
@@ -188,7 +198,6 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
 export const GetSpecificPassword = async (
   req: SpecificIDRequest,
   res: Response
@@ -203,15 +212,19 @@ export const GetSpecificPassword = async (
           .status(400)
           .json({ success: false, message: "Password ID is required" });
       } else {
+        const userID = await User.findOne({ _id: req.user.id });
+        if (!userID) {
+          return;
+        }
         const passwordData = await Password.findOne({
           passwordID: passwordID,
+          userID: userID?.userID,
         });
         if (!passwordData) {
           res
             .status(404)
             .json({ success: false, message: "Password not found" });
         } else {
-          const userID = await User.findOne({ _id: req.user.id });
           await RecentActivity.findOneAndUpdate(
             {
               userID: userID?.userID,

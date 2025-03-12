@@ -8,9 +8,12 @@ import { notify } from "../utils/notification";
 import { useNavigate } from "react-router-dom";
 import { GetUserProfileData, UserDetail } from "../services/UserProfileService";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { getProfileData } from "../redux/ProfileSlice/ProfileSlice";
 
 const Setting_Page = () => {
-  const { register, handleSubmit,setValue } = useForm<UserDetailInterface>({
+  const { register, handleSubmit, setValue } = useForm<UserDetailInterface>({
     defaultValues: {
       username: "",
       fullname: "",
@@ -18,11 +21,13 @@ const Setting_Page = () => {
       nPassword: "",
     },
   });
+  const dispatch = useDispatch<AppDispatch>();
+
   const { data: userData } = useQuery<ResponseInterface>({
     queryKey: ["userData"],
     queryFn: GetUserProfileData,
   });
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const onsubmit: SubmitHandler<UserDetailInterface> = (data) => {
     console.log("Form Data:", data);
     const sendData = {
@@ -40,25 +45,26 @@ const navigate = useNavigate()
     onSuccess: (data) => {
       if (data.success) {
         notify({ type: "success", message: data.message });
+        dispatch(getProfileData());
         navigate("/showall");
       } else {
         notify({ type: "error", message: data.message });
       }
     },
   });
-  useEffect(()=>{
-    if(userData){
-      console.log(userData.data)
+  useEffect(() => {
+    if (userData) {
+      console.log(userData.data);
       const userdata = userData.data?.user;
-      setValue("username",userdata?.username || "")
-      setValue("fullname",userdata?.fullname || "")
+      setValue("username", userdata?.username || "");
+      setValue("fullname", userdata?.fullname || "");
     }
-  },[userData])
+  }, [userData]);
   return (
     <>
       <div className="setting_page">
         <div className="setting_form">
-          <form onSubmit={handleSubmit(onsubmit)} >
+          <form onSubmit={handleSubmit(onsubmit)} autoComplete="false">
             <CInput
               type="text"
               placeholder="Username"
@@ -78,6 +84,7 @@ const navigate = useNavigate()
               type="password"
               placeholder="Old Password"
               id="password"
+              autoComplete="new-password"
               label="Old Password"
               {...register("password")}
             />
@@ -85,6 +92,7 @@ const navigate = useNavigate()
               type="password"
               placeholder="New Password"
               id="new_password"
+              autoComplete="new-password"
               label="New Password"
               {...register("nPassword")}
             />

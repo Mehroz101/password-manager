@@ -79,6 +79,9 @@
   width: 100%;
   max-width: 400px;
 }
+.add_new_field.disabled input{
+  cursor:not-allowed;
+}
 .add_new_field label {
   font-size: 0.9rem;
 }

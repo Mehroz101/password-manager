@@ -27,7 +27,7 @@ const Profile_Page = () => {
   };
 
   const stats = [
-    { title: "Total Password", count: userData?.data.passwords },
+    { title: "Total Password", count: userData?.data?.passwords },
     { title: "Departments", count: 5 },
     { title: "Employees", count: 10 },
     { title: "Reused", count: 230 },

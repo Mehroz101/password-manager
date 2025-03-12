@@ -30,11 +30,32 @@ export const GetUserProfileData = async (
     });
   }
 };
+export const GetUserProfileDetail = async (
+  req: RequestExtendsInterface,
+  res: Response
+) => {
+  try {
+    if (req.user) {
+      const user = await User.findOne({ _id: req.user.id });
+      if (user) {
+        res.status(200).json({
+          success: true,
+          data: user,
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: true,
+      message: "Internal server error",
+    });
+  }
+};
 
 export const UpdateUserDetail = async (
   req: UserDetailInterface, // Ensure req.user is typed correctly
   res: Response
-): => {
+): Promise<void> => {
   try {
     // Check if the user is authenticated
     if (req.user) {
@@ -46,8 +67,13 @@ export const UpdateUserDetail = async (
         // Check if both password fields are provided
         if (password && nPassword) {
           // Check if the new username already exists
-          const isUsernameExist = await User.findOne({ username }) as UserDetailInterface;
-          if (!isUsernameExist || isUsernameExist._id.toString() === req.user.id) {
+          const isUsernameExist = (await User.findOne({
+            username,
+          })) as UserDetailInterface;
+          if (
+            !isUsernameExist ||
+            (isUsernameExist?._id?.toString() ?? "") === req.user.id
+          ) {
             // Verify the old password
             const isVerified = await bcrypt.compare(password, user.password);
             if (isVerified) {
@@ -62,18 +88,27 @@ export const UpdateUserDetail = async (
               });
 
               // Respond with success
-              res.status(200).json({ success: true, message: "Details updated successfully" });
+              res.status(200).json({
+                success: true,
+                message: "Details updated successfully",
+              });
             } else {
               // Incorrect password
-              res.status(401).json({ success: false, message: "Incorrect password" });
+              res
+                .status(401)
+                .json({ success: false, message: "Incorrect password" });
             }
           } else {
             // Username already exists
-            res.status(400).json({ success: false, message: "Username already exists" });
+            res
+              .status(400)
+              .json({ success: false, message: "Username already exists" });
           }
         } else {
           // Password fields are required
-          res.status(400).json({ success: false, message: "Password fields are required" });
+          res
+            .status(400)
+            .json({ success: false, message: "Password fields are required" });
         }
       } else {
         // User not found
