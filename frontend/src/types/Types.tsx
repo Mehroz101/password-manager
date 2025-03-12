@@ -72,8 +72,19 @@ export interface ActivityResponseInterface {
   passwordID: {
     passwordImg: string;
     appName: string;
-    createdAt: string;
     email: string;
   };
+  createdAt: string;
   actionType: string;
+}
+export interface UserProfileInterface {
+  username: string;
+  name: string;
+  profileImage: string;
+}
+export interface UserDetailInterface {
+  username: "";
+  fullname: "";
+  password: "";
+  nPassword: "";
 }

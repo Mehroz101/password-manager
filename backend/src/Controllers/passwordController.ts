@@ -65,7 +65,7 @@ export const AddAndUpdatePassword = async (
             {
               userID: Userid?.userID,
               passwordID: passwordid._id,
-              actionType: "Password Edited",
+              actionType: "Last Edited",
             }, // Find existing entry
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc
@@ -114,7 +114,7 @@ export const AddAndUpdatePassword = async (
             {
               userID: userId?.userID,
               passwordID: passwordid._id,
-              actionType: "Password Created",
+              actionType: "Created At",
             }, // Find existing entry
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc
@@ -216,7 +216,7 @@ export const GetSpecificPassword = async (
             {
               userID: userID?.userID,
               passwordID: passwordData._id,
-              actionType: "Password Viewed",
+              actionType: "Last Viewed",
             }, // Find existing entry
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc

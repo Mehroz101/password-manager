@@ -19,3 +19,14 @@ export interface SpecificIDRequest extends Request {
   user?: { id: string };
   body: { passwordID: number };
 }
+
+export interface UserDetailInterface {
+  user?: { id: string };
+  _id?:string,
+  body:{
+    username: string;
+    fullname: string;
+    password: string;
+    nPassword: string;
+  }
+}

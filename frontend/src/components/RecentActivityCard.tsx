@@ -2,6 +2,7 @@ import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { ActivityResponseInterface } from "../types/Types";
+import { formatDate } from "../utils/function";
 
 const RecentActivityCard = ({
   activity,
@@ -18,8 +19,8 @@ const RecentActivityCard = ({
           passwordImg: activity.passwordID.passwordImg,
           appName: activity.passwordID.appName,
           email: activity.passwordID.email,
-          createdAt: activity.passwordID.createdAt,
         },
+        createdAt: activity?.createdAt,
         actionType: activity.actionType,
       });
     }
@@ -36,14 +37,14 @@ const RecentActivityCard = ({
         <p className="activity_box_account">{activity.passwordID.email}</p>
         <p className="activity_box_account">
           <span>
-            {activity.actionType}: {activity.passwordID.createdAt}
+            {activity.actionType}: {formatDate(activity?.createdAt)}
           </span>{" "}
           {/* <span>{activity.time}</span> */}
         </p>
       </div>
-      <div className="recent_activity_box_right">
+      {/* <div className="recent_activity_box_right">
         <FontAwesomeIcon icon={faClipboard} />
-      </div>
+      </div> */}
     </div>
   );
 };

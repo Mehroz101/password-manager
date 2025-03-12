@@ -11,8 +11,15 @@ import { useNavigate } from "react-router-dom";
 
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons/faPeopleGroup";
 import { ROUTES } from "../utils/routes";
+import { useQuery } from "@tanstack/react-query";
+import { GetUserProfileData } from "../services/UserProfileService";
+import { ResponseInterface } from "../types/Types";
 const Profile_Page = () => {
   const navigate = useNavigate();
+  const { data: userData } = useQuery<ResponseInterface>({
+    queryKey: ["userData"],
+    queryFn: GetUserProfileData,
+  });
   const user = {
     name: "Mehroz Farooq",
     username: "mehrozfarooq",
@@ -20,7 +27,7 @@ const Profile_Page = () => {
   };
 
   const stats = [
-    { title: "Total Password", count: 23 },
+    { title: "Total Password", count: userData?.data.passwords },
     { title: "Departments", count: 5 },
     { title: "Employees", count: 10 },
     { title: "Reused", count: 230 },
@@ -50,6 +57,7 @@ const Profile_Page = () => {
       },
     },
   ];
+  console.log(userData);
 
   return (
     <div className="profile_page">
@@ -57,15 +65,19 @@ const Profile_Page = () => {
       <div className="profile_page_top">
         <div className="profile_img">
           <img
-            src={user.profileImage || "/default-profile.png"}
+            src={
+              userData?.data.user.profileImage
+                ? userData?.data.user.profileImage
+                : ProfileImg
+            }
             alt="Profile"
           />
           <div className="edit_profileImg">
             <FontAwesomeIcon icon={faEdit} />
           </div>
         </div>
-        <h3 className="userorignalname">{user.name}</h3>
-        <span className="username">@{user.username}</span>
+        <h3 className="userorignalname">{userData?.data.user.username}</h3>
+        <span className="username">@{userData?.data.user.username}</span>
       </div>
 
       {/* Profile Stats */}

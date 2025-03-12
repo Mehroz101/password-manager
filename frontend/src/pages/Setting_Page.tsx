@@ -1,58 +1,92 @@
-// import React from "react";
 import "../styles/Setting.css";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faSignOut } from "@fortawesome/free-solid-svg-icons";
-// import Netflix from "../assets/google.png";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ResponseInterface, UserDetailInterface } from "../types/Types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { notify } from "../utils/notification";
+import { useNavigate } from "react-router-dom";
+import { GetUserProfileData, UserDetail } from "../services/UserProfileService";
+import { useEffect } from "react";
 
 const Setting_Page = () => {
+  const { register, handleSubmit,setValue } = useForm<UserDetailInterface>({
+    defaultValues: {
+      username: "",
+      fullname: "",
+      password: "",
+      nPassword: "",
+    },
+  });
+  const { data: userData } = useQuery<ResponseInterface>({
+    queryKey: ["userData"],
+    queryFn: GetUserProfileData,
+  });
+const navigate = useNavigate()
+  const onsubmit: SubmitHandler<UserDetailInterface> = (data) => {
+    console.log("Form Data:", data);
+    const sendData = {
+      username: data.username,
+      fullname: data.fullname,
+      password: data.password,
+      nPassword: data.nPassword,
+    };
+    console.log(sendData);
+    // navigate("/");
+    userDetailMutation.mutate(sendData);
+  };
+  const userDetailMutation = useMutation({
+    mutationFn: UserDetail,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+        navigate("/showall");
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+  });
+  useEffect(()=>{
+    if(userData){
+      console.log(userData.data)
+      const userdata = userData.data?.user;
+      setValue("username",userdata?.username || "")
+      setValue("fullname",userdata?.fullname || "")
+    }
+  },[userData])
   return (
     <>
       <div className="setting_page">
-        {/* <div className="setting_top_card">
-          <div className="top_card_left">
-            <img src={Netflix} alt="appicon" />
-          </div>
-          <div className="top_card_right">
-            <div className="top_card_right_top">
-              <p className="top_card_title">Edusoft System Solution</p>
-              <p className="top_card_category">Development</p>
-              <FontAwesomeIcon icon={faSignOut} />
-            </div>
-            <div className="top_card_right_bottom">
-              <p className="activity_box_account">
-                <span>Joined Since</span> <span>12/07/2024</span>
-              </p>
-            </div>
-          </div>
-        </div> */}
         <div className="setting_form">
-          <form action="" autoComplete="off">
+          <form onSubmit={handleSubmit(onsubmit)} >
             <CInput
               type="text"
               placeholder="Username"
               id="username"
               label="Username"
               disabled={true}
+              {...register("username")}
             />
             <CInput
               type="text"
               placeholder="Full Name"
               id="fullname"
               label="Full Name"
+              {...register("fullname")}
             />
             <CInput
               type="password"
               placeholder="Old Password"
               id="password"
               label="Old Password"
+              {...register("password")}
             />
             <CInput
               type="password"
               placeholder="New Password"
-              id="password"
+              id="new_password"
               label="New Password"
+              {...register("nPassword")}
             />
             <CButton label="Update" />
           </form>

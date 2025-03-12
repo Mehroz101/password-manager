@@ -8,7 +8,11 @@ import "../styles/HomePage.css";
 import Whatsapp from "../assets/whatsapp.png";
 import Google from "../assets/google.png";
 import SearchBox from "../components/SearchBox";
-import { ActivityResponseInterface, Category, RecentActivity } from "../types/Types";
+import {
+  ActivityResponseInterface,
+  Category,
+  RecentActivity,
+} from "../types/Types";
 import { useEffect, useState } from "react";
 import CategoryCard from "../components/CategoryCard";
 import RecentActivityCard from "../components/RecentActivityCard";
@@ -77,10 +81,10 @@ const Home = () => {
   // const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
   //   []
   // );
-  const {data:recentActivities} = useQuery<ActivityResponseInterface[]>({
+  const { data: recentActivities } = useQuery<ActivityResponseInterface[]>({
     queryKey: ["recentActivities"],
-    queryFn:GetAllRecentActivites
-  })
+    queryFn: GetAllRecentActivites,
+  });
   useEffect(() => {
     if (category_cards) {
       setCategories(category_cards);
@@ -111,10 +115,17 @@ const Home = () => {
         <div className="home_page_recent_activity_container">
           <h3 className="section_heading">Recent Activity</h3>
           <div className="home_page_recent_activity_boxs">
-            {recentActivities &&
-              recentActivities.map((activity:ActivityResponseInterface, index:number) => (
-                <RecentActivityCard key={index} activity={activity} />
-              ))}
+            {recentActivities && recentActivities.length > 0 ? (
+              recentActivities
+                .map((activity: ActivityResponseInterface, index: number) => (
+                  <RecentActivityCard key={index} activity={activity} />
+                ))
+                .reverse()
+            ) : (
+              <>
+                <p>No recent activities</p>
+              </>
+            )}
           </div>
         </div>
       </div>
