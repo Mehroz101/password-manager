@@ -3,7 +3,7 @@ import { RequestExtendsInterface, UserDetailInterface } from "../Types/types";
 import User from "../Models/User";
 import Password from "../Models/Password";
 import bcrypt from "bcryptjs";
-
+import fs from "fs"
 export const GetUserProfileData = async (
   req: RequestExtendsInterface,
   res: Response
@@ -45,10 +45,8 @@ export const GetUserProfileDetail = async (
       }
     }
   } catch (error) {
-    res.status(500).json({
-      success: true,
-      message: "Internal server error",
-    });
+    
+    
   }
 };
 
@@ -123,3 +121,47 @@ export const UpdateUserDetail = async (
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response) =>{
+  try {
+    if (!req?.file) {
+      
+      res.status(400).json({ success: false, message: "No file uploaded" });
+    } else {
+      console.log("entered in file: ", req.file)
+      const file = req?.file;
+      if (!req.user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+      } else {
+        const userID = req.user.id;
+        const user = await User.findOne({ _id: userID});
+        if (!user) {
+          res
+            .status(404)
+            .json({ success: false, message: "First Create an Account" });
+        } else {
+          if (user.profileImg) {
+            console.log("logofound");
+            const previousImg = user.profileImg;
+            const filePath = `./uploads/${previousImg}`;
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+            }
+          }
+          user.profileImg = file?.filename;
+          await user.save();
+          res.status(200).json({
+            success: true,
+            message: "Profile image uploaded successfully",
+            user,
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: true,
+      message: "Internal server error",
+    });
+  }
+}

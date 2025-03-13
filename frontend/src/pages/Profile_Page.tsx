@@ -11,23 +11,59 @@ import { useNavigate } from "react-router-dom";
 
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons/faPeopleGroup";
 import { ROUTES } from "../utils/routes";
-import { useQuery } from "@tanstack/react-query";
-import { GetUserProfileData } from "../services/UserProfileService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  GetUserProfileData,
+  UpdateProfileImg,
+} from "../services/UserProfileService";
 import { ResponseInterface } from "../types/Types";
+const API_URL = import.meta.env.REACT_APP_API_IMAGE_URL;
+import profileImg from "../assets/profileImg.png";
+
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { getProfileData } from "../redux/ProfileSlice/ProfileSlice";
+import { notify } from "../utils/notification";
 const Profile_Page = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { userData } = useSelector((state: RootState) => state.profile);
   const navigate = useNavigate();
-  const { data: userData } = useQuery<ResponseInterface>({
-    queryKey: ["userData"],
+  const { data: userdata } = useQuery<ResponseInterface>({
+    queryKey: ["userdata"],
     queryFn: GetUserProfileData,
   });
-  const user = {
-    name: "Mehroz Farooq",
-    username: "mehrozfarooq",
-    profileImage: ProfileImg,
+  const profileImgUpdateMutation = useMutation({
+    mutationFn: UpdateProfileImg,
+    onSuccess:(data)=>{
+      if(data.success)
+      {
+        dispatch(getProfileData())
+        notify({type:"success",message:data.message})
+      }
+      else{
+        notify({type:"error",message:data.message})
+
+      }
+    }
+  });
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // Ensure a file exists
+    console.log(file);
+    if (file) {
+      console.log(file);
+      profileImgUpdateMutation.mutate({ profileImg: file });
+    }
+  };
+  const handleFileClick = () => {
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
   const stats = [
-    { title: "Total Password", count: userData?.data?.passwords },
+    { title: "Total Password", count: userdata?.data?.passwords },
     { title: "Departments", count: 5 },
     { title: "Employees", count: 10 },
     { title: "Reused", count: 230 },
@@ -57,7 +93,7 @@ const Profile_Page = () => {
       },
     },
   ];
-  console.log(userData);
+  console.log("userdata:",userdata);
 
   return (
     <div className="profile_page">
@@ -66,18 +102,26 @@ const Profile_Page = () => {
         <div className="profile_img">
           <img
             src={
-              userData?.data.user.profileImage
-                ? userData?.data.user.profileImage
-                : ProfileImg
+              userData?.profileImg
+                ? `${API_URL}/uploads/${userData?.profileImg}`
+                : profileImg
             }
             alt="Profile"
           />
           <div className="edit_profileImg">
-            <FontAwesomeIcon icon={faEdit} />
+            <FontAwesomeIcon icon={faEdit} onClick={handleFileClick} />
+            <input
+              type="file"
+              ref={inputFileRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              id="profileImg"
+              accept="image/*"
+            />
           </div>
         </div>
-        <h3 className="userorignalname">{userData?.data.user.username}</h3>
-        <span className="username">@{userData?.data.user.username}</span>
+        <h3 className="userorignalname">{userData?.fullname || "No Name" }</h3>
+        <span className="username">@{userData?.username}</span>
       </div>
 
       {/* Profile Stats */}

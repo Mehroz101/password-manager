@@ -17,6 +17,8 @@
 .navbar_left .navbar_profile_img {
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .nav_profile_text p {
   font-size: 0.9rem;

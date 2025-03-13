@@ -46,7 +46,7 @@ const Setting_Page = () => {
       if (data.success) {
         notify({ type: "success", message: data.message });
         dispatch(getProfileData());
-        navigate("/showall");
+        navigate("/profile");
       } else {
         notify({ type: "error", message: data.message });
       }

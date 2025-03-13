@@ -4,7 +4,6 @@ export const formatDate = (dateString: string): string => {
   const diffInMs = now.getTime() - date.getTime();
   const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
   const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
 
   // If edited recently (less than 24 hours ago)
   if (diffInMinutes < 1) return "just now";

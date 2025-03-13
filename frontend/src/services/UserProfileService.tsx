@@ -1,8 +1,5 @@
 import axios from "axios";
-import {
-  ResponseInterface,
-  UserDetailInterface,
-} from "../types/Types";
+import { ResponseInterface, UserDetailInterface } from "../types/Types";
 
 const REACT_APP_API_URL = import.meta.env.REACT_APP_API_URL;
 const API_URL = `${REACT_APP_API_URL}/user`;
@@ -60,6 +57,33 @@ export const UserProfileDetail = async () => {
     return response.data;
   } catch (error: unknown) {
     console.log("error: ", (error as any).response?.data?.message);
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
+};
+
+export const UpdateProfileImg = async (data: {
+  profileImg: File;
+}): Promise<ResponseInterface> => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const formData = new FormData();
+    formData.append("profileImg", data.profileImg);
+    const response = await axios.post(
+      `${API_URL}/updateprofileimg`,
+      formData,
+      config
+    );
+    console.log(response);
+    return response.data;
+  } catch (error: unknown) {
     return {
       success: false,
       message: (error as any).response?.data?.message,

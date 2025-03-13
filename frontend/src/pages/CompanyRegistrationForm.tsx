@@ -17,6 +17,7 @@ import { notify } from "../utils/notification";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import DefaultProfileImg from "../assets/companyLogo.png";
+const API_URL = import.meta.env.REACT_APP_API_IMAGE_URL;
 
 const CompanyRegistrationForm = () => {
   const {
@@ -100,8 +101,8 @@ const CompanyRegistrationForm = () => {
   };
   useEffect(() => {
     if (companyData) {
-      setValue("companyName", companyData.data.companyName);
-      setValue("noOfUsers", companyData.data.noOfUsers);
+      setValue("companyName", companyData.data?.companyName);
+      setValue("noOfUsers", companyData.data?.noOfUsers);
     }
   }, [companyData]);
   return (
@@ -111,8 +112,8 @@ const CompanyRegistrationForm = () => {
           <div className="company_img">
             <img
               src={
-                companyData?.data.companyLogo
-                  ? `http://localhost:5000/uploads/${companyData?.data.companyLogo}`
+                companyData?.data?.companyLogo
+                  ? `${API_URL}/uploads/${companyData?.data?.companyLogo}`
                   : profileImg
               }
               alt="Company Logo"
@@ -143,7 +144,7 @@ const CompanyRegistrationForm = () => {
             {...register("companyName", {
               required: "Company Name is required",
             })}
-            error={errors.companyName}
+            error={errors?.companyName}
           />
 
           {/* Number of Employees Input */}
@@ -155,7 +156,7 @@ const CompanyRegistrationForm = () => {
             {...register("noOfUsers", {
               required: "Number of Employees is required",
             })}
-            error={errors.noOfUsers}
+            error={errors?.noOfUsers}
           />
 
           {/* Submit Button */}
