@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "strict": true,
+    "module": "commonjs",
     "esModuleInterop": true,
-    "resolveJsonModule": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "target": "ES6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "api"
+  },
+  "include": ["./src/**/*"]
 }
