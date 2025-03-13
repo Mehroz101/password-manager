@@ -4,8 +4,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && cp -R uploads api/uploads",
-    "start": "node dist/server.js",
+    "build": "tsc && cp -R uploads public/uploads",
+    "start": "node public/server.js",
     "dev": "ts-node src/server.ts"
 
   },
