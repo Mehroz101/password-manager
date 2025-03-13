@@ -24,6 +24,9 @@ app.use("/api/auth", authRoutes_1.default);
 app.use("/api/company", companyRoutes_1.default);
 app.use("/api/password", passwordRoutes_1.default);
 app.use("/api/user", userRoutes_1.default);
+app.get("/", (req, res) => {
+    res.send("helo versel");
+});
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
