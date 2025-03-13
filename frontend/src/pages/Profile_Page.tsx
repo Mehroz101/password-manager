@@ -6,7 +6,6 @@ import {
   faEdit,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
-import ProfileImg from "../assets/profileImg.png";
 import { useNavigate } from "react-router-dom";
 
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons/faPeopleGroup";
