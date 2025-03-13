@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./DB/dbconnection";
@@ -23,7 +23,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/password", passwordRoutes);
 app.use("/api/user", userRoutes);
-
+app.get("/",(req:Request,res:Response)=>{
+    res.send("helo versel")
+})
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
