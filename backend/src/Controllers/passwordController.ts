@@ -161,7 +161,6 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
       res.status(401).json({ success: false, message: "Unauthorized" });
     } else {
       const { passwordID } = req.body;
-      console.log(req.body);
       if (!passwordID) {
         res
           .status(400)

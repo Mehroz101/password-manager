@@ -7,6 +7,7 @@ export const ROUTES ={
     PROFILE :"/profile",
     SETTING:"/setting",
     USERS:"/users",
+    VIEWCOMPANY:"/companyregistration",
     ADDNEWUSER:"/addnewuser",
     COMPANYREGISTER:"/companyregistration",
     COMPANYREGISTRATIONFORM:"/CompanyRegistrationForm",

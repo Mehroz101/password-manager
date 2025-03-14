@@ -29,14 +29,12 @@ const Setting_Page = () => {
   });
   const navigate = useNavigate();
   const onsubmit: SubmitHandler<UserDetailInterface> = (data) => {
-    console.log("Form Data:", data);
     const sendData = {
       username: data.username,
       fullname: data.fullname,
       password: data.password,
       nPassword: data.nPassword,
     };
-    console.log(sendData);
     // navigate("/");
     userDetailMutation.mutate(sendData);
   };
@@ -54,7 +52,6 @@ const Setting_Page = () => {
   });
   useEffect(() => {
     if (userData) {
-      console.log(userData.data);
       const userdata = userData.data?.user;
       setValue("username", userdata?.username || "");
       setValue("fullname", userdata?.fullname || "");

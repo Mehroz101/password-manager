@@ -16,14 +16,19 @@ export const AddAndUpdatePasswordFunc = async (data: AddNewPassword) => {
       config
     );
     return response.data;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error:unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };  }
 };
 
 export const DeletePassword = async (passwordId: number) => {
   try {
-    console.log("axios ", passwordId);
     const token = localStorage.getItem("passwordmanager");
     const config = {
       headers: {
@@ -36,8 +41,15 @@ export const DeletePassword = async (passwordId: number) => {
       config
     );
     return response.data;
-  } catch (error) {
-    console.log(error);
+  } catch (error:unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
   }
 };
 
@@ -52,7 +64,14 @@ export const GetAllPassword = async () => {
     const response = await axios.get(`${API_URL}/getallpasswords`, config);
     return response.data.data;
   } catch (error) {
-    console.log(error);
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
   }
 };
 export const GetSpecificPassword = async (passwordID: number) => {
@@ -69,7 +88,16 @@ export const GetSpecificPassword = async (passwordID: number) => {
       config
     );
     return response.data.data;
-  } catch (error) {}
+  } catch (error:unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
 };
 
 export const GetAllRecentActivites = async () =>{
@@ -85,7 +113,15 @@ export const GetAllRecentActivites = async () =>{
       config
     );
     return response.data.data;
-  } catch (error) {
+  } catch (error: unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
     
   }
 }

@@ -1,6 +1,5 @@
 import {
-  faBinoculars,
-  faHeart,
+  faBuilding,
   faHome,
   faLayerGroup,
   faPlus,
@@ -35,8 +34,8 @@ const BottomNav = () => {
         </div>
         <div className="bottom_navbar_right">
           <FontAwesomeIcon
-            icon={faBinoculars}
-            onClick={() => navigate(ROUTES.VIEWAPP + "/6")}
+            icon={faBuilding}
+            onClick={() => navigate(ROUTES.VIEWCOMPANY)}
           />
           <FontAwesomeIcon
             icon={faUser}

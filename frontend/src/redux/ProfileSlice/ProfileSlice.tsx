@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import { UserProfileDetail } from "../../services/UserProfileService";
 
 // Define the type for the profile state

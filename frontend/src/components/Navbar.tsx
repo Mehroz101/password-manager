@@ -17,7 +17,6 @@ const Navbar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { userData } = useSelector((state: RootState) => state.profile);
   useEffect(() => {
-    console.log("calledd", userData);
     dispatch(getProfileData());
   }, [dispatch]);
   return (
@@ -26,8 +25,8 @@ const Navbar = () => {
         <div className="navbar_profile_img">
           <img
             src={
-              userData?.profileImg
-                ? `${API_URL}/uploads/${userData?.profileImg}`
+              userData?.user.profileImg
+                ? `${API_URL}/uploads/${userData?.user.profileImg}`
                 : profileImg
             }
             alt="img"
@@ -35,7 +34,7 @@ const Navbar = () => {
         </div>
         <div className="nav_profile_text">
           <p>
-            {userData?.fullname ? userData?.fullname : userData?.username}
+            {userData?.user.fullname ? userData?.user.fullname : userData?.user.username}
             <img src={Verified} alt="" className="verified_badge" />
           </p>
           <span>{getGreeting()}</span>

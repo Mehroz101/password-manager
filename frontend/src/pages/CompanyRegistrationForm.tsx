@@ -69,7 +69,6 @@ const CompanyRegistrationForm = () => {
   const uploadCompanyLogoMutation = useMutation({
     mutationFn: UploadCompanyLogo,
     onSuccess: (data) => {
-      console.log(data);
       if (data.success) {
         notify({
           type: "success",
@@ -95,7 +94,6 @@ const CompanyRegistrationForm = () => {
       reader.readAsDataURL(file);
       const formData = new FormData();
       formData.append("companyLogo", file);
-      console.log(formData);
       uploadCompanyLogoMutation.mutate(formData);
     }
   };

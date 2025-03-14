@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/AddNewUser.css";
 import CInput from "../components/FormComponent/CInput";
 import { AddNewPassword } from "../types/Types";
@@ -18,13 +18,7 @@ const apps = [
 ];
 
 // Category List
-const categories = [
-  { title: "API" },
-  { title: "Card" },
-  { title: "Email" },
-  { title: "Ecom" },
-  { title: "Other" },
-];
+
 const AddNewUser_Page = () => {
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -51,7 +45,6 @@ const AddNewUser_Page = () => {
       password: data.password,
       url: data.url,
     };
-    console.log(sendData);
     navigate("/");
   };
 

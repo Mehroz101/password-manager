@@ -100,7 +100,6 @@ const AddNew_Page = () => {
       password: data.password,
       url: data.url,
     };
-    console.log(sendData);
     // navigate("/");
     AddNewPasswordMutation.mutate(sendData);
   };
@@ -171,9 +170,7 @@ const AddNew_Page = () => {
             placeholder="Select an type"
             label="Category Type"
             required
-            onChange={(selectedOption) =>
-              console.log("Selected:", selectedOption)
-            }
+            
           />
           <CDropdown
             control={control}
@@ -182,9 +179,7 @@ const AddNew_Page = () => {
             placeholder="Select an app"
             label="Category"
             required
-            onChange={(selectedOption) =>
-              console.log("Selected:", selectedOption)
-            }
+           
           />
           {/* Input Fields */}
           {/* <CMultiSelect

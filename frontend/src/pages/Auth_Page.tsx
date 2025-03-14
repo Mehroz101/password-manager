@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginFunc, SignupFunc } from "../services/AuthService";
 import { notify } from "../utils/notification";
 
+
 const Auth_Page = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -23,16 +24,14 @@ const Auth_Page = () => {
     mutationFn: LoginFunc,
     onSuccess: (data) => {
       if (data.success) {
-        console.log(data);
         notify({ type: "success", message: data.message });
         localStorage.setItem("passwordmanager", data.data.token);
-        navigate("/");
+        navigate("/profile");
       } else {
         notify({ type: "error", message: data.message });
       }
     },
     onError: (error: any) => {
-      console.log(error);
 
       const errorMessage =
         error?.response?.data?.message || "An unexpected error occurred";
@@ -43,7 +42,6 @@ const Auth_Page = () => {
     mutationFn: SignupFunc,
     onSuccess: (data) => {
       if (data.success) {
-        console.log(data);
         setIsLogin(true);
         notify({ type: "success", message: data.message });
       } else {
@@ -51,7 +49,6 @@ const Auth_Page = () => {
       }
     },
     onError: (error: any) => {
-      console.log(error);
       const errorMessage =
         error?.response?.data?.message || "An unexpected error occurred";
       notify({ type: "error", message: errorMessage });

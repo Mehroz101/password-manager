@@ -23,9 +23,13 @@ export const RegisterCompany = async (
       return { success: false, message: response.data.message };
     }
   } catch (error: unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
     return {
       success: false,
-      message: (error as any).response?.data?.message || "An error occurred",
+      message: (error as any).response?.data?.message,
     };
   }
 };
@@ -33,7 +37,6 @@ export const UploadCompanyLogo = async (
   data: any
 ): Promise<ResponseInterface> => {
   try {
-    console.log("axios call");
     const token = localStorage.getItem("passwordmanager");
     const config = {
       headers: {
@@ -47,9 +50,13 @@ export const UploadCompanyLogo = async (
       return { success: false, message: response.data.message };
     }
   } catch (error: unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
     return {
       success: false,
-      message: (error as any).response?.data?.message || "An error occurred",
+      message: (error as any).response?.data?.message,
     };
   }
 };
@@ -62,16 +69,19 @@ export const GetCompanyDetail = async (): Promise<ResponseInterface> => {
       },
     };
     const response = await axios.get(API_URL + "/getcompanydetail", config);
-    console.log(response);
     if (response.data) {
       return response.data;
     } else {
       return { success: false, message: response.data.message };
     }
   } catch (error: unknown) {
+    // if((error as any).response.status== 401){
+    //   localStorage.removeItem("passwordmanager")
+    //   window.location.reload()
+    // }
     return {
       success: false,
-      message: (error as any).response?.data?.message || "An error occurred",
+      message: (error as any).response?.data?.message,
     };
   }
 };

@@ -6,9 +6,7 @@ export const LoginFunc = async (
   data: AuthInterface
 ): Promise<ResponseInterface> => {
   try {
-    console.log(data, "data");
     const response = await axios.post(API_URL + "/login", data);
-    console.log(response);
     if (!response.data.success) {
       return {
         success: false,
@@ -22,7 +20,6 @@ export const LoginFunc = async (
       };
     }
   } catch (error: unknown) {
-    console.log(error);
     return {
       success: false,
       message: (error as any).response?.data?.message || "An error occurred",
@@ -34,9 +31,7 @@ export const SignupFunc = async (
   data: AuthInterface
 ): Promise<ResponseInterface> => {
   try {
-    console.log(data, "data");
     const response = await axios.post(API_URL + "/signup", data);
-    console.log(response);
     if (!response.data.success) {
       return {
         success: false,

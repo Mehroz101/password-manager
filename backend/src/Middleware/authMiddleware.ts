@@ -10,7 +10,7 @@ export const protect = (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ message: "Unauthorized: No token provided" });
+    res.status(401).json({ message: "Please login to your account" });
     return;
   }
 
@@ -21,7 +21,7 @@ export const protect = (
     req.user = { id: decoded.id }; // ✅ Ensure `req.user` is always set
     next();
   } catch (error) {
-    res.status(401).json({ success: false, message: "Invalid token" });
+    res.status(401).json({ success: false, message: "Please login again" });
     return;
   }
 };

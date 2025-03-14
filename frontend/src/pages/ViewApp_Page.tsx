@@ -70,7 +70,6 @@ const ViewApp_Page = () => {
       categoryType: data.categoryType,
       passwordID: Number(appId),
     };
-    console.log(sendData);
     AddNewPasswordMutation.mutate(sendData);
   };
   const deletePasswordMutation = useMutation({
@@ -85,7 +84,6 @@ const ViewApp_Page = () => {
     },
   });
   const handleDeletePassword = (passwordId: number) => {
-    console.log("passwordId: ", passwordId);
     deletePasswordMutation.mutate(passwordId);
   };
   const AddNewPasswordMutation = useMutation({
@@ -106,7 +104,6 @@ const ViewApp_Page = () => {
   });
   useEffect(() => {
     if (specificData) {
-      console.log(specificData);
       setValue("appName", specificData.appName);
       setValue("username", specificData.username);
       setValue("email", specificData.email);
@@ -154,9 +151,7 @@ const ViewApp_Page = () => {
               placeholder="Select a type"
               label="Category Type"
               required={true}
-              onChange={(selectedOption) =>
-                console.log("Selected:", selectedOption)
-              }
+             
             />
             <CDropdown
               control={control}
@@ -165,9 +160,7 @@ const ViewApp_Page = () => {
               placeholder="Select a department"
               label="Category"
               required={true}
-              onChange={(selectedOption) =>
-                console.log("Selected:", selectedOption)
-              }
+              
             />
             {/* Input Fields */}
             {/* <CMultiSelect

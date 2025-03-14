@@ -10,12 +10,10 @@ import { useNavigate } from "react-router-dom";
 
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons/faPeopleGroup";
 import { ROUTES } from "../utils/routes";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
-  GetUserProfileData,
   UpdateProfileImg,
 } from "../services/UserProfileService";
-import { ResponseInterface } from "../types/Types";
 const API_URL = import.meta.env.REACT_APP_API_IMAGE_URL;
 import profileImg from "../assets/profileImg.png";
 
@@ -28,10 +26,10 @@ const Profile_Page = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { userData } = useSelector((state: RootState) => state.profile);
   const navigate = useNavigate();
-  const { data: userdata } = useQuery<ResponseInterface>({
-    queryKey: ["userdata"],
-    queryFn: GetUserProfileData,
-  });
+  // const { data: userdata } = useQuery<ResponseInterface>({
+  //   queryKey: ["userdata"],
+  //   queryFn: GetUserProfileData,
+  // });
   const profileImgUpdateMutation = useMutation({
     mutationFn: UpdateProfileImg,
     onSuccess:(data)=>{
@@ -49,9 +47,7 @@ const Profile_Page = () => {
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; // Ensure a file exists
-    console.log(file);
     if (file) {
-      console.log(file);
       profileImgUpdateMutation.mutate({ profileImg: file });
     }
   };
@@ -62,12 +58,11 @@ const Profile_Page = () => {
   };
 
   const stats = [
-    { title: "Total Password", count: userdata?.data?.passwords },
+    { title: "Total Password", count: userData?.passwords },
     { title: "Departments", count: 5 },
     { title: "Employees", count: 10 },
     { title: "Reused", count: 230 },
   ];
-
   const menuItems = [
     {
       id: 1,
@@ -92,7 +87,6 @@ const Profile_Page = () => {
       },
     },
   ];
-  console.log("userdata:",userdata);
 
   return (
     <div className="profile_page">
@@ -101,8 +95,8 @@ const Profile_Page = () => {
         <div className="profile_img">
           <img
             src={
-              userData?.profileImg
-                ? `${API_URL}/uploads/${userData?.profileImg}`
+              userData?.user.profileImg
+                ? `${API_URL}/uploads/${userData?.user.profileImg}`
                 : profileImg
             }
             alt="Profile"
@@ -119,8 +113,8 @@ const Profile_Page = () => {
             />
           </div>
         </div>
-        <h3 className="userorignalname">{userData?.fullname || "No Name" }</h3>
-        <span className="username">@{userData?.username}</span>
+        <h3 className="userorignalname">{userData?.user.fullname || "No Name" }</h3>
+        <span className="username">@{userData?.user.username}</span>
       </div>
 
       {/* Profile Stats */}

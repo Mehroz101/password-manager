@@ -60,7 +60,7 @@ const ShowAll_Page = () => {
   const [filteredData, setFilteredData] = useState<GetAllPasswordResponse[]>(
     []
   );
-  const [filteredCategory, setFilteredCategory] = useState<string>("");
+  const [filteredCategory, setFilteredCategory] = useState<string>("ALL");
   const [showActionBox, setShowActionBox] = useState<{
     [key: number]: boolean;
   }>({});
@@ -77,7 +77,6 @@ const ShowAll_Page = () => {
   const actionBoxRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const handleActionBoxToggle = (accountId: number) => {
-    console.log(accountId);
     setShowActionBox((previousState) => ({
       ...previousState,
       [accountId]: !previousState[accountId],
@@ -108,11 +107,7 @@ const ShowAll_Page = () => {
         if (navigator.clipboard) {
           // Modern Clipboard API
           await navigator.clipboard.writeText(textToCopy);
-          console.log(
-            `${
-              type === "email" ? "Email" : "Password"
-            } copied to clipboard: ${textToCopy}`
-          );
+         
         } else {
           // Fallback for older browsers (execCommand)
           const textArea = document.createElement("textarea");
@@ -121,11 +116,7 @@ const ShowAll_Page = () => {
           textArea.select();
           document.execCommand("copy");
           document.body.removeChild(textArea);
-          console.log(
-            `${
-              type === "email" ? "Email" : "Password"
-            } copied to clipboard (fallback)`
-          );
+          
         }
 
         // Clear the message after a few seconds
@@ -170,14 +161,12 @@ const ShowAll_Page = () => {
     },
   });
   const handleDeletePassword = (passwordId: number) => {
-    console.log("passwordId: ", passwordId);
     deletePasswordMutation.mutate(passwordId);
   };
   const handleEditPassword = (passwordId: number) => {
     navigate(`/editpassword/${passwordId}`);
   };
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setSearchTerm(event.target.value);
     const filtereddata = passwordData?.filter((item) => {
       return item.appName
@@ -267,7 +256,6 @@ const ShowAll_Page = () => {
                   <FontAwesomeIcon
                     icon={faEllipsisVertical}
                     onClick={() => {
-                      console.log("clicked", password);
                       handleActionBoxToggle(password.passwordID);
                     }} // Toggle the action box
                   />

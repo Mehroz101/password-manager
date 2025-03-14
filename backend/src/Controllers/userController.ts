@@ -38,9 +38,14 @@ export const GetUserProfileDetail = async (
     if (req.user) {
       const user = await User.findOne({ _id: req.user.id });
       if (user) {
+        const passwords = await Password.find({ userID: user.userID });
+        const sendData = {
+          user: user,
+          passwords: passwords?.length,
+        };
         res.status(200).json({
           success: true,
-          data: user,
+          data: sendData,
         });
       }
     }
@@ -127,7 +132,6 @@ export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response)
       
       res.status(400).json({ success: false, message: "No file uploaded" });
     } else {
-      console.log("entered in file: ", req.file)
       const file = req?.file;
       if (!req.user) {
         res.status(401).json({ success: false, message: "Unauthorized" });
@@ -140,7 +144,6 @@ export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response)
             .json({ success: false, message: "First Create an Account" });
         } else {
           if (user.profileImg) {
-            console.log("logofound");
             const previousImg = user.profileImg;
             const filePath = `./uploads/${previousImg}`;
             if (fs.existsSync(filePath)) {

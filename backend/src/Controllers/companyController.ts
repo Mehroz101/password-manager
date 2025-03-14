@@ -61,7 +61,6 @@ export const uploadCompanyLogo = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("enterd in upload");
     if (!req?.file) {
       res.status(400).json({ success: false, message: "No file uploaded" });
     } else {
@@ -77,7 +76,6 @@ export const uploadCompanyLogo = async (
             .json({ success: false, message: "First register a company" });
         } else {
           if (company.companyLogo) {
-            console.log("logofound");
             const previousLogo = company.companyLogo;
             const filePath = `./uploads/${previousLogo}`;
             if (fs.existsSync(filePath)) {
@@ -107,7 +105,6 @@ export const getCompany = async (
   res: Response
 ) => {
   try {
-    console.log("enterd");
     if (req.user) {
       const userID = req.user.id;
       const company = await Company.findOne({ creatorID: userID });

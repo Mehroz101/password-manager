@@ -3,7 +3,6 @@ import { ResponseInterface, UserDetailInterface } from "../types/Types";
 
 const REACT_APP_API_URL = import.meta.env.REACT_APP_API_URL;
 const API_URL = `${REACT_APP_API_URL}/user`;
-
 export const GetUserProfileData = async (): Promise<ResponseInterface> => {
   try {
     const token = localStorage.getItem("passwordmanager");
@@ -14,12 +13,20 @@ export const GetUserProfileData = async (): Promise<ResponseInterface> => {
     };
     const response = await axios.get(`${API_URL}/userprofiledata`, config);
     return response.data;
-    console.log(response);
   } catch (error: unknown) {
-    return {
-      success: false,
-      message: (error as any).response?.data?.message || "An error occurred",
-    };
+    // if (axios.isAxiosError(error) && error.response) {
+    //   console.log("Error status:", error.response.status);
+
+    //   if (error.response.status === 401) {
+    //     // Clear token and redirect user to login page
+    //     // localStorage.removeItem("passwordmanager");
+    //     // window.location.href = "/login"; // Redirect to login
+    //   }
+    // }
+      return {
+        success: false,
+        message: (error as any).response.data?.message || "An error occurred",
+      };
   }
 };
 
@@ -38,11 +45,19 @@ export const UserDetail = async (data: UserDetailInterface) => {
     );
     return response.data;
   } catch (error: unknown) {
-    console.log("error: ", (error as any).response?.data?.message);
-    return {
-      success: false,
-      message: (error as any).response?.data?.message,
-    };
+    // if (axios.isAxiosError(error) && error.response) {
+    //   console.log("Error status:", error.response.status);
+
+    //   if (error.response.status === 401) {
+    //     // Clear token and redirect user to login page
+    //     localStorage.removeItem("passwordmanager");
+    //     window.location.href = "/login"; // Redirect to login
+    //   }
+    // }
+      return {
+        success: false,
+        message: (error as any).response.data?.message || "An error occurred",
+      };
   }
 };
 export const UserProfileDetail = async () => {
@@ -56,11 +71,18 @@ export const UserProfileDetail = async () => {
     const response = await axios.get(`${API_URL}/userprofiledetail`, config);
     return response.data;
   } catch (error: unknown) {
-    console.log("error: ", (error as any).response?.data?.message);
-    return {
-      success: false,
-      message: (error as any).response?.data?.message,
-    };
+    if (axios.isAxiosError(error) && error.response) {
+
+      // if (error.response.status === 401) {
+        // Clear token and redirect user to login page
+        // localStorage.removeItem("passwordmanager");
+        // window.location.href = "/login"; // Redirect to login
+      // }
+    }
+      return {
+        success: false,
+        message: (error as any).response.data?.message || "An error occurred",
+      };
   }
 };
 
@@ -81,12 +103,20 @@ export const UpdateProfileImg = async (data: {
       formData,
       config
     );
-    console.log(response);
     return response.data;
   } catch (error: unknown) {
-    return {
-      success: false,
-      message: (error as any).response?.data?.message,
-    };
-  }
-};
+    // if (axios.isAxiosError(error) && error.response) {
+    //   console.log("Error status:", error.response.status);
+
+    //   if (error.response.status === 401) {
+    //     // Clear token and redirect user to login page
+    //     localStorage.removeItem("passwordmanager");
+    //     window.location.href = "/login"; // Redirect to login
+    //   }
+    // }
+      return {
+        success: false,
+        message: (error as any).response.data?.message || "An error occurred",
+      };
+}
+}

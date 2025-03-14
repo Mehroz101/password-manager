@@ -6,7 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && cp -R uploads public/uploads",
     "start": "node public/server.js",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "build_run":"node public/server.js"
+    
 
   },
   "keywords": [],
