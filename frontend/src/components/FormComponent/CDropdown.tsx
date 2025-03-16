@@ -11,7 +11,7 @@ interface Option {
 interface CDropdownProps {
   control: Control<any>;
   name: string;
-  onChange?: (selectedOption: Option) => void;
+  onChange?: (selectedOption: Option) => void  | undefined;
   focusOptions?: (event?: any) => void;
   options: Option[];
   placeholder?: string;

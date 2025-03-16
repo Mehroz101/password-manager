@@ -37,6 +37,13 @@ export interface AddNewPassword {
   password: string;
   url?: string;
   passwordID?: number;
+  apiKey?: string // add this line
+  cardNumber?: string // add this line
+  cvv?: string // add this line
+  accountHolderName?: string // add this line
+  socialUsername?: string // add this line
+  socialPassword?: string // add this line
+
 }
 export interface AuthInterface {
   username: string;

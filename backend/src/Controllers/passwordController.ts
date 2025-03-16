@@ -7,6 +7,7 @@ import {
 import Password from "../Models/Password";
 import User from "../Models/User";
 import RecentActivity from "../Models/RecentActivity";
+import Passwords from "../Models/Passwords";
 
 export const AddAndUpdatePassword = async (
   req: PasswordRequestExtendsInterface,
@@ -175,11 +176,10 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
           userID: userID?.userID, // Ensure it's linked to the correct user
         });
         const deletedPassword = await Password.deleteOne({
-          _id: passwordDoc?._id
+          _id: passwordDoc?._id,
         });
         await RecentActivity.deleteMany({
           passwordID: passwordDoc?._id, // Use the actual _id of the password
-
         });
         if (!deletedPassword) {
           res
@@ -259,5 +259,40 @@ export const RecentActivities = async (
     }
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const DynamicPasswordStore = async (
+  req: RequestExtendsInterface,
+  res: Response
+) => {
+  try {
+    if (req.user) {
+      const userID = await User.findOne({ _id: req.user.id });
+      const { type, fields } = req.body;
+      console.log(req.body);
+      const previousPasswordID = await Passwords.findOne().sort({
+        passwordID: -1,
+      });
+      const nextPasswordID = previousPasswordID
+        ? previousPasswordID.passwordID + 1
+        : 1;
+      const passwordData = await Passwords.create({
+        passwordID: nextPasswordID,
+        userID: userID?.userID,
+        type: type,
+        fields: fields,
+      });
+      console.log(passwordData);
+      res.status(201).json({
+        success: true,
+        message: "Password stored successfully",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
