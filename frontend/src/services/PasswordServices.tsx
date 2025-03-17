@@ -2,7 +2,7 @@ import axios from "axios";
 import { AddNewPassword } from "../types/Types";
 const REACT_APP_API_URL = import.meta.env.REACT_APP_API_URL;
 const API_URL = `${REACT_APP_API_URL}/password`;
-export const AddAndUpdatePasswordFunc = async (data: AddNewPassword) => {
+export const AddAndUpdatePasswordFunc = async (data: any) => {
   try {
     const token = localStorage.getItem("passwordmanager");
     const config = {

@@ -268,7 +268,7 @@ export const DynamicPasswordStore = async (
 ) => {
   try {
     if (req.user) {
-      const userID = await User.findOne({ _id: req.user.id });
+      // const userID = await User.findOne({ _id: req.user.id });
       const { type, fields } = req.body;
       console.log(req.body);
       const previousPasswordID = await Passwords.findOne().sort({
@@ -279,7 +279,7 @@ export const DynamicPasswordStore = async (
         : 1;
       const passwordData = await Passwords.create({
         passwordID: nextPasswordID,
-        userID: userID?.userID,
+        userID: req.user.id,
         type: type,
         fields: fields,
       });
@@ -290,6 +290,7 @@ export const DynamicPasswordStore = async (
       });
     }
   } catch (error) {
+    console.log(error.message)
     res.status(500).json({
       success: false,
       message: "Internal Server Error",

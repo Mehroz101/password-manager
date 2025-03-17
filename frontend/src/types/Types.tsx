@@ -28,23 +28,55 @@ export interface CButtonType {
 }
 
 export interface AddNewPassword {
-  appName: string;
+  // General Information
+  appName?: string;
   categoryType: string;
-  categoryName: string;
-  // name?: string;
   username?: string;
   email?: string;
   password: string;
   url?: string;
   passwordID?: number;
-  apiKey?: string // add this line
-  cardNumber?: string // add this line
-  cvv?: string // add this line
-  accountHolderName?: string // add this line
-  socialUsername?: string // add this line
-  socialPassword?: string // add this line
 
+  // Email Category
+  recovery?: string;
+
+  // Bank Category
+  accountNumber?: string;
+  bankName?: string;
+  routingNumber?: string;
+
+  // Card Category
+  cardHolderName?: string;
+  cardNumber?: string;
+  expirationDate?: string;
+  cvv?: string;
+  pin?: string;
+
+  // Social Category
+  socialUsername?: string;
+  socialPassword?: string;
+  socialEmail?: string;
+  socialPhone?: string;
+
+  // API Category
+  apiKey?: string;
+  apiSecret?: string;
+  endpoint?: string;
+
+  // Wi‑Fi Category
+  wifiName?: string;
+  wifiPassword?: string;
+
+  // Work Category
+  workEmail?: string;
+  employeeId?: string;
+  workPassword?: string;
+  loginUrl?: string;
+
+  // Other Category
+  otherDetails?: string;
 }
+
 export interface AuthInterface {
   username: string;
   email: string;
