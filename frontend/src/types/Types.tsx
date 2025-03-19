@@ -27,16 +27,55 @@ export interface CButtonType {
   action?: () => void;
 }
 
+export interface UpdatePassword {
+  appName: string;
+  categoryType: string;
+
+  fields: {
+    // Email Category
+    recovery?: string;
+
+    // Bank Category
+    accountNumber?: string;
+    bankName?: string;
+    routingNumber?: string;
+
+    // Card Category
+    cardHolderName?: string;
+    cardNumber?: string;
+    expirationDate?: string;
+    cvv?: string;
+    pin?: string;
+
+    // Social Category
+    socialUsername?: string;
+    socialPassword?: string;
+    socialEmail?: string;
+    socialPhone?: string;
+
+    // API Category
+    apiKey?: string;
+    apiSecret?: string;
+    endpoint?: string;
+
+    // Wi‑Fi Category
+    wifiName?: string;
+    wifiPassword?: string;
+
+    // Work Category
+    workEmail?: string;
+    employeeId?: string;
+    workPassword?: string;
+    loginUrl?: string;
+
+    // Other Category
+    otherDetails?: string;
+  };
+}
 export interface AddNewPassword {
   // General Information
   appName?: string;
   categoryType: string;
-  username?: string;
-  email?: string;
-  password: string;
-  url?: string;
-  passwordID?: number;
-
   // Email Category
   recovery?: string;
 
@@ -98,14 +137,15 @@ export interface DeletePasswordPayload {
 }
 export interface GetAllPasswordResponse {
   passwordID: number;
-  appName: string;
-  categoryName: string;
-  categoryType: string;
-  email: string;
-  password: string;
-  username: string;
-  webUrl: string;
-  passwordImg: string;
+  fields: {
+    appName: string;
+    type: string;
+    email: string;
+    password: string;
+    username: string;
+    webUrl: string;
+    passwordImg: string;
+  };
 }
 export interface ActivityResponseInterface {
   passwordID: {

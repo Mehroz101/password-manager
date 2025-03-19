@@ -146,7 +146,7 @@ export const getAllPasswords = async (
       if (!user) {
         res.status(404).json({ success: false, message: "User not found" });
       } else {
-        const passwords = await Password.find({ userID: user.userID });
+        const passwords = await Passwords.find({ userID: user });
 
         res.status(200).json({ success: true, message: "", data: passwords });
       }
@@ -215,9 +215,9 @@ export const GetSpecificPassword = async (
         if (!userID) {
           return;
         }
-        const passwordData = await Password.findOne({
+        const passwordData = await Passwords.findOne({
           passwordID: passwordID,
-          userID: userID?.userID,
+          userID: userID,
         });
         if (!passwordData) {
           res

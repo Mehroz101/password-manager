@@ -87,6 +87,7 @@ export const GetSpecificPassword = async (passwordID: number) => {
       { passwordID: passwordID },
       config
     );
+    console.log(response.data.data)
     return response.data.data;
   } catch (error:unknown) {
     // if((error as any).response.status== 401){

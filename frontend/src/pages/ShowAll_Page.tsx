@@ -101,7 +101,7 @@ const ShowAll_Page = () => {
 
     if (passwordEntry) {
       const textToCopy =
-        type === "email" ? passwordEntry.email : passwordEntry.password;
+        type === "email" ? passwordEntry.fields.email : passwordEntry.fields.password;
 
       try {
         if (navigator.clipboard) {
@@ -169,7 +169,7 @@ const ShowAll_Page = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     const filtereddata = passwordData?.filter((item) => {
-      return item.appName
+      return item.fields.appName
         .toLowerCase()
         .includes(event.target.value.toLowerCase());
     });
@@ -194,7 +194,7 @@ const ShowAll_Page = () => {
   useEffect(() => {
     if (filteredCategory !== "ALL") {
       const filtereddata = passwordData?.filter((item) => {
-        return item.categoryType === filteredCategory;
+        return item.fields.type === filteredCategory;
       });
       setFilteredData(filtereddata || []);
     } else {
@@ -227,17 +227,17 @@ const ShowAll_Page = () => {
             filteredData.map((password, index) => (
               <div className="allpassword_box" key={index}>
                 <div className="allpassword_box_left">
-                  <img src={password.passwordImg} alt={password.appName} />
+                  <img src={`http://localhost:5000/uploads/${password.type}.png`} alt={password.fields.appName} />
                 </div>
                 <div className="allpassword_box_center">
-                  <p className="allpassword_title">{password.appName}</p>
+                  <p className="allpassword_title">{password.fields.appName}</p>
                   <p className="allpassword_account">
-                    {password.email ? password.email : password.username}
+                    {password.fields.email ? password.fields.email : password.fields.username}
                   </p>
                   <div className="password">
                     <p className="allpassword_password">
                       {passwordVisibility[password.passwordID]
-                        ? password.password
+                        ? password.fields.password
                         : "*************"}{" "}
                     </p>
                     <FontAwesomeIcon

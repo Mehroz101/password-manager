@@ -1,14 +1,17 @@
 import "../styles/AddNewPage.css";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { AddNewPassword } from "../types/Types";
 import CDropdown from "../components/FormComponent/CDropdown";
 import { notify } from "../utils/notification";
-import { AddAndUpdatePasswordFunc } from "../services/PasswordServices";
-import { useMutation } from "@tanstack/react-query";
+import {
+  AddAndUpdatePasswordFunc,
+  GetSpecificPassword,
+} from "../services/PasswordServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import CPasswordInput from "../components/FormComponent/CPasswordInput";
 
 const categoryOptions = [
@@ -25,7 +28,8 @@ const categoryOptions = [
 const AddNew_Page = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-
+  const [appId, setAppId] = useState<string | null>(null);
+  const URL = useLocation();
   // React Hook Form Setup
   const { register, handleSubmit, control, watch, reset, setValue } =
     useForm<AddNewPassword>();
@@ -60,16 +64,57 @@ const AddNew_Page = () => {
       }
     },
   });
-
+  const { data: specificData } = useQuery({
+    queryKey: ["specificData"],
+    queryFn: () => GetSpecificPassword(Number(appId)),
+    enabled: appId ? true : false,
+  });
   // Focus input on load for an enhanced user experience
   useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 300);
+    const id = URL.pathname.split("/");
+    if (id[id.length - 2] === "editpassword" && id[id.length - 1]) {
+      const passwordId = id[id.length - 1];
+      setAppId(passwordId);
+    }
   }, []);
-
+  useEffect(() => {
+    if (specificData) {
+      setValue("categoryType", specificData.type);
+      Object.entries(specificData.fields).forEach(([key, value]) => {
+        setValue(`fields.${key}`, value);
+      });
+    }
+  }, [specificData]);
   return (
     <div className="add_new_page">
+      {/* {
+        <div className="viewapp_top_card">
+          <div className="top_card_left">
+            <img src={specificData?.passwordImg} alt="appicon" />
+          </div>
+          <div className="top_card_right">
+            <div className="top_card_right_top">
+              <p className="top_card_title">
+                {watch("appName", specificData?.appName)}
+              </p>
+              <p className="top_card_category">{specificData?.categoryType}</p>
+              <FontAwesomeIcon
+                icon={faTrash}
+                onClick={() => handleDeletePassword(Number(appId))}
+              />
+            </div>
+            <div className="top_card_right_bottom">
+              <p className="activity_box_account">
+                <span>
+                  {specificData?.lastAction.actionType}:{" "}
+                  {formatDate(specificData?.updatedAt)}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      } */}
+
       <div className="add_new_form">
         <form onSubmit={handleSubmit(onSubmit)}>
           <CDropdown
@@ -85,7 +130,16 @@ const AddNew_Page = () => {
               setValue("categoryType", e.value);
             }}
           />
-
+          {categoryType && (
+            <CInput
+              label="App Name"
+              id="appName"
+              type="text"
+              autoComplete="new-password"
+              placeholder="Enter app name"
+              {...register("appName", { required: true })}
+            />
+          )}
           {categoryType === "Email" && (
             <>
               <CInput
@@ -196,12 +250,12 @@ const AddNew_Page = () => {
                 
               /> */}
               <CPasswordInput
-                 label="PIN"
-                 id="pin"
-                 type="password"
-                 autoComplete="new-password"
-                 placeholder="PIN"
-                 {...register("pin")}
+                label="PIN"
+                id="pin"
+                type="password"
+                autoComplete="new-password"
+                placeholder="PIN"
+                {...register("pin")}
               />
             </>
           )}
@@ -241,12 +295,12 @@ const AddNew_Page = () => {
                 {...register("socialPassword", { required: true })}
               /> */}
               <CPasswordInput
-                  label="Password"
-                  id="socialPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="Password"
-                  {...register("socialPassword", { required: true })}
+                label="Password"
+                id="socialPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Password"
+                {...register("socialPassword", { required: true })}
               />
               <CInput
                 label="Phone Number"
@@ -269,13 +323,13 @@ const AddNew_Page = () => {
                 placeholder="API Key"
                 {...register("apiKey", { required: true })}
               /> */}
-               <CPasswordInput
-                 label="API Key"
-                 id="apiKey"
-                 autoComplete="new-password"
-                 type="password"
-                 placeholder="API Key"
-                 {...register("apiKey", { required: true })}
+              <CPasswordInput
+                label="API Key"
+                id="apiKey"
+                autoComplete="new-password"
+                type="password"
+                placeholder="API Key"
+                {...register("apiKey", { required: true })}
               />
               {/* <CInput
                 label="API Secret"
@@ -285,13 +339,13 @@ const AddNew_Page = () => {
                 placeholder="API Secret"
                 {...register("apiSecret", { required: true })}
               /> */}
-               <CPasswordInput
-                 label="API Secret"
-                 id="apiSecret"
-                 type="password"
-                 autoComplete="new-password"
-                 placeholder="API Secret"
-                 {...register("apiSecret", { required: true })}
+              <CPasswordInput
+                label="API Secret"
+                id="apiSecret"
+                type="password"
+                autoComplete="new-password"
+                placeholder="API Secret"
+                {...register("apiSecret", { required: true })}
               />
               <CInput
                 label="Endpoint URL"
@@ -322,13 +376,13 @@ const AddNew_Page = () => {
                 placeholder="Wi‑Fi Password"
                 {...register("wifiPassword", { required: true })}
               /> */}
-               <CPasswordInput
-                 label="Wi‑Fi Password"
-                 id="wifiPassword"
-                 type="password"
-                 autoComplete="new-password"
-                 placeholder="Wi‑Fi Password"
-                 {...register("wifiPassword", { required: true })}
+              <CPasswordInput
+                label="Wi‑Fi Password"
+                id="wifiPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Wi‑Fi Password"
+                {...register("wifiPassword", { required: true })}
               />
             </>
           )}
@@ -359,12 +413,12 @@ const AddNew_Page = () => {
                 {...register("workPassword", { required: true })}
               /> */}
               <CPasswordInput
-                   label="Password"
-                   id="workPassword"
-                   type="password"
-                   autoComplete="new-password"
-                   placeholder="Password"
-                   {...register("workPassword", { required: true })}
+                label="Password"
+                id="workPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Password"
+                {...register("workPassword", { required: true })}
               />
               <CInput
                 label="Login URL"
@@ -379,14 +433,6 @@ const AddNew_Page = () => {
 
           {categoryType === "Other" && (
             <>
-              <CInput
-                label="App Name"
-                id="appName"
-                type="text"
-                autoComplete="new-password"
-                placeholder="Enter app name"
-                {...register("appName", { required: true })}
-              />
               <CInput
                 label="Details"
                 id="otherDetails"

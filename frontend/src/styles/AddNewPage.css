@@ -5,6 +5,72 @@
   max-width: 400px; /* Prevents it from being too wide */
   margin: 0 auto;
 }
+.viewapp_page .viewapp_top_card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.viewapp_page .top_card_left {
+  background-color: #e5f2ff;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 4px;
+  width: 60px;
+}
+.viewapp_page .top_card_left img {
+  width: 40px;
+}
+.viewapp_page .top_card_right {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.viewapp_page .top_card_right .top_card_right_top {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  justify-content: space-between;
+}
+.viewapp_page .top_card_right .top_card_right_top svg {
+  margin-left: auto;
+  color: var(--secondary-color);
+}
+.viewapp_page .top_card_right p {
+  font-size: 1.1rem;
+}
+.viewapp_page .top_card_right .top_card_title {
+  font-weight: 600;
+}
+.viewapp_page .top_card_right .top_card_category {
+  font-weight: 400;
+  font-size: 0.6rem;
+  justify-self: flex-start;
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
+  border-radius: 8px;
+  padding: 0 4px;
+  line-height: 25px;
+}
+.top_card_right .activity_box_account {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.top_card_right .activity_box_account span {
+  font-size: 0.7rem;
+  color: #666;
+}
 /* ========================== */
 /* add new form */
 /* ========================== */
