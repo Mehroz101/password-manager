@@ -171,11 +171,16 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
         if (!userID) {
           return;
         }
-        const passwordDoc = await Password.findOne({
+        console.log(passwordID);
+        console.log(userID?._id);
+        const passwordDoc = await Passwords.findOne({
           passwordID: passwordID, // Search by custom passwordID field
-          userID: userID?.userID, // Ensure it's linked to the correct user
+          userID: userID?._id, // Ensure it's linked to the correct user
         });
-        const deletedPassword = await Password.deleteOne({
+        if(!passwordDoc){
+
+        }
+        const deletedPassword = await Passwords.deleteOne({
           _id: passwordDoc?._id,
         });
         await RecentActivity.deleteMany({
@@ -193,7 +198,7 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
       }
     }
   } catch (error) {
-    console.error("Error deleting password:", error);
+    console.error("Error deleting password:", error.message);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -290,7 +295,7 @@ export const DynamicPasswordStore = async (
       });
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",

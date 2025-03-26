@@ -81,7 +81,7 @@ const AddNew_Page = () => {
     if (specificData) {
       setValue("categoryType", specificData.type);
       Object.entries(specificData.fields).forEach(([key, value]) => {
-        setValue(`fields.${key}`, value);
+        setValue(key, value);
       });
     }
   }, [specificData]);
@@ -124,6 +124,7 @@ const AddNew_Page = () => {
             placeholder="Select an app"
             label="Category"
             required
+            disabled= {appId ? true : false}
             onChange={(e: any) => {
               console.log(e.value);
               reset();
@@ -150,14 +151,7 @@ const AddNew_Page = () => {
                 placeholder="Email Address"
                 {...register("email", { required: true })}
               />
-              {/* <CInput
-                label="Password"
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Password"
-                {...register("password", { required: true })}
-              /> */}
+             
               <CPasswordInput
                 label="Password"
                 id="password"
@@ -195,14 +189,8 @@ const AddNew_Page = () => {
                 placeholder="Account Number"
                 {...register("accountNumber", { required: true })}
               />
-              {/*               
-              <CInput
-                label="Routing Number"
-                id="routingNumber"
-                type="text"
-                placeholder="Routing Number"
-                {...register("routingNumber")}
-              /> */}
+                             
+              
             </>
           )}
 
@@ -240,15 +228,7 @@ const AddNew_Page = () => {
                 placeholder="CVV"
                 {...register("cvv", { required: true })}
               />
-              {/* <CInput
-                label="PIN"
-                id="pin"
-                type="password"
-                autoComplete="new-password"
-                placeholder="PIN"
-                {...register("pin")}
-                
-              /> */}
+             
               <CPasswordInput
                 label="PIN"
                 id="pin"
@@ -286,14 +266,7 @@ const AddNew_Page = () => {
                 placeholder="Email Address"
                 {...register("socialEmail")}
               />
-              {/* <CInput
-                label="Password"
-                id="socialPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Password"
-                {...register("socialPassword", { required: true })}
-              /> */}
+             
               <CPasswordInput
                 label="Password"
                 id="socialPassword"
@@ -315,14 +288,7 @@ const AddNew_Page = () => {
 
           {categoryType === "API" && (
             <>
-              {/* <CInput
-                label="API Key"
-                id="apiKey"
-                autoComplete="new-password"
-                type="text"
-                placeholder="API Key"
-                {...register("apiKey", { required: true })}
-              /> */}
+            
               <CPasswordInput
                 label="API Key"
                 id="apiKey"
@@ -331,14 +297,7 @@ const AddNew_Page = () => {
                 placeholder="API Key"
                 {...register("apiKey", { required: true })}
               />
-              {/* <CInput
-                label="API Secret"
-                id="apiSecret"
-                type="password"
-                autoComplete="new-password"
-                placeholder="API Secret"
-                {...register("apiSecret", { required: true })}
-              /> */}
+              
               <CPasswordInput
                 label="API Secret"
                 id="apiSecret"
@@ -404,14 +363,7 @@ const AddNew_Page = () => {
                 placeholder="Employee ID"
                 {...register("employeeId")}
               />
-              {/* <CInput
-                label="Password"
-                id="workPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Password"
-                {...register("workPassword", { required: true })}
-              /> */}
+             
               <CPasswordInput
                 label="Password"
                 id="workPassword"
@@ -444,22 +396,7 @@ const AddNew_Page = () => {
             </>
           )}
 
-          {/* Common Fields (if applicable) */}
-          {/* <CInput
-            label="App Name"
-            id="appName"
-            type="text"
-            placeholder="Enter App Name"
-            {...register("appName", { required: true })}
-          /> */}
-          {/* <CInput
-            label="Website Link"
-            id="url"
-            type="text"
-            placeholder="Website URL"
-            {...register("url")}
-          /> */}
-
+         
           <CButton label="Save" />
         </form>
       </div>

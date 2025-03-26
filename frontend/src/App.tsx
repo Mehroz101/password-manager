@@ -89,7 +89,7 @@ const AppRoutes = () => {
         <Route path={"/"} element={<ProtectedRoutes element={<Layout />} />}>
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.ADDNEW} element={<AddNew />} />
-          <Route path={`${ROUTES.VIEWAPP}/:id`} element={<AddNew />} />
+          {/* <Route path={`$ {ROUTES.VIEWAPP}/:id`} element={<AddNew />} /> */}
           <Route path={ROUTES.SHOWALL} element={<ShowAll />} />
           <Route path={ROUTES.PROFILE} element={<Profile />} />
           <Route path={ROUTES.SETTING} element={<Setting />} />
@@ -103,7 +103,8 @@ const AppRoutes = () => {
             path={ROUTES.COMPANYREGISTRATIONFORM}
             element={<CompanyRegistrationForm />}
           />
-          {/* <Route path={`${ROUTES.VIEWAPP}/:id`} element={<ViewApp />} /> */}
+          <Route path={`${ROUTES.EDITAPP}/:id`} element={<AddNew />} />
+          <Route path={`${ROUTES.VIEWAPP}/:id`} element={<ViewApp />} />
         </Route>
       </Routes>
     </>

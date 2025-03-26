@@ -20,6 +20,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { DeletePassword, GetAllPassword } from "../services/PasswordServices";
 import { notify } from "../utils/notification";
 import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "../utils/routes";
 
 const category_cards = [
   {
@@ -101,13 +102,14 @@ const ShowAll_Page = () => {
 
     if (passwordEntry) {
       const textToCopy =
-        type === "email" ? passwordEntry.fields.email : passwordEntry.fields.password;
+        type === "email"
+          ? passwordEntry.fields.email
+          : passwordEntry.fields.password;
 
       try {
         if (navigator.clipboard) {
           // Modern Clipboard API
           await navigator.clipboard.writeText(textToCopy);
-         
         } else {
           // Fallback for older browsers (execCommand)
           const textArea = document.createElement("textarea");
@@ -116,7 +118,6 @@ const ShowAll_Page = () => {
           textArea.select();
           document.execCommand("copy");
           document.body.removeChild(textArea);
-          
         }
 
         // Clear the message after a few seconds
@@ -225,14 +226,25 @@ const ShowAll_Page = () => {
           {/* Dynamically render password boxes */}
           {filteredData && filteredData?.length > 0 ? (
             filteredData.map((password, index) => (
-              <div className="allpassword_box" key={index}>
+              <div
+                className="allpassword_box"
+                key={index}
+                onClick={() =>
+                  navigate(`${ROUTES.VIEWAPP}/${password.passwordID}`)
+                }
+              >
                 <div className="allpassword_box_left">
-                  <img src={`http://localhost:5000/uploads/${password.type}.png`} alt={password.fields.appName} />
+                  <img
+                    src={`http://localhost:5000/uploads/${password.type}.png`}
+                    alt={password.fields.appName}
+                  />
                 </div>
                 <div className="allpassword_box_center">
                   <p className="allpassword_title">{password.fields.appName}</p>
                   <p className="allpassword_account">
-                    {password.fields.email ? password.fields.email : password.fields.username}
+                    {password.fields.email
+                      ? password.fields.email
+                      : password.fields.username}
                   </p>
                   <div className="password">
                     <p className="allpassword_password">
@@ -255,7 +267,8 @@ const ShowAll_Page = () => {
                 <div className="allpassword_box_right">
                   <FontAwesomeIcon
                     icon={faEllipsisVertical}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevents the parent onClick from firing
                       handleActionBoxToggle(password.passwordID);
                     }} // Toggle the action box
                   />
@@ -268,26 +281,35 @@ const ShowAll_Page = () => {
                     }`}
                   >
                     <span
-                      onClick={() =>
-                        handleCopyToClipboard("email", password.passwordID)
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyToClipboard("email", password.passwordID);
+                      }}
                     >
                       Copy Email
                     </span>
                     <span
-                      onClick={() =>
-                        handleCopyToClipboard("password", password.passwordID)
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        handleCopyToClipboard("password", password.passwordID);
+                      }}
                     >
                       Copy Password
                     </span>
                     <span
-                      onClick={() => handleEditPassword(password.passwordID)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        handleEditPassword(password.passwordID);
+                      }}
                     >
                       Edit
                     </span>
                     <span
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+
                         handleActionBoxToggle(password.passwordID);
                         handleDeletePassword(password.passwordID);
                       }}

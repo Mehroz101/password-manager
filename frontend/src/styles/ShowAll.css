@@ -100,6 +100,7 @@
   box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1);
   padding: 10px;
   border-radius: 4px;
+  cursor: pointer;
   max-width: 400px;
 }
 

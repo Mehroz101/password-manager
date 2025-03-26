@@ -97,3 +97,99 @@
   width: 100%;
   max-width: 400px;
 }
+
+/* General container */
+.app-container {
+  max-width: 420px;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: "Inter", sans-serif;
+  border: 1px solid #e0e0e0;
+}
+
+/* Title Styling */
+.app-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* List Container */
+.app-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Each Item Box */
+.app-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  background: #f9fafb;
+  border-radius: 8px;
+  /* border: 1px solid #e5e7eb; */
+}
+
+
+
+/* Label & Value */
+.app-info-text {
+  flex-grow: 1;
+}
+
+.app-info-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.app-info-value {
+  font-size: 0.90rem;
+  color: #4b5563;
+  word-break: break-word;
+}
+
+/* Copy Button */
+.copy-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.copy-button {
+  padding: 8px;
+  background: #8baefb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  background: #1e40af;
+  transform: scale(1.05);
+}
+
+/* Tooltip Effect */
+.copied-tooltip {
+  position: absolute;
+  top: -25px;
+  right: 5px;
+  background: #10b981;
+  color: white;
+  font-size: 0.75rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+

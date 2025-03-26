@@ -77,13 +77,14 @@ export interface AddNewPassword {
   appName?: string;
   categoryType: string;
   // Email Category
+  email?:string;
+  password?:string;
   recovery?: string;
 
   // Bank Category
   accountNumber?: string;
   bankName?: string;
   routingNumber?: string;
-
   // Card Category
   cardHolderName?: string;
   cardNumber?: string;

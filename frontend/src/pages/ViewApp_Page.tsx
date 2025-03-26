@@ -1,23 +1,18 @@
 import { useLocation, useNavigate } from "react-router-dom";
 // import Netflix from "../assets/netflix.png";
 import "../styles/ViewApp.css";
-import CInput from "../components/FormComponent/CInput";
-import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { AddNewPassword } from "../types/Types";
-import CButton from "../components/FormComponent/CButton";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import CDropdown from "../components/FormComponent/CDropdown";
+import { faClipboard, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AddAndUpdatePasswordFunc,
   DeletePassword,
   GetSpecificPassword,
 } from "../services/PasswordServices";
-import CPasswordInput from "../components/FormComponent/CPasswordInput";
 import { notify } from "../utils/notification";
 import { formatDate } from "../utils/function";
+import Img from "../assets/whatsapp.png"
 const categoryOptions = [
   { label: "Developement", value: "Developement" },
   { label: "Wifi", value: "Wifi" },
@@ -43,35 +38,66 @@ const ViewApp_Page = () => {
 
   const appId = pathSegments[2] || "N/A"; // Ensure there's a fallback in case it's missing
   const navigate = useNavigate();
-
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+const [appData,setAppData] = useState<any>()
+  // const appData = {
+  //   "App Name": "My Awesome App",
+  //   "Email": "user@example.com",
+  //   "Password": "mypassword123",
+  //   "Recovery Email": "recovery@example.com",
+  // };
+  const handleCopy = (value: string, field: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          setCopiedField(field);
+          setTimeout(() => setCopiedField(null), 2000);
+        })
+        .catch(() => fallbackCopyText(value, field));
+    } else {
+      fallbackCopyText(value, field);
+    }
+  };
+  
+  const fallbackCopyText = (text: string, field: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+  
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
   // React Hook Form Setup
-  const { control, register, handleSubmit, setValue, watch } =
-    useForm<AddNewPassword>({
-      defaultValues: {
-        appName: "",
-        username: "",
-        email: "",
-        password: "",
-        url: "",
-        categoryName: "",
-        categoryType: "",
-      },
-    });
+  // const { control, register, handleSubmit, setValue, watch } =
+  //   useForm<AddNewPassword>({
+  //     defaultValues: {
+  //       appName: "",
+  //       username: "",
+  //       email: "",
+  //       password: "",
+  //       url: "",
+  //       categoryName: "",
+  //       categoryType: "",
+  //     },
+  //   });
 
   // Form Submit Handler
-  const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
-    const sendData = {
-      categoryName: data.categoryName,
-      username: data.username,
-      appName: data.appName,
-      email: data.email,
-      password: data.password,
-      url: data.url,
-      categoryType: data.categoryType,
-      passwordID: Number(appId),
-    };
-    AddNewPasswordMutation.mutate(sendData);
-  };
+  // const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
+  //   const sendData = {
+  //     categoryName: data.categoryName,
+  //     username: data.username,
+  //     appName: data.appName,
+  //     email: data.email,
+  //     password: data.password,
+  //     url: data.url,
+  //     categoryType: data.categoryType,
+  //     passwordID: Number(appId),
+  //   };
+  //   AddNewPasswordMutation.mutate(sendData);
+  // };
   const deletePasswordMutation = useMutation({
     mutationFn: DeletePassword,
     onSuccess: (data) => {
@@ -104,13 +130,15 @@ const ViewApp_Page = () => {
   });
   useEffect(() => {
     if (specificData) {
-      setValue("appName", specificData.appName);
-      setValue("username", specificData.username);
-      setValue("email", specificData.email);
-      setValue("password", specificData.password);
-      setValue("url", specificData.webUrl);
-      setValue("categoryName", specificData.categoryName);
-      setValue("categoryType", specificData.categoryType);
+      console.log("specificData",specificData)
+      setAppData(specificData?.fields)
+      // setValue("appName", specificData.fields.appName);
+      // setValue("username", specificData?.fields.username);
+      // setValue("email", specificData.email);
+      // setValue("password", specificData.password);
+      // setValue("url", specificData.webUrl);
+      // setValue("categoryName", specificData.categoryName);
+      // setValue("categoryType", specificData.categoryType);
     }
   }, [specificData]);
 
@@ -119,12 +147,12 @@ const ViewApp_Page = () => {
       <div className="viewapp_page">
         <div className="viewapp_top_card">
           <div className="top_card_left">
-            <img src={specificData?.passwordImg} alt="appicon" />
+            <img src={`http://localhost:5000/uploads/${specificData?.type}.png` || Img} alt="appicon" />
           </div>
           <div className="top_card_right">
             <div className="top_card_right_top">
               <p className="top_card_title">
-                {watch("appName", specificData?.appName)}
+                { appData?.appName || "App Name"}
               </p>
               <p className="top_card_category">{specificData?.categoryType}</p>
               <FontAwesomeIcon
@@ -135,14 +163,40 @@ const ViewApp_Page = () => {
             <div className="top_card_right_bottom">
               <p className="activity_box_account">
                 <span>
-                  {specificData?.lastAction.actionType}:{" "}
+                  {specificData?.lastAction?.actionType || "Created Now"}:{" "}
                   {formatDate(specificData?.updatedAt)}
                 </span>
               </p>
             </div>
           </div>
         </div>
-        <div className="form_fields">
+        <div className="app-container">
+      <h2 className="app-title">App Information</h2>
+      <div className="app-info-list">
+        {appData && Object.entries(appData).map(([key, value]) => (
+          <div key={key} className="app-info-item">
+            <div className="app-info-text">
+              <p className="app-info-label">{key}</p>
+              <p className="app-info-value">{String(value)}</p>
+            </div>
+            <div className="copy-container">
+              <button
+                className="copy-button"
+                onClick={() => handleCopy(String(value), key)}
+              >
+                <FontAwesomeIcon
+            icon={faClipboard}
+            onClick={() => {}}
+          />
+                {/* <Copy size={16} /> */}
+              </button>
+              {copiedField === key && <span className="copied-tooltip">Copied!</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+        {/* <div className="form_fields">
           <form onSubmit={handleSubmit(onSubmit)}>
             <CDropdown
               control={control}
@@ -162,18 +216,7 @@ const ViewApp_Page = () => {
               required={true}
               
             />
-            {/* Input Fields */}
-            {/* <CMultiSelect
-              control={control}
-              name="selectedItems"
-              label="Allowed User"
-              options={groupedOptions}
-              placeholder="Select users"
-              onChange={(selectedOptions) =>
-                console.log("Selected:", selectedOptions)
-              }
-            /> */}
-            {/* Input Fields */}
+           
             <CInput
               label="App Name"
               id="appName"
@@ -213,10 +256,9 @@ const ViewApp_Page = () => {
               {...register("url")}
             />
 
-            {/* Submit Button */}
             <CButton label="Update" />
           </form>
-        </div>
+        </div> */}
       </div>
     </>
   );
