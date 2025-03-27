@@ -4,6 +4,7 @@ import User from "../Models/User";
 import Password from "../Models/Password";
 import bcrypt from "bcryptjs";
 import fs from "fs"
+import Passwords from "../Models/Passwords";
 export const GetUserProfileData = async (
   req: RequestExtendsInterface,
   res: Response
@@ -37,8 +38,7 @@ export const GetUserProfileDetail = async (
   try {
     if (req.user) {
       const user = await User.findOne({ _id: req.user.id });
-      if (user) {
-        const passwords = await Password.find({ userID: user.userID });
+        const passwords = await Passwords.find({ userID: req.user.id });
         const sendData = {
           user: user,
           passwords: passwords?.length,
@@ -47,10 +47,13 @@ export const GetUserProfileDetail = async (
           success: true,
           data: sendData,
         });
-      }
     }
   } catch (error) {
-    
+    console.log(error.message)
+    res.status(500).json({
+      success: true,
+      message: "Internal server error",
+    });
     
   }
 };
