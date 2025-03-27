@@ -138,6 +138,7 @@ export interface DeletePasswordPayload {
 }
 export interface GetAllPasswordResponse {
   passwordID: number;
+  type:string,
   fields: {
     appName: string;
     type: string;

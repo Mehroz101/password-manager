@@ -195,7 +195,7 @@ const ShowAll_Page = () => {
   useEffect(() => {
     if (filteredCategory !== "ALL") {
       const filtereddata = passwordData?.filter((item) => {
-        return item.fields.type === filteredCategory;
+        return item.type === filteredCategory;
       });
       setFilteredData(filtereddata || []);
     } else {
@@ -258,9 +258,10 @@ const ShowAll_Page = () => {
                           ? faEye
                           : faEyeLowVision
                       }
-                      onClick={() =>
-                        handlePasswordVisibilityToggle(password.passwordID)
-                      } // Toggle the password visibility
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePasswordVisibilityToggle(password.passwordID);
+                      }} // Toggle the password visibility
                     />
                   </div>
                 </div>

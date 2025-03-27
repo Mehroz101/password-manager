@@ -274,8 +274,19 @@ export const DynamicPasswordStore = async (
   try {
     if (req.user) {
       // const userID = await User.findOne({ _id: req.user.id });
-      const { type, fields } = req.body;
+      const { type, fields,passwordID=null } = req.body;
       console.log(req.body);
+      if(passwordID){
+        const password = await Passwords.findOne({passwordID:passwordID});
+        if(password){
+          await Passwords.updateOne({passwordID:passwordID},{$set:{type:type,fields:fields}})
+          res.status(201).json({
+            success: true,
+            message: "Password updated successfully",
+          });
+        }
+        return
+      }
       const previousPasswordID = await Passwords.findOne().sort({
         passwordID: -1,
       });

@@ -24,6 +24,11 @@ const categoryOptions = [
   { label: "Work", value: "Work" },
   { label: "Other", value: "Other" },
 ];
+interface Payload {
+  type: string;
+  fields: Record<string, any>;
+  passwordID?: number;
+}
 
 const AddNew_Page = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,10 +51,17 @@ const AddNew_Page = () => {
       return acc;
     }, {} as Record<string, any>);
 
-    const payload = {
+    let payload: Payload = {
       type: data.categoryType,
       fields: filteredFields,
     };
+    if (appId) {
+      payload = {
+        type: data.categoryType,
+        fields: filteredFields,
+        passwordID: Number(appId),
+      };
+    }
     AddNewPasswordMutation.mutate(payload);
   };
 
@@ -81,7 +93,7 @@ const AddNew_Page = () => {
     if (specificData) {
       setValue("categoryType", specificData.type);
       Object.entries(specificData.fields).forEach(([key, value]) => {
-        setValue(key, value);
+        setValue(key as keyof AddNewPassword, value as string);
       });
     }
   }, [specificData]);
@@ -124,7 +136,7 @@ const AddNew_Page = () => {
             placeholder="Select an app"
             label="Category"
             required
-            disabled= {appId ? true : false}
+            disabled={appId ? true : false}
             onChange={(e: any) => {
               console.log(e.value);
               reset();
@@ -151,7 +163,7 @@ const AddNew_Page = () => {
                 placeholder="Email Address"
                 {...register("email", { required: true })}
               />
-             
+
               <CPasswordInput
                 label="Password"
                 id="password"
@@ -189,8 +201,6 @@ const AddNew_Page = () => {
                 placeholder="Account Number"
                 {...register("accountNumber", { required: true })}
               />
-                             
-              
             </>
           )}
 
@@ -228,7 +238,7 @@ const AddNew_Page = () => {
                 placeholder="CVV"
                 {...register("cvv", { required: true })}
               />
-             
+
               <CPasswordInput
                 label="PIN"
                 id="pin"
@@ -266,7 +276,7 @@ const AddNew_Page = () => {
                 placeholder="Email Address"
                 {...register("socialEmail")}
               />
-             
+
               <CPasswordInput
                 label="Password"
                 id="socialPassword"
@@ -288,7 +298,6 @@ const AddNew_Page = () => {
 
           {categoryType === "API" && (
             <>
-            
               <CPasswordInput
                 label="API Key"
                 id="apiKey"
@@ -297,7 +306,7 @@ const AddNew_Page = () => {
                 placeholder="API Key"
                 {...register("apiKey", { required: true })}
               />
-              
+
               <CPasswordInput
                 label="API Secret"
                 id="apiSecret"
@@ -363,7 +372,7 @@ const AddNew_Page = () => {
                 placeholder="Employee ID"
                 {...register("employeeId")}
               />
-             
+
               <CPasswordInput
                 label="Password"
                 id="workPassword"
@@ -396,7 +405,6 @@ const AddNew_Page = () => {
             </>
           )}
 
-         
           <CButton label="Save" />
         </form>
       </div>
