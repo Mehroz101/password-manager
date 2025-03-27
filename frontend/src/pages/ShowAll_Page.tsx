@@ -193,7 +193,7 @@ const ShowAll_Page = () => {
     }
   }, [passwordData]);
   useEffect(() => {
-    if (filteredCategory !== "ALL") {
+    if (filteredCategory !== "ALL" && passwordData) {
       const filtereddata = passwordData?.filter((item) => {
         return item.type === filteredCategory;
       });

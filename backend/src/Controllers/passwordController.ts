@@ -177,8 +177,7 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
           passwordID: passwordID, // Search by custom passwordID field
           userID: userID?._id, // Ensure it's linked to the correct user
         });
-        if(!passwordDoc){
-
+        if (!passwordDoc) {
         }
         const deletedPassword = await Passwords.deleteOne({
           _id: passwordDoc?._id,
@@ -229,7 +228,8 @@ export const GetSpecificPassword = async (
             .status(404)
             .json({ success: false, message: "Password not found" });
         } else {
-          await RecentActivity.findOneAndUpdate(
+          console.log("recent actitvy");
+          const response = await RecentActivity.findOneAndUpdate(
             {
               userID: userID?.userID,
               passwordID: passwordData._id,
@@ -238,6 +238,7 @@ export const GetSpecificPassword = async (
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc
           );
+          console.log(response);
           res
             .status(200)
             .json({ success: true, message: "", data: passwordData });
@@ -255,6 +256,7 @@ export const RecentActivities = async (
   try {
     if (req.user) {
       const userID = await User.findOne({ _id: req.user.id });
+      console.log(userID.userID)
       const recentActivities = await RecentActivity.find({
         userID: userID?.userID,
       }).populate("passwordID");
@@ -274,18 +276,32 @@ export const DynamicPasswordStore = async (
   try {
     if (req.user) {
       // const userID = await User.findOne({ _id: req.user.id });
-      const { type, fields,passwordID=null } = req.body;
+      const { type, fields, passwordID = null } = req.body;
       console.log(req.body);
-      if(passwordID){
-        const password = await Passwords.findOne({passwordID:passwordID});
-        if(password){
-          await Passwords.updateOne({passwordID:passwordID},{$set:{type:type,fields:fields}})
+      if (passwordID) {
+        const password = await Passwords.findOne({ passwordID: passwordID });
+        if (password) {
+          await Passwords.updateOne(
+            { passwordID: passwordID },
+            { $set: { type: type, fields: fields } }
+          );
+          const Userid = await User.findOne({ _id: req.user.id });
+
+          await RecentActivity.findOneAndUpdate(
+            {
+              userID: Userid?.userID,
+              passwordID: password._id,
+              actionType: "Last Edited",
+            }, // Find existing entry
+            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
+            { upsert: true, new: true } // Create if not exists, return the updated doc
+          );
           res.status(201).json({
             success: true,
             message: "Password updated successfully",
           });
         }
-        return
+        return;
       }
       const previousPasswordID = await Passwords.findOne().sort({
         passwordID: -1,
@@ -299,6 +315,17 @@ export const DynamicPasswordStore = async (
         type: type,
         fields: fields,
       });
+      const Userid = await User.findOne({ _id: req.user.id });
+
+      await RecentActivity.findOneAndUpdate(
+        {
+          userID: Userid?.userID,
+          passwordID: passwordData._id,
+          actionType: "Created At",
+        }, // Find existing entry
+        { updatedAt: new Date() }, // Update timestamp (or add additional fields)
+        { upsert: true, new: true } // Create if not exists, return the updated doc
+      );
       console.log(passwordData);
       res.status(201).json({
         success: true,

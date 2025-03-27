@@ -77,8 +77,8 @@ export interface AddNewPassword {
   appName?: string;
   categoryType: string;
   // Email Category
-  email?:string;
-  password?:string;
+  email?: string;
+  password?: string;
   recovery?: string;
 
   // Bank Category
@@ -138,7 +138,7 @@ export interface DeletePasswordPayload {
 }
 export interface GetAllPasswordResponse {
   passwordID: number;
-  type:string,
+  type: string;
   fields: {
     appName: string;
     type: string;
@@ -151,9 +151,8 @@ export interface GetAllPasswordResponse {
 }
 export interface ActivityResponseInterface {
   passwordID: {
-    passwordImg: string;
-    appName: string;
-    email: string;
+    type?: string;
+    fields?: {};
   };
   createdAt: string;
   actionType: string;

@@ -16,9 +16,7 @@ const RecentActivityCard = ({
     if (activity?.passwordID) {
       setActivities({
         passwordID: {
-          passwordImg: activity?.passwordID?.passwordImg,
-          appName: activity?.passwordID?.appName,
-          email: activity?.passwordID?.email,
+          type: activities?.passwordID.type
         },
         createdAt: activity?.createdAt,
         actionType: activity?.actionType,
@@ -30,11 +28,11 @@ const RecentActivityCard = ({
   return (
     <div className="home_page_recent_activity_box">
       <div className="recent_activity_box_left">
-        <img src={activity?.passwordID?.passwordImg} alt="google" />
+        <img src={`http://localhost:5000/uploads/${activity?.passwordID?.type}.png`} alt="google" />
       </div>
       <div className="recent_activity_box_center">
-        <p className="activity_box_title">{activity?.passwordID?.appName}</p>
-        <p className="activity_box_account">{activity?.passwordID?.email}</p>
+        <p className="activity_box_title">{activity?.passwordID?.type}</p>
+        {/* <p className="activity_box_account">{activity?.passwordID?.email}</p> */}
         <p className="activity_box_account">
           <span>
             {activity?.actionType}: {formatDate(activity?.createdAt)}
