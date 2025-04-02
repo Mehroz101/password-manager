@@ -147,6 +147,16 @@ export interface GetAllPasswordResponse {
     username: string;
     webUrl: string;
     passwordImg: string;
+    cvv:string;
+    pin:string;
+    socialPassword:string;
+    wifiPassword:string;
+    apiSecret:string;
+    workPassword:string;
+    socialEmail:string;
+    workEmail:string;
+    accountNumber:string;
+    
   };
 }
 export interface ActivityResponseInterface {

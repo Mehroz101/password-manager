@@ -48,11 +48,11 @@ const category_cards = [
     title: "API",
     cardNo: 5,
   },
-  {
-    icon: faFeather,
-    title: "Other",
-    cardNo: 6,
-  },
+  // {
+  //   icon: faFeather,
+  //   title: "Other",
+  //   cardNo: 6,
+  // },
 ];
 // Example of dynamic data for the password boxes
 
@@ -235,35 +235,51 @@ const ShowAll_Page = () => {
               >
                 <div className="allpassword_box_left">
                   <img
-                    src={`http://localhost:5000/uploads/${password.type}.png`}
-                    alt={password.fields.appName}
+                    src={`http://localhost:5000/uploads/${password?.type}.png`}
+                    alt={password?.fields?.appName}
                   />
                 </div>
                 <div className="allpassword_box_center">
                   <p className="allpassword_title">{password.fields.appName}</p>
                   <p className="allpassword_account">
-                    {password.fields.email
-                      ? password.fields.email
+                    {(password.fields.email || password.fields.socialEmail || password.fields.workEmail)
+                      ? (password.fields.email || password.fields.socialEmail || password.fields.workEmail)
                       : password.fields.username}
                   </p>
-                  <div className="password">
-                    <p className="allpassword_password">
-                      {passwordVisibility[password.passwordID]
-                        ? password.fields.password
-                        : "*************"}{" "}
-                    </p>
-                    <FontAwesomeIcon
-                      icon={
-                        passwordVisibility[password.passwordID]
-                          ? faEye
-                          : faEyeLowVision
-                      }
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePasswordVisibilityToggle(password.passwordID);
-                      }} // Toggle the password visibility
-                    />
-                  </div>
+                  {(password?.fields.password ||
+                    password?.fields.cvv ||
+                    password?.fields.pin ||
+                    password?.fields.socialPassword ||
+                    password?.fields.apiSecret ||
+                    password?.fields.wifiPassword ||
+                    password?.fields.accountNumber ||
+                    password?.fields.workPassword) && (
+                    <div className="password">
+                      <p className="allpassword_password">
+                        {passwordVisibility[password.passwordID]
+                          ? password.fields.password ||
+                            password.fields.cvv ||
+                            password.fields.pin ||
+                            password.fields.socialPassword ||
+                            password.fields.apiSecret ||
+                            password.fields.wifiPassword ||
+                            password.fields.accountNumber ||
+                            password.fields.workPassword
+                          : "*************"}{" "}
+                      </p>
+                      <FontAwesomeIcon
+                        icon={
+                          passwordVisibility[password.passwordID]
+                            ? faEye
+                            : faEyeLowVision
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePasswordVisibilityToggle(password.passwordID);
+                        }} // Toggle the password visibility
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="allpassword_box_right">
                   <FontAwesomeIcon
@@ -281,7 +297,7 @@ const ShowAll_Page = () => {
                         : "" // Only show for the clicked item
                     }`}
                   >
-                    <span
+                    {/* <span
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCopyToClipboard("email", password.passwordID);
@@ -297,7 +313,7 @@ const ShowAll_Page = () => {
                       }}
                     >
                       Copy Password
-                    </span>
+                    </span> */}
                     <span
                       onClick={(e) => {
                         e.stopPropagation();

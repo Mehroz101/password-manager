@@ -90,7 +90,9 @@ const AddNew_Page = () => {
     }
   }, []);
   useEffect(() => {
-    if (specificData) {
+    reset()
+    if (specificData &&  appId) {
+      console.log("called")
       setValue("categoryType", specificData.type);
       Object.entries(specificData.fields).forEach(([key, value]) => {
         setValue(key as keyof AddNewPassword, value as string);
@@ -252,14 +254,14 @@ const AddNew_Page = () => {
 
           {categoryType === "Social" && (
             <>
-              <CInput
+              {/* <CInput
                 label="App Name"
                 id="appName"
                 autoComplete="new-password"
                 type="text"
                 placeholder="Enter app name"
                 {...register("appName", { required: true })}
-              />
+              /> */}
               <CInput
                 label="Username"
                 id="socialUsername"
