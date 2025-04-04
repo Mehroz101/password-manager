@@ -9,6 +9,7 @@ import {
   CompanyRegistration,
   CompanyRegistrationForm,
   Home,
+  InvitationPage,
   Layout,
   Profile,
   Setting,
@@ -95,6 +96,7 @@ const AppRoutes = () => {
           <Route path={ROUTES.SETTING} element={<Setting />} />
           <Route path={ROUTES.USERS} element={<Users />} />
           <Route path={ROUTES.ADDNEWUSER} element={<AddUser />} />
+          <Route path={`${ROUTES.INVITATION}/:companyName/:token`} element={<InvitationPage />} />
           <Route
             path={ROUTES.COMPANYREGISTER}
             element={<CompanyRegistration />}

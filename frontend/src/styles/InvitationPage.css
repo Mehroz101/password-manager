@@ -1,0 +1,33 @@
+.invitation_page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+    height: 100%;
+}
+.action_btns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:20px;
+}
+button{
+    width: 100%;
+    max-width: 400px;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.accept_btn{
+    background-color: var(--secondary-color);
+}
+.reject_btn{
+    background-color: #333;
+}

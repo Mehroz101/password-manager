@@ -9,6 +9,7 @@ export const Profile = lazy(() => import("../pages/Profile_Page"));
 export const Setting = lazy(() => import("../pages/Setting_Page"));
 export const Users = lazy(() => import("../pages/Users_Page"));
 export const AddUser = lazy(() => import("../pages/AddNewUser_Page"));
+export const InvitationPage = lazy(() => import("../pages/Invitation_Page"));
 export const CompanyRegistration = lazy(
   () => import("../pages/CompanyRegistration")
 );

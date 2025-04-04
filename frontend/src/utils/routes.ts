@@ -8,6 +8,7 @@ export const ROUTES ={
     PROFILE :"/profile",
     SETTING:"/setting",
     USERS:"/users",
+    INVITATION:"/join",
     VIEWCOMPANY:"/companyregistration",
     ADDNEWUSER:"/addnewuser",
     COMPANYREGISTER:"/companyregistration",

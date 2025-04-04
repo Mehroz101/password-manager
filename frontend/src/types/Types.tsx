@@ -116,6 +116,11 @@ export interface AddNewPassword {
   // Other Category
   otherDetails?: string;
 }
+export interface invitationInterface {
+  accessLevel:string;
+  email:string;
+  
+}
 
 export interface AuthInterface {
   username: string;

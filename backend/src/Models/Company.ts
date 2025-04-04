@@ -3,7 +3,7 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 export interface ICompany extends Document {
   companyName: string;
   companyID: number;
-  companyUserIDs: number[];
+  companyUserIDs: Types.ObjectId[];
   companyUserLimit: number;
   creatorID: Types.ObjectId;
   noOfUsers: number;
@@ -27,7 +27,8 @@ const CompanySchema = new Schema(
       required: true,
     },
     companyUserIDs: {
-      type: [Number],
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
     },
     companyUserLimit: {
       type: Number,

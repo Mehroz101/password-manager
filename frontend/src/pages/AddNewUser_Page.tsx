@@ -1,22 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/AddNewUser.css";
 import CInput from "../components/FormComponent/CInput";
-import { AddNewPassword } from "../types/Types";
+import { invitationInterface } from "../types/Types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CButton from "../components/FormComponent/CButton";
-const apps = [
-  { title: "Twitter" },
-  { title: "Instagram" },
-  { title: "Facebook" },
-  { title: "Google" },
-  { title: "Netflix" },
-  { title: "Amazon" },
-  { title: "Linkedin" },
-  { title: "Youtube" },
-  { title: "Other" },
+import CDropdown from "../components/FormComponent/CDropdown";
+import { useMutation } from "@tanstack/react-query";
+import { notify } from "../utils/notification";
+import { SendInvitation } from "../services/CompanyServices";
+const accessOptions = [
+  { label: "Full Access", value: "Full Access" },
+  { label: "Read only", value: "Read only" },
 ];
-
 // Category List
 
 const AddNewUser_Page = () => {
@@ -29,24 +25,33 @@ const AddNewUser_Page = () => {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
-  } = useForm<AddNewPassword>();
+  } = useForm<invitationInterface>();
 
   // Form Submit Handler
-  const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
-    if (!selectedApp && !selectedCategory) {
-      return alert("app and category required");
-    }
+  const onSubmit: SubmitHandler<invitationInterface> = (data) => {
+  
     const sendData = {
-      appName: selectedApp,
-      categoryName: selectedCategory,
-      name: data.name,
       email: data.email,
-      password: data.password,
-      url: data.url,
+      accessLevel: data.accessLevel,
     };
-    navigate("/");
+    console.log(sendData);
+    AddNewPasswordMutation.mutate(sendData);
+    // navigate("/");
   };
+  const AddNewPasswordMutation = useMutation({
+    mutationFn: SendInvitation,
+    onSuccess: (data) => {
+      if (data.success) {
+        notify({ type: "success", message: data.message });
+        navigate("/showall");
+      } else {
+        notify({ type: "error", message: data.message });
+      }
+    },
+  });
 
   // Focus Input Field on Load
   useEffect(() => {
@@ -60,79 +65,27 @@ const AddNewUser_Page = () => {
       <div className="addnewuser_page">
         <div className="add_new_form">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="app_container">
-              <p className="app_label">App</p>
-              <div className="add_new_apps">
-                {apps.map((app, index) => (
-                  <button
-                    type="button"
-                    className={`add_new_app ${
-                      selectedApp === app.title ? "active" : ""
-                    }`}
-                    key={index}
-                    onClick={() => setSelectedApp(app.title)}
-                  >
-                    <p>{app.title}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-            {/* Category Selection
-            <div className="category_container">
-              <p className="category_label">Category</p>
-              <div className="add_new_categories">
-                {categories.map((category, index) => (
-                  <button
-                    type="button"
-                    className={`add_new_category ${
-                      selectedCategory === category.title ? "active" : ""
-                    }`}
-                    key={index}
-                    onClick={() => setSelectedCategory(category.title)}
-                  >
-                    <p>{category.title}</p>
-                  </button>
-                ))}
-              </div>
-            </div> */}
-            {/* Input Fields */}
-            <CInput
-              label="User Name"
-              id="name"
-              type="text"
-              placeholder="Enter User Name"
-              {...register("name")}
-              ref={inputRef}
-            />
-            <CInput
-              label="Username"
-              id="username"
-              type="text"
-              placeholder="Enter Unique Username"
-              {...register("name")}
-            />
             <CInput
               label="Email Address"
               id="email"
               type="email"
+              required
               placeholder="Email Address"
               {...register("email")}
             />
-            <CInput
-              label="Password"
-              id="password"
-              type="password"
-              placeholder="Password"
-              {...register("password")}
+            <CDropdown
+              control={control}
+              name="accessLevel"
+              options={accessOptions}
+              placeholder="Choose access level"
+              label="Acess Level"
+              required
+              onChange={(e: any) => {
+                console.log(e.value);
+                setValue("accessLevel", e.value);
+              }}
             />
-            <CInput
-              label="Confirm Password"
-              id="cPassword"
-              type="password"
-              placeholder="Confirm Your Password"
-              {...register("url")}
-            />
-            {/* Submit Button */}
+
             <CButton label="Create" />
           </form>
         </div>

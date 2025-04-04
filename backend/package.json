@@ -7,22 +7,23 @@
     "build": "tsc && cp -R uploads public/uploads",
     "start": "node public/server.js",
     "dev": "ts-node src/server.ts",
-    "build_run":"node public/server.js"
-    
-
+    "build_run": "node public/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/nodemailer": "^6.4.17",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

@@ -85,3 +85,49 @@ export const GetCompanyDetail = async (): Promise<ResponseInterface> => {
     };
   }
 };
+
+export const SendInvitation = async (data: {
+  email: string;
+  accessLevel: string;
+}) => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      API_URL + `/sendinvitation`,
+      data,
+      config
+    );
+    return response.data.data;
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
+};
+export const AcceptInvitation = async (data: { token: string }) => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      API_URL + `/acceptinvitation`,
+      data,
+      config
+    );
+    return response.data;
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
+};

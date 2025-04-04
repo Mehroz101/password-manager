@@ -4,6 +4,8 @@ import {
   getCompany,
   registerCompany,
   uploadCompanyLogo,
+  SendInvitation,
+  AcceptInvitation
 } from "../Controllers/companyController";
 import { protect } from "../Middleware/authMiddleware"; // ✅ Check case sensitivity
 import upload from "../Middleware/multerMiddleware";
@@ -16,4 +18,6 @@ router.post(
 );
 router.post("/register", protect, registerCompany);
 router.get("/getcompanydetail", protect, getCompany);
+router.post("/sendinvitation", protect, SendInvitation);
+router.post("/acceptinvitation", protect, AcceptInvitation);
 export default router;
