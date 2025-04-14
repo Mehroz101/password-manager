@@ -9,6 +9,9 @@ import {
 import ProfileImg from "../assets/profileImg.png";
 import { ROUTES } from "../utils/routes";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { CompanyUsersFetch } from "../services/CompanyServices";
+import { companyUsers } from "../types/Types";
 
 const users = [
   {
@@ -85,7 +88,10 @@ const Users_Page = () => {
       [accountId]: !previousState[accountId],
     }));
   };
-
+const {data:usersData} = useQuery<companyUsers[]>({
+  queryKey:["users"],
+  queryFn:CompanyUsersFetch
+})
   // const handleOutsideClick = (event: MouseEvent) => {
   //   let clickedOutside = true;
   

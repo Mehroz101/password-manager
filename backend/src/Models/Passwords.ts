@@ -10,13 +10,17 @@ const passwordSchema = new Schema(
       type: Number,
       required: true,
     },
-    type:{
-        type:String,
-        required:true
+    type: {
+      type: String,
+      required: true,
     },
     fields: {
       type: Map,
       of: String,
+    },
+    companyPass: {
+      type: Boolean,
+      default: false,
     },
     lastAction: {
       actionType: {

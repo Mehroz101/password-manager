@@ -183,3 +183,7 @@ export interface UserDetailInterface {
   password: "";
   nPassword: "";
 }
+
+export interface companyUsers {
+  name:""
+}

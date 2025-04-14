@@ -47,7 +47,7 @@ export const registerCompany = async (
           noOfUsers: noOfUsers,
           companyID: nextCompanyID,
           creatorID: userID,
-          companyUserIDs: [userId.userID],
+          companyUserIDs: [userId._id],
           companyUserLimit: UserLimit,
         });
         res.status(201).json({
@@ -283,15 +283,11 @@ export const AcceptInvitation = async (
       findInvitation.status = "accepted";
       await findInvitation.save();
 
+      findInvitation.status = "accepted";
+      await findInvitation.save();
       res
         .status(200)
         .json({ success: true, message: "Invitation accepted successfully" }); // Update invitation status
-      findInvitation.status = "accepted";
-      await findInvitation.save();
-
-      res
-        .status(200)
-        .json({ success: true, message: "Invitation accepted successfully" });
     } else {
       res
         .status(200)
@@ -306,4 +302,40 @@ export const AcceptInvitation = async (
       error: error.message,
     });
   }
+};
+export const companyUsersFetch = async (
+  req: RequestExtendsInterface,
+  response: Response
+) => {
+  try {
+    if (req.user) {
+      const findcompany = await Company.findOne({ creatorID: req.user.id });
+      if (findcompany) {
+        console.log(findcompany.companyUserIDs);
+        if (findcompany?.companyUserIDs?.length > 0) {
+          findcompany?.companyUserIDs.map((user, index) => {
+            // const finduser = await User.findById(user);
+          });
+        }
+      }
+    }
+  } catch (error) {}
+};
+export const companyUserDelete = async (
+  req: RequestExtendsInterface,
+  response: Response
+) => {
+  try {
+    if (req.user) {
+      const { companyID, userID } = req.body;
+      const findcompany = await Company.findOne({ companyID: companyID });
+      if (findcompany?.companyUserIDs?.length > 0) {
+        const findUser = findcompany?.companyUserIDs.filter(
+          (user) => user != userID
+        );
+        findcompany.companyUserIDs = findUser;
+        findcompany.save();
+      }
+    }
+  } catch (error) {}
 };

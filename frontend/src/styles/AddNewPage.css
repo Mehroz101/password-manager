@@ -97,6 +97,15 @@
   width: 100%;
   max-width: 400px;
 }
+
+.companycheckbox {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.companycheckbox label {
+  margin-left: 10px;
+}
 .add_new_btn {
   margin-top: 30px;
 }

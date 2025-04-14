@@ -131,3 +131,23 @@ export const AcceptInvitation = async (data: { token: string }) => {
     };
   }
 };
+export const CompanyUsersFetch = async () => {
+  try {
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      API_URL + `/companyusersfetch`,
+      config
+    );
+    return response.data;
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
+};

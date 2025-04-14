@@ -3,8 +3,9 @@ import { RequestExtendsInterface, UserDetailInterface } from "../Types/types";
 import User from "../Models/User";
 import Password from "../Models/Password";
 import bcrypt from "bcryptjs";
-import fs from "fs"
+import fs from "fs";
 import Passwords from "../Models/Passwords";
+import Company from "../Models/Company";
 export const GetUserProfileData = async (
   req: RequestExtendsInterface,
   res: Response
@@ -38,23 +39,24 @@ export const GetUserProfileDetail = async (
   try {
     if (req.user) {
       const user = await User.findOne({ _id: req.user.id });
-        const passwords = await Passwords.find({ userID: req.user.id });
-        const sendData = {
-          user: user,
-          passwords: passwords?.length,
-        };
-        res.status(200).json({
-          success: true,
-          data: sendData,
-        });
+      const passwords = await Passwords.find({ userID: req.user.id });
+      const company = await Company.findOne({ creatorID: req.user.id });
+      const sendData = {
+        user: user,
+        passwords: passwords?.length,
+        company: company?.companyID,
+      };
+      res.status(200).json({
+        success: true,
+        data: sendData,
+      });
     }
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({
       success: true,
       message: "Internal server error",
     });
-    
   }
 };
 
@@ -129,10 +131,12 @@ export const UpdateUserDetail = async (
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response) =>{
+export const UpdateProfileImg = async (
+  req: RequestExtendsInterface,
+  res: Response
+) => {
   try {
     if (!req?.file) {
-      
       res.status(400).json({ success: false, message: "No file uploaded" });
     } else {
       const file = req?.file;
@@ -140,7 +144,7 @@ export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response)
         res.status(401).json({ success: false, message: "Unauthorized" });
       } else {
         const userID = req.user.id;
-        const user = await User.findOne({ _id: userID});
+        const user = await User.findOne({ _id: userID });
         if (!user) {
           res
             .status(404)
@@ -164,10 +168,10 @@ export const UpdateProfileImg = async (req:RequestExtendsInterface,res:Response)
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       success: true,
       message: "Internal server error",
     });
   }
-}
+};

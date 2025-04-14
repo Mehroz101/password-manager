@@ -13,6 +13,8 @@ import {
 } from "../services/PasswordServices";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import CPasswordInput from "../components/FormComponent/CPasswordInput";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const categoryOptions = [
   { label: "API", value: "API" },
@@ -28,13 +30,17 @@ interface Payload {
   type: string;
   fields: Record<string, any>;
   passwordID?: number;
+  showCompany: boolean;
 }
 
 const AddNew_Page = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const [companyPass, setCompanyPass] = useState<boolean>(false);
   const [appId, setAppId] = useState<string | null>(null);
   const URL = useLocation();
+  const { userData } = useSelector((state: RootState) => state.profile);
+
   // React Hook Form Setup
   const { register, handleSubmit, control, watch, reset, setValue } =
     useForm<AddNewPassword>();
@@ -54,12 +60,14 @@ const AddNew_Page = () => {
     let payload: Payload = {
       type: data.categoryType,
       fields: filteredFields,
+      showCompany: companyPass,
     };
     if (appId) {
       payload = {
         type: data.categoryType,
         fields: filteredFields,
         passwordID: Number(appId),
+        showCompany: companyPass,
       };
     }
     AddNewPasswordMutation.mutate(payload);
@@ -90,9 +98,9 @@ const AddNew_Page = () => {
     }
   }, []);
   useEffect(() => {
-    reset()
-    if (specificData &&  appId) {
-      console.log("called")
+    reset();
+    if (specificData && appId) {
+      console.log("called");
       setValue("categoryType", specificData.type);
       Object.entries(specificData.fields).forEach(([key, value]) => {
         setValue(key as keyof AddNewPassword, value as string);
@@ -406,7 +414,21 @@ const AddNew_Page = () => {
               />
             </>
           )}
-
+          {userData?.company && (
+            <div className="companycheckbox">
+              <input
+                type="checkbox"
+                name="companyPass"
+                onChange={(e) => {
+                  setCompanyPass(e.target.checked);
+                }}
+                id="companyPass"
+              />
+              <label htmlFor="companyPass">
+                Register as a company password
+              </label>
+            </div>
+          )}
           <CButton label="Save" />
         </form>
       </div>
