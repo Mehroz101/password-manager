@@ -147,7 +147,7 @@ export const getAllPasswords = async (
         res.status(404).json({ success: false, message: "User not found" });
       } else {
         const passwords = await Passwords.find({ userID: user });
-
+        
         res.status(200).json({ success: true, message: "", data: passwords });
       }
     }
@@ -256,7 +256,7 @@ export const RecentActivities = async (
   try {
     if (req.user) {
       const userID = await User.findOne({ _id: req.user.id });
-      console.log(userID.userID)
+      console.log(userID.userID);
       const recentActivities = await RecentActivity.find({
         userID: userID?.userID,
       }).populate("passwordID");
@@ -276,14 +276,14 @@ export const DynamicPasswordStore = async (
   try {
     if (req.user) {
       // const userID = await User.findOne({ _id: req.user.id });
-      const { type, fields, passwordID = null } = req.body;
+      const { type, fields, passwordID = null, showCompany = false } = req.body;
       console.log(req.body);
       if (passwordID) {
         const password = await Passwords.findOne({ passwordID: passwordID });
         if (password) {
           await Passwords.updateOne(
             { passwordID: passwordID },
-            { $set: { type: type, fields: fields } }
+            { $set: { type: type, fields: fields }, companyPass: showCompany }
           );
           const Userid = await User.findOne({ _id: req.user.id });
 
@@ -296,10 +296,10 @@ export const DynamicPasswordStore = async (
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc
           );
-          res.status(201).json({
-            success: true,
-            message: "Password updated successfully",
-          });
+          // res.status(201).json({
+          //   success: true,
+          //   message: "Password updated successfully",
+          // });
         }
         return;
       }
@@ -314,6 +314,7 @@ export const DynamicPasswordStore = async (
         userID: req.user.id,
         type: type,
         fields: fields,
+        companyPass: showCompany
       });
       const Userid = await User.findOne({ _id: req.user.id });
 

@@ -35,28 +35,41 @@ export const GetUserProfileData = async (
 export const GetUserProfileDetail = async (
   req: RequestExtendsInterface,
   res: Response
-) => {
+): Promise<void> => {
   try {
-    if (req.user) {
-      const user = await User.findOne({ _id: req.user.id });
-      const passwords = await Passwords.find({ userID: req.user.id });
-      const company = await Company.findOne({ creatorID: req.user.id });
-      const sendData = {
-        user: user,
-        passwords: passwords?.length,
-        company: company?.companyID,
-      };
-      res.status(200).json({
-        success: true,
-        data: sendData,
-      });
+    if (!req.user?.id) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
     }
+
+    const userId = req.user.id;
+    const [user, passwords, userCompany, allCompanies] = await Promise.all([
+      User.findById(userId),
+      Passwords.find({ userID: userId }),
+      Company.findOne({ creatorID: userId }),
+      Company.find(),
+    ]);
+
+    const companyEmp = allCompanies.find(
+      (c) => c._id.toString() === user?.companyID?.toString()
+    );
+
+    const isCompanyOwner = companyEmp?.creatorID?.toString() === userId;
+    const companyName = companyEmp?.companyName || "";
+
+    const data = {
+      user,
+      passwordsCount: passwords.length,
+      companyOwner: isCompanyOwner,
+      companyName,
+    };
+
+    res.status(200).json({ success: true, data });
+    return;
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({
-      success: true,
-      message: "Internal server error",
-    });
+    console.error("Error:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error" });
+    return;
   }
 };
 
