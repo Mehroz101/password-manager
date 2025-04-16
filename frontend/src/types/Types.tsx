@@ -117,9 +117,8 @@ export interface AddNewPassword {
   otherDetails?: string;
 }
 export interface invitationInterface {
-  accessLevel:string;
-  email:string;
-  
+  accessLevel: string;
+  email: string;
 }
 
 export interface AuthInterface {
@@ -152,16 +151,15 @@ export interface GetAllPasswordResponse {
     username: string;
     webUrl: string;
     passwordImg: string;
-    cvv:string;
-    pin:string;
-    socialPassword:string;
-    wifiPassword:string;
-    apiSecret:string;
-    workPassword:string;
-    socialEmail:string;
-    workEmail:string;
-    accountNumber:string;
-    
+    cvv: string;
+    pin: string;
+    socialPassword: string;
+    wifiPassword: string;
+    apiSecret: string;
+    workPassword: string;
+    socialEmail: string;
+    workEmail: string;
+    accountNumber: string;
   };
 }
 export interface ActivityResponseInterface {
@@ -185,5 +183,8 @@ export interface UserDetailInterface {
 }
 
 export interface companyUsers {
-  name:""
+    fullname: string;
+    username: string;
+    profileImage: string;
+    id: string;
 }

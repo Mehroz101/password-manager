@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/Users.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,128 +12,37 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CompanyUsersFetch } from "../services/CompanyServices";
 import { companyUsers } from "../types/Types";
-
-const users = [
-  {
-    id: 1,
-    name: "Mehroz Farooq",
-    username: "@mehrozfarooq",
-    img: ProfileImg,
-    belongs: "Development",
-  },
-  {
-    id: 2,
-    name: "Fahad Ahmed",
-    username: "@fahadahmed",
-    img: ProfileImg,
-    belongs: "Sales",
-  },
-  {
-    id: 3,
-    name: "Hairat Ali",
-    username: "@hairatali",
-    img: ProfileImg,
-    belongs: "Support",
-  },
-  {
-    id: 4,
-    name: "Fahad Farooq",
-    username: "@fahadfarooq",
-    img: ProfileImg,
-    belongs: "Networking",
-  },
-  {
-    id: 5,
-
-    name: "Mehroz Farooq",
-    username: "@mehrozfarooq",
-    img: ProfileImg,
-    belongs: "Development",
-  },
-  {
-    id: 6,
-
-    name: "Fahad Ahmed",
-    username: "@fahadahmed",
-    img: ProfileImg,
-    belongs: "Sales",
-  },
-  {
-    id: 7,
-
-    name: "Hairat Ali",
-    username: "@hairatali",
-    img: ProfileImg,
-    belongs: "Support",
-  },
-  {
-    id: 8,
-
-    name: "Fahad Farooq",
-    username: "@fahadfarooq",
-    img: ProfileImg,
-    belongs: "Networking",
-  },
-];
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Users_Page = () => {
-  const [showActionBox, setShowActionBox] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const actionBoxRef = useRef<HTMLDivElement | null>(null);
+  const [activeActionBoxId, setActiveActionBoxId] = useState<string | null>(null);
+  const { userData } = useSelector((state: RootState) => state.profile);
+  const navigate = useNavigate();
 
-  const handleActionBoxToggle = (accountId: number) => {
-    setShowActionBox((previousState) => ({
-      ...previousState,
-      [accountId]: !previousState[accountId],
-    }));
+  const { data: usersData = [] } = useQuery<companyUsers[]>({
+    queryKey: ["users"],
+    queryFn: () => CompanyUsersFetch(userData?.user?.companyID as string),
+    enabled: !!userData?.companyOwner,
+  });
+
+  const handleActionBoxToggle = (userId: string) => {
+    setActiveActionBoxId((prev) => (prev === userId ? null : userId));
   };
-const {data:usersData} = useQuery<companyUsers[]>({
-  queryKey:["users"],
-  queryFn:CompanyUsersFetch
-})
-  // const handleOutsideClick = (event: MouseEvent) => {
-  //   let clickedOutside = true;
-  
-  //   Object.keys(actionBoxRefs.current).forEach((id) => {
-  //     const ref = actionBoxRefs.current[Number(id)];
-  //     if (ref && ref.contains(event.target as Node)) {
-  //       clickedOutside = false;
-  //     }
-  //   });
-  
-  //   console.log("Clicked outside:", clickedOutside);
-  //   if (clickedOutside) {
-  //     setShowActionBox({});
-  //   }
-  // };
+
   const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      actionBoxRef.current &&
-      event.target &&
-      !actionBoxRef.current.contains(event.target as Node) &&
-      !(event.target as HTMLElement).closest(".user_box_right")
-    ) {
-      setShowActionBox((prev) => {
-        // Close all action boxes, except the one that's currently open
-        const newShowActionBox = { ...prev };
-        for (const id in newShowActionBox) {
-          if (newShowActionBox[id] === true) {
-            newShowActionBox[id] = false;
-          }
-        }
-        return newShowActionBox;
-      });
+    const target = event.target as HTMLElement;
+    if (!target.closest(".user_box_right")) {
+      setActiveActionBoxId(null);
     }
   };
+
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
-
-  const navigate = useNavigate();
 
   return (
     <div className="users_page">
@@ -144,49 +53,59 @@ const {data:usersData} = useQuery<companyUsers[]>({
         <div className="top_card_right">
           <p className="top_card_title">Number of users</p>
           <p className="top_card_number">
-            12 <span className="totalusers">/20</span>
+            {usersData.length} <span className="totalusers">/20</span>
           </p>
         </div>
       </div>
+
       <div className="user_container">
         <h3>Users</h3>
         <div className="user_boxs">
-          {users.map((user, index) => (
-            <div className="user_box" key={index}>
+          {usersData.map((user) => (
+            <div className="user_box" key={user.id}>
               <div className="user_box_left">
-                <img src={user.img} alt="" />
+                <img
+                  src={
+                    user?.profileImage
+                      ? `http://localhost:5000/uploads/${user.profileImage}`
+                      : ProfileImg
+                  }
+                  alt={user?.fullname || "User"}
+                />
               </div>
+
               <div className="user_box_center">
                 <div className="user_box_center_top">
-                  <p className="user_box_name">{user.name}</p>
-                  <p className="user_box_belongs">{user.belongs}</p>
+                  <p className="user_box_name">
+                    {user?.fullname || user?.username}
+                  </p>
                 </div>
                 <div className="user_box_center_bottom">
-                  <p className="user_box_username">{user.username}</p>
+                  <p className="user_box_username">{user?.username}</p>
                 </div>
               </div>
+
               <div className="user_box_right">
                 <FontAwesomeIcon
                   icon={faEllipsisVertical}
-                  onClick={() => handleActionBoxToggle(user.id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent triggering document click
+                    handleActionBoxToggle(user.id);
+                  }}
                 />
-                {/* {showActionBox[user.id] && ( */}
-                  <div
-                  ref={actionBoxRef}
+                <div
                   className={`box_right_Action_dropdown ${
-                    showActionBox[user.id] ? "box_right_Action_show" : "" // Only show for the clicked item
+                    activeActionBoxId === user.id ? "box_right_Action_show" : ""
                   }`}
-                  >
-                    <span onClick={() => {}}>Copy Email</span>
-                    <span onClick={() => {}}>Copy Password</span>
-                    <span onClick={() => {}}>Delete</span>
-                  </div>
-                {/* )} */}
+                >
+                  <span onClick={() => {}}>Delete</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
       <div className="add_new_user">
         <button className="add_btn" onClick={() => navigate(ROUTES.ADDNEWUSER)}>
           <FontAwesomeIcon icon={faPlus} />

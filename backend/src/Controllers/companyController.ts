@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { RequestExtendsInterface } from "../Types/types";
 import Company from "../Models/Company";
 import User, { IUser } from "../Models/User";
@@ -6,64 +6,80 @@ import fs from "fs";
 import crypto from "crypto";
 import Invitation from "../Models/Invitation";
 import { sendEmail } from "../utils/sendEmail";
-import bcrypt from "bcryptjs";
 import { Types } from "mongoose";
 
-import { IncomingMessage } from "http";
-import { ObjectId } from "mongoose";
 export const registerCompany = async (
   req: RequestExtendsInterface,
   res: Response
 ): Promise<void> => {
   try {
     const { companyName, noOfUsers } = req.body;
+
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
       return;
     }
-    let companyname = companyName.trim().toLowerCase();
+
+    const companyname = companyName.trim().toLowerCase();
     const userID = req.user.id;
-    const existingCompany = await Company.findOne({
-      $or: [{ creatorID: userID }, { companyName: companyname }],
-    }).populate("creatorID");
+
+    // Check if a company already exists for the user
+    const existingCompany = await Company.findOne({ creatorID: userID });
+
     if (existingCompany) {
-      res.status(400).json({
-        success: false,
-        message:
-          existingCompany.companyName === companyname
-            ? "Company name already exists"
-            : "You already have a company",
+      console.log("existingCompany ");
+      // Update existing company
+      existingCompany.companyName = companyname;
+      existingCompany.noOfUsers = noOfUsers;
+      await existingCompany.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Company updated successfully",
+        company: existingCompany,
       });
+      return;
     } else {
-      const previousCompanyID = await Company.findOne().sort({ companyID: -1 });
-      const nextCompanyID = previousCompanyID
-        ? previousCompanyID.companyID + 1
-        : 1;
-      const userId = await User.findOne({ _id: userID });
-      const UserLimit = process.env.COMPANY_USER_LIMIT || 10;
-      if (userId) {
-        const company = await Company.create({
-          companyName: companyname,
-          noOfUsers: noOfUsers,
-          companyID: nextCompanyID,
-          creatorID: userID,
-          companyUserIDs: [userId._id],
-          companyUserLimit: UserLimit,
-        });
-        res.status(201).json({
-          success: true,
-          message: "Company registered successfully",
-          company,
-        });
+      console.log("newCompany ");
+      // Create a new company
+      const previousCompany = await Company.findOne().sort({ companyID: -1 });
+      const nextCompanyID = previousCompany ? previousCompany.companyID + 1 : 1;
+
+      const user = await User.findById(userID);
+      if (!user) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
       }
+
+      const userLimit = process.env.COMPANY_USER_LIMIT || 10;
+
+      const newCompany = await Company.create({
+        companyName: companyname,
+        noOfUsers: noOfUsers,
+        companyID: nextCompanyID,
+        creatorID: userID,
+        companyUserIDs: [user._id],
+        companyUserLimit: userLimit,
+      });
+      user.companyID = new Types.ObjectId(newCompany._id as Types.ObjectId);
+      user.save();
+      res.status(201).json({
+        success: true,
+        message: "Company registered successfully",
+        company: newCompany,
+      });
+      return;
     }
   } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error registering company", error });
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error handling company registration/update",
+      error,
+    });
   }
 };
+
 export const uploadCompanyLogo = async (
   req: RequestExtendsInterface,
   res: Response
@@ -79,9 +95,14 @@ export const uploadCompanyLogo = async (
         const userID = req.user.id;
         const company = await Company.findOne({ creatorID: userID });
         if (!company) {
-          res
-            .status(404)
-            .json({ success: false, message: "First register a company" });
+       
+            //delete the file that uploaded by user
+          const filePath = `./uploads/${file?.filename}`;
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+
+            res.status(404).json({ success: false, message: "First register a company then upload logo" });
+          }
         } else {
           if (company.companyLogo) {
             const previousLogo = company.companyLogo;
@@ -136,7 +157,6 @@ export const SendInvitation = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log(req.body);
 
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
@@ -218,7 +238,6 @@ export const AcceptInvitation = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log(req.body);
 
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
@@ -248,7 +267,6 @@ export const AcceptInvitation = async (
       res.status(404).json({ success: false, message: "User not found" });
       return;
     }
-    console.log(user);
     // Ensure the user is the invited person
     if (user.email !== findInvitation.email) {
       res.status(403).json({
@@ -305,22 +323,47 @@ export const AcceptInvitation = async (
 };
 export const companyUsersFetch = async (
   req: RequestExtendsInterface,
-  response: Response
-) => {
+  res: Response
+): Promise<void> => {
   try {
-    if (req.user) {
-      const findcompany = await Company.findOne({ creatorID: req.user.id });
-      if (findcompany) {
-        console.log(findcompany.companyUserIDs);
-        if (findcompany?.companyUserIDs?.length > 0) {
-          findcompany?.companyUserIDs.map((user, index) => {
-            // const finduser = await User.findById(user);
-          });
-        }
-      }
+    const { id } = req.params;
+
+    if (!req.user) {
+       res.status(401).json({ success: false, message: "Unauthorized" });
+       return
     }
-  } catch (error) {}
+
+    const company = await Company.findById(id);
+
+    if (!company) {
+       res.status(404).json({ success: false, message: "Company not found" });
+       return
+    }
+
+    if (!company.companyUserIDs || company.companyUserIDs.length === 0) {
+       res.status(200).json({ success: true, users: [] });
+       return
+    }
+console.log("company.companyUserIDs", company.companyUserIDs)
+    const users = await User.find({
+      _id: { $in: company.companyUserIDs }
+    }).select('fullname username profileImg ');
+     res.status(200).json({
+      success: true,
+      users,
+    });
+    return    
+
+  } catch (error) {
+    console.error("Error fetching company users:", error);
+     res.status(500).json({
+      success: false,
+      message: "Error fetching company users",
+      error: error.message,
+    });
+  }
 };
+
 export const companyUserDelete = async (
   req: RequestExtendsInterface,
   response: Response

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/CompanyRegistration.css";
 import RegistrationImg1 from "../assets/companyReg0.png";
@@ -8,6 +8,8 @@ import RegistrationImg4 from "../assets/companyReg3.png";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../utils/routes";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const slides = [
   {
@@ -35,6 +37,7 @@ const slides = [
 const CompanyRegistration = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 for next, -1 for prev
+  const { userData } = useSelector((state: RootState) => state.profile);
 
   const nextSlide = () => {
     if (currentIndex < slides.length - 1) {
@@ -56,7 +59,14 @@ const CompanyRegistration = () => {
     onSwipedRight: prevSlide,
     trackMouse: true,
   });
-
+  useEffect(() => {
+    if (
+      userData?.user?.companyID != null &&
+      userData.companyOwner === true
+    ) {
+      navigate(ROUTES.COMPANYREGISTRATIONFORM); // Change path as needed
+    }
+  }, [userData]);
   return (
     <div className="company_registration_page">
       <div className="company_registration_container" {...handlers}>

@@ -132,13 +132,7 @@ const [appData,setAppData] = useState<any>()
     if (specificData) {
       console.log("specificData",specificData)
       setAppData(specificData?.fields)
-      // setValue("appName", specificData.fields.appName);
-      // setValue("username", specificData?.fields.username);
-      // setValue("email", specificData.email);
-      // setValue("password", specificData.password);
-      // setValue("url", specificData.webUrl);
-      // setValue("categoryName", specificData.categoryName);
-      // setValue("categoryType", specificData.categoryType);
+
     }
   }, [specificData]);
 
@@ -148,12 +142,13 @@ const [appData,setAppData] = useState<any>()
         <div className="viewapp_top_card">
           <div className="top_card_left">
             <img src={`http://localhost:5000/uploads/${specificData?.type}.png` || Img} alt="appicon" />
-          </div>
+            <img src={specificData?.type ? `http://localhost:5000/uploads/${specificData.type}.png` : Img} alt="appicon" />
           <div className="top_card_right">
             <div className="top_card_right_top">
               <p className="top_card_title">
                 { appData?.appName || "App Name"}
-              </p>
+                { appData?.appName ?? "App Name"}
+                </p>
               <p className="top_card_category">{specificData?.categoryType}</p>
               <FontAwesomeIcon
                 icon={faTrash}
@@ -164,7 +159,7 @@ const [appData,setAppData] = useState<any>()
               <p className="activity_box_account">
                 <span>
                   {specificData?.lastAction?.actionType || "Created Now"}:{" "}
-                  {formatDate(specificData?.updatedAt)}
+                  {specificData?.lastAction?.actionType ?? "Created Now"}:{" "}
                 </span>
               </p>
             </div>
@@ -260,8 +255,9 @@ const [appData,setAppData] = useState<any>()
           </form>
         </div> */}
       </div>
+      </div>
     </>
-  );
+    )
 };
 
 export default ViewApp_Page;

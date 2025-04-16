@@ -37,25 +37,44 @@ export const GetUserProfileDetail = async (
   res: Response
 ): Promise<void> => {
   try {
-    if (!req.user?.id) {
+    const userId = req.user?.id;
+
+    if (!userId) {
       res.status(401).json({ success: false, message: "Unauthorized" });
       return;
     }
 
-    const userId = req.user.id;
-    const [user, passwords, userCompany, allCompanies] = await Promise.all([
+    const [user, passwords, ownedCompany] = await Promise.all([
       User.findById(userId),
       Passwords.find({ userID: userId }),
       Company.findOne({ creatorID: userId }),
-      Company.find(),
     ]);
 
-    const companyEmp = allCompanies.find(
-      (c) => c._id.toString() === user?.companyID?.toString()
-    );
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
 
-    const isCompanyOwner = companyEmp?.creatorID?.toString() === userId;
-    const companyName = companyEmp?.companyName || "";
+    let isCompanyOwner = false;
+    let companyName = "";
+
+    if (user.companyID) {
+      const company = await Company.findById(user.companyID);
+
+      if (company) {
+        const isMember = company.companyUserIDs.some(
+          (empId) => empId.toString() === userId.toString()
+        );
+
+        if (isMember) {
+          companyName = company.companyName;
+        }
+
+        if (isMember && company.creatorID.toString() === userId.toString()) {
+          isCompanyOwner = true;
+        }
+      }
+    }
 
     const data = {
       user,
@@ -65,13 +84,12 @@ export const GetUserProfileDetail = async (
     };
 
     res.status(200).json({ success: true, data });
-    return;
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error("Error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
-    return;
   }
 };
+
 
 export const UpdateUserDetail = async (
   req: UserDetailInterface, // Ensure req.user is typed correctly

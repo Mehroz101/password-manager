@@ -69,6 +69,7 @@ export const UserProfileDetail = async () => {
       },
     };
     const response = await axios.get(`${API_URL}/userprofiledetail`, config);
+    console.log("response: ", response.data.data);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

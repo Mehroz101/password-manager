@@ -45,7 +45,7 @@ const CompanyRegistrationForm = () => {
     mutationFn: RegisterCompany,
     onSuccess: (data) => {
       if (data.success) {
-        notify({ type: "success", message: "Company Registered Successfully" });
+        notify({ type: "success", message: data.message });
       } else {
         notify({ type: "error", message: data.message });
       }

@@ -22,5 +22,5 @@ router.post("/register", protect, registerCompany);
 router.get("/getcompanydetail", protect, getCompany);
 router.post("/sendinvitation", protect, SendInvitation);
 router.post("/acceptinvitation", protect, AcceptInvitation);
-router.get("/companyusersfetch", protect, companyUsersFetch);
+router.get("/companyusersfetch/:id", protect, companyUsersFetch);
 export default router;

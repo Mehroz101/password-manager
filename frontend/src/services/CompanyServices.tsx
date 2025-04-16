@@ -131,7 +131,7 @@ export const AcceptInvitation = async (data: { token: string }) => {
     };
   }
 };
-export const CompanyUsersFetch = async () => {
+export const CompanyUsersFetch = async (id: string) => {
   try {
     const token = localStorage.getItem("passwordmanager");
     const config = {
@@ -140,11 +140,13 @@ export const CompanyUsersFetch = async () => {
       },
     };
     const response = await axios.get(
-      API_URL + `/companyusersfetch`,
+      API_URL + `/companyusersfetch/${id}`,
       config
     );
-    return response.data;
+    console.log(response.data, "company users data");
+    return response.data.users;
   } catch (error: unknown) {
+    console.log(error, "error in company users fetch");
     return {
       success: false,
       message: (error as any).response?.data?.message,
