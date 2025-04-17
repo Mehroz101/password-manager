@@ -58,9 +58,9 @@ const Profile_Page = () => {
   };
 
   const stats = [
-    { title: "Total Password", count: userData?.passwords },
-    { title: "Departments", count: 5 },
-    { title: "Employees", count: 10 },
+    { title: "Total Password", count: userData?.passwordsCount },
+    { title: "Company Name", count: userData?.companyName || "NAN" },
+    { title: "Employees", count: userData?.totalEmployees },
     { title: "Reused", count: 230 },
   ];
   const menuItems = [
@@ -119,10 +119,10 @@ const Profile_Page = () => {
 
       {/* Profile Stats */}
       <div className="profile_page_cards">
-        {stats.map((stat, index) => (
-          <div className="profile_page_card" key={index}>
+        {stats.map((stat, _) => (
+          <div className="profile_page_card" key={stat.title}>
             <span className="card_title">{stat.title}</span>
-            <span className="card_number">{stat.count}</span>
+            <span className="card_number">{stat.count || 0}</span>
           </div>
         ))}
       </div>
@@ -130,6 +130,7 @@ const Profile_Page = () => {
       {/* Menu Items */}
       <div className="profile_page_menus">
         {menuItems.map((item, index) => (
+         
           <div
             className={`profile_page_menu menu_${item.id}`}
             key={index}

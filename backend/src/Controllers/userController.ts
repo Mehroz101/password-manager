@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 import Passwords from "../Models/Passwords";
 import Company from "../Models/Company";
+import { totalmem } from "os";
 export const GetUserProfileData = async (
   req: RequestExtendsInterface,
   res: Response
@@ -38,58 +39,76 @@ export const GetUserProfileDetail = async (
 ): Promise<void> => {
   try {
     const userId = req.user?.id;
-
     if (!userId) {
       res.status(401).json({ success: false, message: "Unauthorized" });
       return;
     }
 
-    const [user, passwords, ownedCompany] = await Promise.all([
-      User.findById(userId),
-      Passwords.find({ userID: userId }),
-      Company.findOne({ creatorID: userId }),
-    ]);
-
+    const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ success: false, message: "User not found" });
       return;
     }
+console.log("1 User Found");
+console.log("userID: ",user.userID);
+    const userPasswords = await Passwords.find({ userID: user._id }) || [];
+    console.log("2 userPasswords: ",userPasswords.length);
 
-    let isCompanyOwner = false;
+    let companyPasswords: any[] = [];
     let companyName = "";
+    let totalEmployees = 0;
+    let isCompanyOwner = false;
 
     if (user.companyID) {
-      const company = await Company.findById(user.companyID);
+      console.log("3 companyID Found ");
 
+      companyPasswords = await Passwords.find({ companyPass: user.companyID }) || [];
+      console.log("3 companyPasswords: ",companyPasswords.length);
+      const company = await Company.findById(user.companyID);
       if (company) {
+        console.log("4 company Found ");
+
         const isMember = company.companyUserIDs.some(
           (empId) => empId.toString() === userId.toString()
         );
 
         if (isMember) {
-          companyName = company.companyName;
-        }
+          console.log("5 Company Member Found ");
 
-        if (isMember && company.creatorID.toString() === userId.toString()) {
-          isCompanyOwner = true;
+          companyName = company.companyName;
+          totalEmployees = company.companyUserIDs.length;
+
+          if (company.creatorID.toString() === userId.toString()) {
+            console.log("5 Company Owner Found ");
+
+            isCompanyOwner = true;
+          }
         }
       }
     }
+    const totalPasswords = [...userPasswords, ...companyPasswords];
+    const uniquePasswordsMap = new Map<string, any>();
+    for (const pwd of totalPasswords) {
+      uniquePasswordsMap.set(pwd._id.toString(), pwd);
+    }
 
-    const data = {
-      user,
-      passwordsCount: passwords.length,
-      companyOwner: isCompanyOwner,
-      companyName,
-    };
-
-    res.status(200).json({ success: true, data });
+    const uniquePasswords = Array.from(uniquePasswordsMap.values());
+    console.log("5 uniquePasswords: ",uniquePasswords.length);
+    res.status(200).json({
+      success: true,
+      data: {
+        user,
+        passwordsCount: uniquePasswords.length,
+        companyOwner: isCompanyOwner,
+        totalEmployees,
+        companyName,
+      },
+    });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("Error occurred in UpdateUserDetail:", error); // Log the error for debugging
+    res.status(500).json({ success: false, message: "An unexpected error occurred. Please try again later." });
   }
 };
-
 
 export const UpdateUserDetail = async (
   req: UserDetailInterface, // Ensure req.user is typed correctly

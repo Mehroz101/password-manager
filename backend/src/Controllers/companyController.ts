@@ -180,7 +180,7 @@ export const SendInvitation = async (
       });
       return;
     }
-
+   
     // Check if user is already part of the company
     const isUserInCompany = findCompany?.companyUserIDs?.some(
       (user) => user.toString() === checkUser._id.toString()
@@ -193,7 +193,13 @@ export const SendInvitation = async (
       });
       return;
     }
-
+    if(checkUser.companyID) {
+      res.status(400).json({
+        success: false,
+        message: "User is already part of another company",
+      });
+      return;
+    }
     // Generate invitation token
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date();
@@ -217,11 +223,10 @@ export const SendInvitation = async (
       subject: `Invitation to join ${findCompany.companyName}`,
       text: message,
     });
-
+    console.log("Invitation sent to:", req.body.email);
     res
       .status(200)
       .json({ success: true, message: "Invitation sent successfully" });
-    return;
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
@@ -301,8 +306,8 @@ export const AcceptInvitation = async (
       findInvitation.status = "accepted";
       await findInvitation.save();
 
-      findInvitation.status = "accepted";
-      await findInvitation.save();
+      user.companyID = new Types.ObjectId(findCompany._id as Types.ObjectId);
+
       res
         .status(200)
         .json({ success: true, message: "Invitation accepted successfully" }); // Update invitation status
@@ -344,7 +349,6 @@ export const companyUsersFetch = async (
        res.status(200).json({ success: true, users: [] });
        return
     }
-console.log("company.companyUserIDs", company.companyUserIDs)
     const users = await User.find({
       _id: { $in: company.companyUserIDs }
     }).select('fullname username profileImg ');
@@ -364,21 +368,46 @@ console.log("company.companyUserIDs", company.companyUserIDs)
   }
 };
 
-export const companyUserDelete = async (
+
+export const DeleteUserFromCompany = async(
   req: RequestExtendsInterface,
   response: Response
-) => {
+)=>{
   try {
-    if (req.user) {
-      const { companyID, userID } = req.body;
-      const findcompany = await Company.findOne({ companyID: companyID });
-      if (findcompany?.companyUserIDs?.length > 0) {
-        const findUser = findcompany?.companyUserIDs.filter(
-          (user) => user != userID
-        );
-        findcompany.companyUserIDs = findUser;
-        findcompany.save();
-      }
+    const {userId} = req.body;
+    if (!req.user) {
+      response.status(401).json({ success: false, message: "Unauthorized" });
+      return;
     }
-  } catch (error) {}
-};
+    const findUser = await Company.findOne({
+      companyUserIDs: { $in: [userId] }
+    });
+    if(!findUser) {
+      response.status(404).json({ success: false, message: "User not found in company" });
+      return;
+    }
+    console.log("creator id", findUser.creatorID.toString())
+    console.log("user id", req.user.id.toString())
+      if(findUser.creatorID.toString() === userId.toString()) {
+        response.status(400).json({ success: false, message: "You cannot delete the creator of the company" });
+        return;
+      }
+      findUser.companyUserIDs = findUser.companyUserIDs.filter(
+        (user) => user.toString() !== userId.toString()
+      );
+      const user = await User.findById(userId);
+      if (user) {
+        user.companyID = null;
+        await findUser.save();
+        await user.save();
+      }
+      response.status(200).json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    console.log(error, "error in delete user from company")
+    response.status(500).json({
+      success: false,
+      message: "Error in delete user from company",
+      error: error.message,
+    });
+  }
+}

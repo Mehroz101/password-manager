@@ -19,8 +19,8 @@ const passwordSchema = new Schema(
       of: String,
     },
     companyPass: {
-      type: Boolean,
-      default: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
     },
     lastAction: {
       actionType: {

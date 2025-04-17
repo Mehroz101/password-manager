@@ -102,8 +102,9 @@ export const SendInvitation = async (data: {
       data,
       config
     );
-    return response.data.data;
+    return response.data;
   } catch (error: unknown) {
+    console.log(error, "error in send invitation");
     return {
       success: false,
       message: (error as any).response?.data?.message,
@@ -147,6 +148,32 @@ export const CompanyUsersFetch = async (id: string) => {
     return response.data.users;
   } catch (error: unknown) {
     console.log(error, "error in company users fetch");
+    return {
+      success: false,
+      message: (error as any).response?.data?.message,
+    };
+  }
+};
+export const DeleteUserFromCompany = async (userId: string) => {
+  try {
+    const sendata = {
+      userId: userId,
+    }
+    console.log(userId, "user id in delete user from company");
+    const token = localStorage.getItem("passwordmanager");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      API_URL + `/deleteuserfromcompany`,
+      sendata,
+      config
+    );
+      return response.data;
+  } catch (error: unknown) {
+    console.log(error, "error in delete user from company");
     return {
       success: false,
       message: (error as any).response?.data?.message,

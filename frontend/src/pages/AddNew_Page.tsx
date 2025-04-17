@@ -1,5 +1,5 @@
 import "../styles/AddNewPage.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import CInput from "../components/FormComponent/CInput";
 import CButton from "../components/FormComponent/CButton";
@@ -34,21 +34,17 @@ interface Payload {
 }
 
 const AddNew_Page = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const [companyPass, setCompanyPass] = useState<boolean>(false);
-  const [appId, setAppId] = useState<string | null>(null);
-  const URL = useLocation();
-  const { userData } = useSelector((state: RootState) => state.profile);
 
-  // React Hook Form Setup
+  const { id } = useParams(); // assuming your route is something like /editpassword/:id
+const appId = id ?? null;
+  const { userData } = useSelector((state: RootState) => state.profile);
   const { register, handleSubmit, control, watch, reset, setValue } =
     useForm<AddNewPassword>();
   const categoryType = watch("categoryType");
 
-  // Form Submit Handler
   const onSubmit: SubmitHandler<AddNewPassword> = (data) => {
-    console.log(data);
     const filteredFields = Object.entries(data).reduce((acc, [key, value]) => {
       if (key === "categoryType") return acc;
       if (value !== undefined && value !== null && value !== "") {
@@ -87,55 +83,26 @@ const AddNew_Page = () => {
   const { data: specificData } = useQuery({
     queryKey: ["specificData"],
     queryFn: () => GetSpecificPassword(Number(appId)),
-    enabled: appId ? true : false,
+    enabled: !!appId,
   });
-  // Focus input on load for an enhanced user experience
-  useEffect(() => {
-    const id = URL.pathname.split("/");
-    if (id[id.length - 2] === "editpassword" && id[id.length - 1]) {
-      const passwordId = id[id.length - 1];
-      setAppId(passwordId);
-    }
-  }, []);
+
   useEffect(() => {
     reset();
+    console.log("specificData", specificData);
+    console.log("appId", appId);
     if (specificData && appId) {
       console.log("called");
       setValue("categoryType", specificData.type);
       Object.entries(specificData.fields).forEach(([key, value]) => {
         setValue(key as keyof AddNewPassword, value as string);
       });
+      setCompanyPass(!!specificData?.companyPass);
+      console.log("specificData", !!specificData.companyPass);
     }
   }, [specificData]);
   return (
     <div className="add_new_page">
-      {/* {
-        <div className="viewapp_top_card">
-          <div className="top_card_left">
-            <img src={specificData?.passwordImg} alt="appicon" />
-          </div>
-          <div className="top_card_right">
-            <div className="top_card_right_top">
-              <p className="top_card_title">
-                {watch("appName", specificData?.appName)}
-              </p>
-              <p className="top_card_category">{specificData?.categoryType}</p>
-              <FontAwesomeIcon
-                icon={faTrash}
-                onClick={() => handleDeletePassword(Number(appId))}
-              />
-            </div>
-            <div className="top_card_right_bottom">
-              <p className="activity_box_account">
-                <span>
-                  {specificData?.lastAction.actionType}:{" "}
-                  {formatDate(specificData?.updatedAt)}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      } */}
+  
 
       <div className="add_new_form">
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -414,7 +381,7 @@ const AddNew_Page = () => {
               />
             </>
           )}
-          {userData?.company && (
+          {userData?.companyOwner && (
             <div className="companycheckbox">
               <input
                 type="checkbox"
@@ -422,6 +389,7 @@ const AddNew_Page = () => {
                 onChange={(e) => {
                   setCompanyPass(e.target.checked);
                 }}
+                checked={companyPass}
                 id="companyPass"
               />
               <label htmlFor="companyPass">

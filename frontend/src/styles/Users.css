@@ -38,6 +38,12 @@
   font-size: 0.9rem;
   color: #999;
 }
+ .users_page .company_register_text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
 .users_page .user_box {
   display: flex;
   justify-content: flex-start;
@@ -84,6 +90,7 @@
   width: 50px;
   height: 50px;
   object-fit: cover;
+  border-radius: 50%;
 }
 .users_page .user_box_right {
   justify-self: flex-end;

@@ -3,6 +3,7 @@ import "../styles/Navbar.css";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Verified from "../assets/verified.png";
+import EMPBadge from "../assets/empBadge.png";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { useEffect, useState } from "react";
@@ -35,7 +36,10 @@ const Navbar = () => {
         <div className="nav_profile_text">
           <p>
             {userData?.user.fullname ? userData?.user.fullname : userData?.user.username}
+            {userData?.companyOwner ? (
+
             <img src={Verified} alt="" className="verified_badge" />
+            ) : <img src={EMPBadge} alt="" className="verified_badge" />}
           </p>
           <span>{getGreeting()}</span>
         </div>

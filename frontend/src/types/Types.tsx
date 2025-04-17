@@ -185,6 +185,6 @@ export interface UserDetailInterface {
 export interface companyUsers {
     fullname: string;
     username: string;
-    profileImage: string;
-    id: string;
+    profileImg: string;
+    _id: string;
 }

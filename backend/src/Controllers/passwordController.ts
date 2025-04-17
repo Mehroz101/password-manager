@@ -8,6 +8,7 @@ import Password from "../Models/Password";
 import User from "../Models/User";
 import RecentActivity from "../Models/RecentActivity";
 import Passwords from "../Models/Passwords";
+import Company from "../Models/Company";
 
 export const AddAndUpdatePassword = async (
   req: PasswordRequestExtendsInterface,
@@ -141,21 +142,40 @@ export const getAllPasswords = async (
   try {
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
-    } else {
-      const user = await User.findOne({ _id: req.user.id });
-      if (!user) {
-        res.status(404).json({ success: false, message: "User not found" });
-      } else {
-        const passwords = await Passwords.find({ userID: user });
-        
-        res.status(200).json({ success: true, message: "", data: passwords });
-      }
+      return;
     }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    let userPasswords = await Passwords.find({ userID: user._id }) || [];
+    console.log("userPasswords: ", userPasswords.length);
+    let companyPasswords: any[] = [];
+
+    if (user.companyID) {
+      console.log("user.companyID: ", user.companyID);
+      companyPasswords = await Passwords.find({ companyPass: user.companyID }) || [];
+      console.log("companyPasswords: ", companyPasswords.length);
+    }
+
+    const allPasswords = [...userPasswords, ...companyPasswords];
+    const uniquePasswordsMap = new Map<string, any>();
+    for (const pwd of allPasswords) {
+      uniquePasswordsMap.set(pwd._id.toString(), pwd);
+    }
+
+    const uniquePasswords = Array.from(uniquePasswordsMap.values());
+
+    res.status(200).json({ success: true, message: "", data: uniquePasswords });
   } catch (error) {
     console.error("Error fetching passwords:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
   try {
     if (!req.user) {
@@ -171,14 +191,11 @@ export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
         if (!userID) {
           return;
         }
-        console.log(passwordID);
-        console.log(userID?._id);
         const passwordDoc = await Passwords.findOne({
           passwordID: passwordID, // Search by custom passwordID field
           userID: userID?._id, // Ensure it's linked to the correct user
         });
-        if (!passwordDoc) {
-        }
+
         const deletedPassword = await Passwords.deleteOne({
           _id: passwordDoc?._id,
         });
@@ -228,7 +245,6 @@ export const GetSpecificPassword = async (
             .status(404)
             .json({ success: false, message: "Password not found" });
         } else {
-          console.log("recent actitvy");
           const response = await RecentActivity.findOneAndUpdate(
             {
               userID: userID?.userID,
@@ -238,7 +254,6 @@ export const GetSpecificPassword = async (
             { updatedAt: new Date() }, // Update timestamp (or add additional fields)
             { upsert: true, new: true } // Create if not exists, return the updated doc
           );
-          console.log(response);
           res
             .status(200)
             .json({ success: true, message: "", data: passwordData });
@@ -256,7 +271,6 @@ export const RecentActivities = async (
   try {
     if (req.user) {
       const userID = await User.findOne({ _id: req.user.id });
-      console.log(userID.userID);
       const recentActivities = await RecentActivity.find({
         userID: userID?.userID,
       }).populate("passwordID");
@@ -275,32 +289,44 @@ export const DynamicPasswordStore = async (
 ) => {
   try {
     if (req.user) {
-      // const userID = await User.findOne({ _id: req.user.id });
       const { type, fields, passwordID = null, showCompany = false } = req.body;
-      console.log(req.body);
+      const user = await User.findById(req.user.id);
+
       if (passwordID) {
         const password = await Passwords.findOne({ passwordID: passwordID });
         if (password) {
+          let compnayID = null;
+          if (showCompany) {
+            const company = await Company.findOne({ creatorID: user?._id });
+            compnayID = company?._id;
+          }
+
           await Passwords.updateOne(
             { passwordID: passwordID },
-            { $set: { type: type, fields: fields }, companyPass: showCompany }
+            {
+              $set: { type: type, fields: fields },
+              companyPass: compnayID,
+              lastAction: {
+                actionType: "Last Edited",
+                actionDateTime: new Date(),
+              },
+            }
           );
-          const Userid = await User.findOne({ _id: req.user.id });
 
           await RecentActivity.findOneAndUpdate(
             {
-              userID: Userid?.userID,
+              userID: user?.userID,
               passwordID: password._id,
               actionType: "Last Edited",
-            }, // Find existing entry
-            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
-            { upsert: true, new: true } // Create if not exists, return the updated doc
+            },
+            { updatedAt: new Date() },
+            { upsert: true, new: true }
           );
-          // res.status(201).json({
-          //   success: true,
-          //   message: "Password updated successfully",
-          // });
         }
+        res.status(200).json({
+          success: true,
+          message: "Password updated successfully",
+        });
         return;
       }
       const previousPasswordID = await Passwords.findOne().sort({
@@ -309,25 +335,32 @@ export const DynamicPasswordStore = async (
       const nextPasswordID = previousPasswordID
         ? previousPasswordID.passwordID + 1
         : 1;
+      let compnayID = null;
+      if (showCompany) {
+        const company = await Company.findOne({ creatorID: user?._id });
+        compnayID = company?._id;
+      }
       const passwordData = await Passwords.create({
         passwordID: nextPasswordID,
         userID: req.user.id,
         type: type,
         fields: fields,
-        companyPass: showCompany
+        companyPass: compnayID,
+        lastAction: {
+          actionType: "Created At",
+          actionDateTime: new Date(),
+        },
       });
-      const Userid = await User.findOne({ _id: req.user.id });
 
       await RecentActivity.findOneAndUpdate(
         {
-          userID: Userid?.userID,
+          userID: user?.userID,
           passwordID: passwordData._id,
           actionType: "Created At",
-        }, // Find existing entry
-        { updatedAt: new Date() }, // Update timestamp (or add additional fields)
-        { upsert: true, new: true } // Create if not exists, return the updated doc
+        },
+        { updatedAt: new Date() },
+        { upsert: true, new: true }
       );
-      console.log(passwordData);
       res.status(201).json({
         success: true,
         message: "Password stored successfully",

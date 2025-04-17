@@ -14,15 +14,7 @@ export const GetUserProfileData = async (): Promise<ResponseInterface> => {
     const response = await axios.get(`${API_URL}/userprofiledata`, config);
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error) && error.response) {
-    //   console.log("Error status:", error.response.status);
 
-    //   if (error.response.status === 401) {
-    //     // Clear token and redirect user to login page
-    //     // localStorage.removeItem("passwordmanager");
-    //     // window.location.href = "/login"; // Redirect to login
-    //   }
-    // }
       return {
         success: false,
         message: (error as any).response.data?.message || "An error occurred",
@@ -45,15 +37,7 @@ export const UserDetail = async (data: UserDetailInterface) => {
     );
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error) && error.response) {
-    //   console.log("Error status:", error.response.status);
-
-    //   if (error.response.status === 401) {
-    //     // Clear token and redirect user to login page
-    //     localStorage.removeItem("passwordmanager");
-    //     window.location.href = "/login"; // Redirect to login
-    //   }
-    // }
+  
       return {
         success: false,
         message: (error as any).response.data?.message || "An error occurred",
@@ -69,16 +53,11 @@ export const UserProfileDetail = async () => {
       },
     };
     const response = await axios.get(`${API_URL}/userprofiledetail`, config);
-    console.log("response: ", response.data.data);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
 
-      // if (error.response.status === 401) {
-        // Clear token and redirect user to login page
-        // localStorage.removeItem("passwordmanager");
-        // window.location.href = "/login"; // Redirect to login
-      // }
+     
     }
       return {
         success: false,
@@ -106,15 +85,7 @@ export const UpdateProfileImg = async (data: {
     );
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error) && error.response) {
-    //   console.log("Error status:", error.response.status);
 
-    //   if (error.response.status === 401) {
-    //     // Clear token and redirect user to login page
-    //     localStorage.removeItem("passwordmanager");
-    //     window.location.href = "/login"; // Redirect to login
-    //   }
-    // }
       return {
         success: false,
         message: (error as any).response.data?.message || "An error occurred",

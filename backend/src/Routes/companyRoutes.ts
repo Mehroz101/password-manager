@@ -6,7 +6,8 @@ import {
   uploadCompanyLogo,
   SendInvitation,
   AcceptInvitation,
-  companyUsersFetch
+  companyUsersFetch,
+  DeleteUserFromCompany
 
 } from "../Controllers/companyController";
 import { protect } from "../Middleware/authMiddleware"; // ✅ Check case sensitivity
@@ -23,4 +24,5 @@ router.get("/getcompanydetail", protect, getCompany);
 router.post("/sendinvitation", protect, SendInvitation);
 router.post("/acceptinvitation", protect, AcceptInvitation);
 router.get("/companyusersfetch/:id", protect, companyUsersFetch);
+router.post("/deleteuserfromcompany", protect, DeleteUserFromCompany);
 export default router;
