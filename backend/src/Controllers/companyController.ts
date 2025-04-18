@@ -307,11 +307,12 @@ export const AcceptInvitation = async (
       await findInvitation.save();
 
       user.companyID = new Types.ObjectId(findCompany._id as Types.ObjectId);
-
+      await user.save();
       res
         .status(200)
         .json({ success: true, message: "Invitation accepted successfully" }); // Update invitation status
     } else {
+      
       res
         .status(200)
         .json({ success: false, message: "Already member of this company" });

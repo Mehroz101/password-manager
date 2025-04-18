@@ -38,6 +38,7 @@ export const GetUserProfileDetail = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log('=====================================================')
     const userId = req.user?.id;
     if (!userId) {
       res.status(401).json({ success: false, message: "Unauthorized" });
