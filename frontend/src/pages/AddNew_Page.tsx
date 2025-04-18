@@ -23,7 +23,7 @@ const categoryOptions = [
   { label: "Social", value: "Social" },
   { label: "Bank", value: "Bank" },
   { label: "Wi‑Fi", value: "Wi-Fi" },
-  { label: "Work", value: "Work" },
+  // { label: "Work", value: "Work" },
   { label: "Other", value: "Other" },
 ];
 interface Payload {

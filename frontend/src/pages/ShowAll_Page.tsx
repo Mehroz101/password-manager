@@ -9,6 +9,7 @@ import {
   faEnvelope,
   faFeather,
   faGlobe,
+  faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -240,7 +241,8 @@ const ShowAll_Page = () => {
                   />
                 </div>
                 <div className="allpassword_box_center">
-                  <p className="allpassword_title">{password.fields.appName}</p>
+                  <p className="allpassword_title">{password.fields.appName} {password.companyPass ?  ( <FontAwesomeIcon icon={ faBuilding } title="Company Password"/>) : ""  } 
+                  </p>
                   <p className="allpassword_account">
                     {(password.fields.email || password.fields.socialEmail || password.fields.workEmail)
                       ? (password.fields.email || password.fields.socialEmail || password.fields.workEmail)

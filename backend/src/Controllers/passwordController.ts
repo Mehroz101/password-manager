@@ -151,13 +151,14 @@ export const getAllPasswords = async (
       return;
     }
 
-    let userPasswords = await Passwords.find({ userID: user._id }) || [];
+    let userPasswords = (await Passwords.find({ userID: user._id })) || [];
     console.log("userPasswords: ", userPasswords.length);
     let companyPasswords: any[] = [];
 
     if (user.companyID) {
       console.log("user.companyID: ", user.companyID);
-      companyPasswords = await Passwords.find({ companyPass: user.companyID }) || [];
+      companyPasswords =
+        (await Passwords.find({ companyPass: user.companyID })) || [];
       console.log("companyPasswords: ", companyPasswords.length);
     }
 
@@ -225,45 +226,66 @@ export const GetSpecificPassword = async (
   try {
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
-    } else {
-      const { passwordID } = req.body;
-      if (!passwordID) {
-        res
-          .status(400)
-          .json({ success: false, message: "Password ID is required" });
-      } else {
-        const userID = await User.findOne({ _id: req.user.id });
-        if (!userID) {
-          return;
-        }
-        const passwordData = await Passwords.findOne({
-          passwordID: passwordID,
-          userID: userID,
-        });
-        if (!passwordData) {
-          res
-            .status(404)
-            .json({ success: false, message: "Password not found" });
-        } else {
-          const response = await RecentActivity.findOneAndUpdate(
-            {
-              userID: userID?.userID,
-              passwordID: passwordData._id,
-              actionType: "Last Viewed",
-            }, // Find existing entry
-            { updatedAt: new Date() }, // Update timestamp (or add additional fields)
-            { upsert: true, new: true } // Create if not exists, return the updated doc
-          );
-          res
-            .status(200)
-            .json({ success: true, message: "", data: passwordData });
-        }
-      }
+      return;
     }
+
+    const { passwordID } = req.body;
+    if (!passwordID) {
+      res
+        .status(400)
+        .json({ success: false, message: "Password ID is required" });
+      return;
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    // Try to find the password for the specific user
+    let passwordData = await Passwords.findOne({
+      passwordID,
+      userID: user._id,
+    });
+
+    // If not found, check if it exists under the company
+    if (!passwordData && user.companyID) {
+      passwordData = await Passwords.findOne({
+        passwordID,
+        companyPass: user.companyID,
+      });
+    }
+
+    if (!passwordData) {
+      res.status(404).json({ success: false, message: "Password not found" });
+      return;
+    }
+
+    // Track recent activity
+    await RecentActivity.findOneAndUpdate(
+      {
+        userID: user.userID,
+        passwordID: passwordData._id,
+        actionType: "Last Viewed",
+      },
+      { updatedAt: new Date() },
+      { upsert: true, new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password retrieved successfully",
+      data: passwordData,
+    });
+    return;
   } catch (error) {
-    console.log(error);
+    console.error("Error in GetSpecificPassword:", error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return;
   }
 };
+
 export const RecentActivities = async (
   req: RequestExtendsInterface,
   res: Response

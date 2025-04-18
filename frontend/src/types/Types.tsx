@@ -143,6 +143,7 @@ export interface DeletePasswordPayload {
 export interface GetAllPasswordResponse {
   passwordID: number;
   type: string;
+  companyPass: string;
   fields: {
     appName: string;
     type: string;

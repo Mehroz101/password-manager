@@ -101,6 +101,7 @@ console.log("userID: ",user.userID);
         user,
         passwordsCount: uniquePasswords.length,
         companyOwner: isCompanyOwner,
+        companyPasswords: companyPasswords.length,
         totalEmployees,
         companyName,
       },

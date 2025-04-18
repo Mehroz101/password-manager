@@ -61,7 +61,7 @@ const Profile_Page = () => {
     { title: "Total Password", count: userData?.passwordsCount },
     { title: "Company Name", count: userData?.companyName || "NAN" },
     { title: "Employees", count: userData?.totalEmployees },
-    { title: "Reused", count: 230 },
+    { title: "Company Password", count: userData?.companyPasswords },
   ];
   const menuItems = [
     {
