@@ -86,6 +86,8 @@
   color: #666;
   font-weight: 600;
   margin-top: 5px;
+  text-align: center;
+  text-transform: capitalize;
 }
 
 .profile_page_menus {

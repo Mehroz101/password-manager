@@ -22,7 +22,17 @@ export const registerCompany = async (
 
     const companyname = companyName.trim().toLowerCase();
     const userID = req.user.id;
-
+    const checkUserCompanyEmp = await User.findById(userID);
+    if(checkUserCompanyEmp && checkUserCompanyEmp.companyID) {
+      const company = await Company.findById(checkUserCompanyEmp.companyID);
+      if(company) {
+        const filterUser = company.companyUserIDs.find((user) => user.toString() === userID.toString());
+        if(filterUser) {
+          res.status(400).json({ success: false, message: "You are already a member of other company" });
+          return;
+        }
+      }
+    }
     // Check if a company already exists for the user
     const existingCompany = await Company.findOne({ creatorID: userID });
 

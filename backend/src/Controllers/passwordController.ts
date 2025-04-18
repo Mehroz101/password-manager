@@ -179,46 +179,64 @@ export const getAllPasswords = async (
 
 export const DeletePassword = async (req: SpecificIDRequest, res: Response) => {
   try {
+    // Step 1: Check user auth
     if (!req.user) {
       res.status(401).json({ success: false, message: "Unauthorized" });
-    } else {
-      const { passwordID } = req.body;
-      if (!passwordID) {
-        res
-          .status(400)
-          .json({ success: false, message: "Password ID is required" });
-      } else {
-        const userID = await User.findOne({ _id: req.user.id });
-        if (!userID) {
-          return;
-        }
-        const passwordDoc = await Passwords.findOne({
-          passwordID: passwordID, // Search by custom passwordID field
-          userID: userID?._id, // Ensure it's linked to the correct user
-        });
-
-        const deletedPassword = await Passwords.deleteOne({
-          _id: passwordDoc?._id,
-        });
-        await RecentActivity.deleteMany({
-          passwordID: passwordDoc?._id, // Use the actual _id of the password
-        });
-        if (!deletedPassword) {
-          res
-            .status(404)
-            .json({ success: false, message: "Password not found" });
-        } else {
-          res
-            .status(200)
-            .json({ success: true, message: "Password deleted successfully" });
-        }
-      }
+      return;
     }
-  } catch (error) {
+
+    const { passwordID } = req.body;
+
+    // Step 2: Validate input
+    if (!passwordID) {
+      res
+        .status(400)
+        .json({ success: false, message: "Password ID is required" });
+      return;
+    }
+
+    // Step 3: Find password by ID
+    const passwordDoc = await Passwords.findOne({ passwordID });
+
+    if (!passwordDoc) {
+      res.status(404).json({ success: false, message: "Password not found" });
+      return;
+    }
+
+    // Step 4: Check ownership
+    if (passwordDoc.userID?.toString() !== req.user.id) {
+      res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this password",
+      });
+      return;
+    }
+
+    // Step 5: Delete password
+    const deletedPassword = await Passwords.deleteOne({ _id: passwordDoc._id });
+
+    if (deletedPassword.deletedCount === 0) {
+      res
+        .status(500)
+        .json({ success: false, message: "Failed to delete password" });
+      return;
+    }
+
+    // Step 6: Clean up related activity
+    await RecentActivity.deleteMany({ passwordID: passwordDoc._id });
+
+    res.status(200).json({
+      success: true,
+      message: "Password deleted successfully",
+    });
+    return;
+  } catch (error: any) {
     console.error("Error deleting password:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "Internal server error" });
+    return;
   }
 };
+
 export const GetSpecificPassword = async (
   req: SpecificIDRequest,
   res: Response
