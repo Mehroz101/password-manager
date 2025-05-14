@@ -57,52 +57,7 @@ export const registerCompany = async (
       }
     }
     // Check if a company already exists for the user
-    const existingCompany = await Company.findOne({ creatorID: userID });
-
-    if (existingCompany) {
-      console.log("existingCompany ");
-      // Update existing company
-      existingCompany.companyName = companyname;
-      existingCompany.noOfUsers = noOfUsers;
-      await existingCompany.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Company updated successfully",
-        company: existingCompany,
-      });
-      return;
-    } else {
-      console.log("newCompany ");
-      // Create a new company
-      const previousCompany = await Company.findOne().sort({ companyID: -1 });
-      const nextCompanyID = previousCompany ? previousCompany.companyID + 1 : 1;
-
-      const user = await User.findById(userID);
-      if (!user) {
-        res.status(404).json({ success: false, message: "User not found" });
-        return;
-      }
-
-      const userLimit = process.env.COMPANY_USER_LIMIT || 10;
-
-      const newCompany = await Company.create({
-        companyName: companyname,
-        noOfUsers: noOfUsers,
-        companyID: nextCompanyID,
-        creatorID: userID,
-        companyUserIDs: [user._id],
-        companyUserLimit: userLimit,
-      });
-      user.companyID = new Types.ObjectId(newCompany._id as Types.ObjectId);
-      user.save();
-      res.status(201).json({
-        success: true,
-        message: "Company registered successfully",
-        company: newCompany,
-      });
-      return;
-    }
+  
   } catch (error) {
     console.error(error);
     res.status(500).json({
