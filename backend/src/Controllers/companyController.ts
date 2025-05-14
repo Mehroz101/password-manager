@@ -22,15 +22,38 @@ export const registerCompany = async (
 
     const companyname = companyName.trim().toLowerCase();
     const userID = req.user.id;
-    const checkUserCompanyEmp = await User.findById(userID);
-    if(checkUserCompanyEmp && checkUserCompanyEmp.companyID) {
-      const company = await Company.findById(checkUserCompanyEmp.companyID);
-      if(company) {
-        const filterUser = company.companyUserIDs.find((user) => user.toString() === userID.toString());
-        if(filterUser) {
-          res.status(400).json({ success: false, message: "You are already a member of other company" });
-          return;
-        }
+    let existingCompany = await Company.findOne({
+      $or: [{ creatorID: userID }, { companyName: companyname }],
+    }).populate("creatorID");
+    if (existingCompany) {
+      res.status(400).json({
+        success: false,
+        message:
+          existingCompany.companyName === companyname
+            ? "Company name already exists"
+            : "You already have a company",
+      });
+    } else {
+      const previousCompanyID = await Company.findOne().sort({ companyID: -1 });
+      const nextCompanyID = previousCompanyID
+        ? previousCompanyID.companyID + 1
+        : 1;
+      const userId = await User.findOne({ _id: userID });
+      const UserLimit = process.env.COMPANY_USER_LIMIT || 10;
+      if (userId) {
+          const company = await Company.create({
+          companyName: companyname,
+          noOfUsers: noOfUsers,
+          companyID: nextCompanyID,
+          creatorID: userID,
+          companyUserIDs: [userId._id],
+          companyUserLimit: UserLimit,
+        });
+        res.status(201).json({
+          success: true,
+          message: "Company registered successfully",
+          company,
+        });
       }
     }
     // Check if a company already exists for the user
