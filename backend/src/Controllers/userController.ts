@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 import Passwords from "../Models/Passwords";
 import Company from "../Models/Company";
-import { totalmem } from "os";
+
 export const GetUserProfileData = async (
   req: RequestExtendsInterface,
   res: Response

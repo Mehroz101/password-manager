@@ -5,6 +5,7 @@ import upload from "../Middleware/multerMiddleware";
 
 const router = express.Router()
 
+
 router.get("/userprofiledata",protect,GetUserProfileData)
 router.get("/userprofiledetail",protect,GetUserProfileDetail)
 router.post("/updateuserdetail",protect,UpdateUserDetail)
