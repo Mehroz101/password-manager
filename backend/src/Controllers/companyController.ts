@@ -83,9 +83,9 @@ export const uploadCompanyLogo = async (
         const userID = req.user.id;
         const company = await Company.findOne({ creatorID: userID });
         if (!company) {
-       
-            //delete the file that uploaded by user
-          const filePath = `./uploads/${file?.filename}`;
+
+          //delete the file that uploaded by user
+          const filePath = file?.path;
           if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
 
@@ -94,12 +94,12 @@ export const uploadCompanyLogo = async (
         } else {
           if (company.companyLogo) {
             const previousLogo = company.companyLogo;
-            const filePath = `./uploads/${previousLogo}`;
+            const filePath = previousLogo;
             if (fs.existsSync(filePath)) {
               fs.unlinkSync(filePath);
             }
           }
-          company.companyLogo = file?.filename;
+          company.companyLogo = file?.path || "";
           await company.save();
           res.status(200).json({
             success: true,
@@ -116,7 +116,6 @@ export const uploadCompanyLogo = async (
       .json({ success: false, message: "Error uploading company logo", error });
   }
 };
-
 export const getCompany = async (
   req: RequestExtendsInterface,
   res: Response
