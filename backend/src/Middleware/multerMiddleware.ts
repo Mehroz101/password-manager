@@ -1,49 +1,35 @@
-import { Request, Response } from "express";
-import multer, { FileFilterCallback } from "multer";
-import path from "path";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-// Set up storage for uploaded images
-const storage = multer.diskStorage({
-  destination: function (
-    req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void
-  ) {
-    cb(null, "uploads/"); // Uploads will be stored in the "uploads" folder
-  },
-  filename: function (
-    req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, filename: string) => void
-  ) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// File filter (accept only images)
-const fileFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: FileFilterCallback
-) => {
-  const allowedExtensions = /jpeg|jpg|png/;
-  const extname = allowedExtensions.test(
-    path.extname(file.originalname).toLowerCase()
-  );
-  const mimetype = allowedExtensions.test(file.mimetype);
+// Set up Cloudinary storage for multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req: Express.Request, file: Express.Multer.File) => ({
+    folder: "uploads",
+    format: (() => {
+      const ext = file.mimetype.split("/").pop();
+      if (["jpeg", "jpg", "png"].includes(ext)) {
+        return ext;
+      }
+      return "jpg";
+    })(),
+    // Optionally, you can set public_id or other params here
+  }),
+});
 
-  if (extname && mimetype) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only JPEG, JPG, and PNG images are allowed!"));
-  }
-};
-
-// Multer Upload Middleware
+// Multer Upload Middleware for Cloudinary
 const upload = multer({
   storage: storage,
   limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
-  fileFilter: fileFilter,
 });
+
 
 export default upload;
