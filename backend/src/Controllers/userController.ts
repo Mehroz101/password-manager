@@ -198,18 +198,10 @@ export const UpdateProfileImg = async (
         const userID = req.user.id;
         const user = await User.findOne({ _id: userID });
         if (!user) {
-          res
-            .status(404)
-            .json({ success: false, message: "First Create an Account" });
+          res.status(404).json({ success: false, message: "First Create an Account" });
         } else {
-          if (user.profileImg) {
-            const previousImg = user.profileImg;
-            const filePath = `./uploads/${previousImg}`;
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-            }
-          }
-          user.profileImg = file?.filename;
+          // Optionally: delete previous image from Cloudinary using public_id if you store it
+          user.profileImg = file?.path || "";
           await user.save();
           res.status(200).json({
             success: true,
